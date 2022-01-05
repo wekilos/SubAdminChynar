@@ -1,0 +1,62 @@
+
+.mehanik-form{
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 20px;
+    border:  1px solid rgba(0, 0, 0, 0.514);
+    border-top-left-radius:18px;
+    border-top-right-radius: 18px;
+    border-bottom-left-radius:18px;
+    border-bottom-right-radius: 18px;
+    box-shadow:  rgb(0, 0, 0) 0 0 3px;
+}
+.labels{
+    display:flex;
+    justify-content: space-between;
+}
+.filter{
+    display: inline-flex;
+    margin-left:200px;
+    margin-top: 20px;
+    
+    
+}
+.hasabat-label{
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px;
+    margin-left: 100px;
+    
+}
+.hasabat-checkbox{
+    margin-top: 15px;
+    margin-right: 320px;
+    
+}
+.hasabat-input{
+    width: 250px;
+    margin: 10px;
+    margin-right: 100px;
+}
+.hasabat-button{
+    display: flex;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+@media screen and (max-width:1200px){
+    .hasabat-input{
+        margin-right: 20px;
+        width: 200px;
+    }
+    .hasabat-checkbox{
+        margin-right: 220px;
+    }
+    .hasabat-label{
+        margin-left: 20px;
+        width: auto;
+    }
+    .mehanik-form{
+        width: 70%;
+    }
+}

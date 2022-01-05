@@ -1,0 +1,42 @@
+.hereket-filter{
+    background-color: #fff;
+    height: 75px;
+    width: 100%;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom: 2px solid #aaa;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items:flex-start;
+    padding-left: 18px;
+    padding-right: 18px;
+    
+}
+.hereket-filter--form{
+    width: 100%;
+    margin: 0 auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+   
+
+}
+
+.hereket-filter--input{
+ width:250px;
+ margin:15px;
+
+}
+
+.hereket-filter--button{
+    margin: 15px;
+}
+
+@media screen and (max-width:600px){
+    .hereket-filter--input{
+        display: inline;
+        justify-content:left;
+        width: 250px;
+    }
+}

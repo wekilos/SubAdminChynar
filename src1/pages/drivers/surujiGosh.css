@@ -1,0 +1,20 @@
+
+
+
+.suruji--form{
+    width: 100%;
+    background-color: inherit;
+    margin: 0 auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: -30px;
+}
+.suruji-gosh--input{
+ width:350px;
+ margin: 5px;
+
+}
+.suruji-gosh--button{
+    margin: 5px;
+}

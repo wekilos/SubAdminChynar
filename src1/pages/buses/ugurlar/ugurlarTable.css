@@ -1,0 +1,16 @@
+.ugurlar .ant-input-group-addon{
+    width: 110px;
+}
+.ugurlar .ugurlar-uytget--input{
+    margin:5px;
+}
+.ugurlar-table--buttons{
+    position: fixed;
+    bottom:5vh;
+    right: 3.5vw;
+    margin: 0 auto;
+}
+.ugurlar-table--button{
+    margin: 20px;
+    margin-bottom: 0;
+}

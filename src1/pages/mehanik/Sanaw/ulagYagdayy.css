@@ -1,0 +1,19 @@
+.ulag-yagdayy--form {
+  width: 100%;
+  background-color: inherit;
+  margin: 0 auto;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ulag-yagdayy--form .ant-input-group-addon {
+  width: 85px;
+  text-align: left;
+}
+.ulag-yagdayy--input {
+  width: 350px;
+  margin: 10px;
+}
+.ulag-yagdayy--button {
+  margin: 5px;
+}

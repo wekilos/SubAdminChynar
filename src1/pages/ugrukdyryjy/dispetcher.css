@@ -1,0 +1,31 @@
+body{
+    background-color: #f5f5f5;
+}
+.dispetcher{
+    width:90%;
+    margin : 0 auto;
+}
+.dispetcher--header{
+    text-align: center;
+    font-family: sans-serif;
+    margin-top: 30px;
+    font-size: 30px;
+    font-weight: bold;
+}
+.dispetcher--list_div{
+    margin-bottom: 10px;
+}
+.dispetcher--list_ul{
+    list-style: none;
+}
+.dispetcher--list_li{
+    display: inline;
+    padding:3px;
+    font-style: normal;
+    font-family: sans-serif;
+    font-size: 20px;
+    font-weight: lighter;
+}
+.bold_list{
+    font-weight: bold;
+}

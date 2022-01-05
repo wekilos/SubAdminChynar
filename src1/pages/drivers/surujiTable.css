@@ -1,0 +1,26 @@
+.surujiTable{
+    width: 100%;
+    background-color: inherit;
+    margin: 0 auto;
+
+}
+
+
+
+
+
+.Goshmacha--ul{
+    list-style: none;
+}
+
+.modalLi {
+    padding:5px;
+    font-size: 16px;
+}
+.ant-input-group-addon{
+    font-weight: 600;
+}    
+.ant-modal-title{
+    font-size: 20px;
+    font-weight: 700;
+}
