@@ -15,6 +15,7 @@ const YolHaty = prop =>{
 
     const [Gosh,setGosh]=useState(false);
     const [sany,setSany] = useState(0);
+    let market_Id = localStorage.getItem("SubMarketId")
     const [welayatId,setWelayatId] = useState(null);
     const [welayatlar,setWelayatlar] = useState([])
     const GoshButton = ()=>{
@@ -44,13 +45,12 @@ const YolHaty = prop =>{
     }
 
     const getData = ()=>{
-      let MarketId = localStorage.getItem("SubMarketId");
-      axiosInstance.get("/api/market/"+MarketId).then((data)=>{
+      axiosInstance.get("/api/market/"+market_Id).then((data)=>{
         console.log(data.data);
-        let array = [];
-        array.push(data.data);
-        setData(array);
-        setSany(array.length);
+        let newArray = []
+        newArray.push(data.data);
+        setData([...newArray]);
+        setSany(data.data.length);
       }).catch((err)=>{
         console.log(err);
       })
@@ -67,7 +67,7 @@ const YolHaty = prop =>{
                 <Button onClick={GoshButton} shape='round' type='primary' icon={<PlusCircleFilled />} className='suruji--gosh'>Ýol Haty Döret</Button>
             </div> */}
             {/* {Gosh && <YolHatyGosh onClick={GoshButton}/>} */}
-            <Drawer
+            {/* <Drawer
                 width={500}
                 className='lukman-table--drawer'
                 title="Market Goş"
@@ -80,12 +80,12 @@ const YolHaty = prop =>{
             >
                      <YolHatyGosh getData={getData} onClick={GoshButton}/>
 
-            </Drawer>
+            </Drawer> */}
             <div className='yolHaty--gozleg yolHaty-gozle'>
                 {/* <YolHatyGozle sany={sany} GoshButton={GoshButton}/> */}
                 <form className="yolHaty-gozle--form">
                   <div style={{display:"inline-flex"}}>
-                  <h2 style={{margin:"10px 10px"}}>Admin Marketler page</h2>
+                  <h2 style={{margin:"10px 10px"}}>Admin Market page</h2>
                     {/* <Input
                       className="yolHaty-gozle--input"
                       placeholder="Id No"

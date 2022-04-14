@@ -22,6 +22,8 @@ const EditingProduct =(props) =>{
     const [name_ru,setName_ru] = useState();
     const [name_en,setName_en] = useState(maglumat && maglumat.name_en);
     const [price,setPrice] = useState(maglumat && maglumat.price);
+    const [gelenBaha,setGelenBaha] = useState(maglumat?.gelenBaha);
+    const [product_code,setProduct_code] = useState(maglumat?.product_code);
     const [sale_price,setSale_price] = useState(maglumat && maglumat.sale_price);
     const [step,setStep] = useState(maglumat && maglumat.step);
     const [article_tm,setArticle_tm] = useState(maglumat && maglumat.article_tm);
@@ -75,6 +77,8 @@ useEffect(()=>{
                   name_ru:name_ru,
                   name_en:name_en,
                   price:price,
+                  product_code:product_code,
+                  gelenBaha:gelenBaha,
                   sale_price:sale_price,
                   sale_until:sale_until,
                   step:step,
@@ -123,6 +127,7 @@ useEffect(()=>{
           setName_ru();
           setName_en();
           setPrice();
+          setGelenBaha()
           setSale_price();
           setStep();
           setArticle_tm();
@@ -157,6 +162,11 @@ useEffect(()=>{
         setIs_valyuta(value);
       }
 
+      const onChangeBaha = (value)=>{
+        let baha = (gelenBaha*value)/100;
+        setPrice(parseInt(gelenBaha)+baha);
+      }
+
     return (
         <div
             className='suruji-yagdayy'>
@@ -165,15 +175,30 @@ useEffect(()=>{
            <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
            <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
            <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
+           <Input value={product_code} onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore='Haryt Code'  className='suruji-yagdayy--input' />
+            <Input value={gelenBaha} onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore='Gelen baha'  className='suruji-yagdayy--input' />
+            <Select
+              className='suruji-yagdayy--input'
+              // style={{ width: 200 }}
+              placeholder="Satysh Baha %"
+              onChange={onChangeBaha}
+            >
+              <Option value={5}>5%</Option>
+              <Option value={10}>10%</Option>
+              <Option value={15}>15%</Option>
+              <Option value={20}>20%</Option>
+              <Option value={25}>25%</Option>
+              <Option value={30}>30%</Option>
+            </Select>
            <Input value={price} onChange={(e)=>{setPrice(e.target.value)}} addonBefore='baha'  className='suruji-yagdayy--input' />
            <Input value={sale_price} onChange={(e)=>{setSale_price(e.target.value)}} addonBefore='Satyş baha'  className='suruji-yagdayy--input' />
            {/* <Input value={step} onChange={(e)=>{setStep(e.target.value)}} addonBefore='Step'  className='suruji-yagdayy--input' />
            <Input value={article_tm} onChange={(e)=>{setArticle_tm(e.target.value)}} addonBefore='Article tm'  className='suruji-yagdayy--input' />
            <Input value={article_ru} onChange={(e)=>{setArticle_ru(e.target.value)}} addonBefore='Article ru'  className='suruji-yagdayy--input' />
            <Input value={article_en} onChange={(e)=>{setArticle_en(e.target.value)}} addonBefore='Article en'  className='suruji-yagdayy--input' /> */}
-           <Input value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
-           <Input value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
-           <Input value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
            <Input  onChange={(e)=>{setSale_until(e.target.value)}} type="date" addonBefore='Sale until'  className='suruji-yagdayy--input' />
            <Input value={total_amount} onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore='Ambardaky Sany'  className='suruji-yagdayy--input' />
            {/* <Input  onChange={()=>ChangeCheckbox()} type="checkbox" addonBefore='Valýutamy'  className='suruji-yagdayy--input' /> */}

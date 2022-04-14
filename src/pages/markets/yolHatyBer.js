@@ -18,36 +18,53 @@ const YolHatyBer = (props) => {
     console.log(Gosh);
   };
 
+  
+  let market_Id = localStorage.getItem("SubMarketId")
+
   const [data, setData] = useState([]);
-  const [ kategoriya, setKategoriya ] = useState();
+  const [ kategoriya, setKategoriya ] = useState([]);
   const [ market_id , setMarket_id ] = useState();
   const [ kategoriyaValue, setKategoriyaValue ] = useState();
     // geting all data from database with api
     
     useEffect(()=>{
-      // getData();
-      getKategoriyas();
+      getData();
+      
       
     },[])
     
     const getData = ()=>{
-      axiosInstance.get("/api/markets").then((data)=>{
+      axiosInstance.get("/api/markets",{
+        // params:{
+        //   deleted:false
+        // }
+      }).then((data)=>{
         console.log("data:",data.data);
         setData(data.data);
-        // getKategoriyas(data.data && data.data[0].id)
-        setMarket_id(data.data && data.data[0].id)
-        setKategoriyaValue(data.data && data.data[0].name_tm)
+        getKategoriyas(data?.data[0]?.id)
+        setMarket_id( data?.data[0]?.id)
+        setKategoriyaValue(data?.data[0]?.name_tm);
+        // setKategoriya(data.data?.[0].MarketKategoriyas)
       }).catch((err)=>{
         console.log(err);
       })
     }
 
     const getKategoriyas = (e)=>{
-      let MarketId = localStorage.getItem("SubMarketId");
-      axiosInstance.get("/api/market/kategoriya/"+MarketId).then((data)=>{
-        console.log( "Market",data.data);
-        setKategoriya(data.data);
-      setKategoriyaValue(data.data && data.data[0].Market && data.data[0].Market.name_tm)
+      console.log(e);
+      axiosInstance.get("/api/market/kategoriya/"+market_Id ,{
+        params:{
+          active:true,
+          deleted:false
+        }
+      }
+      ).then((data)=>{
+        console.log( "Market",data?.data);
+        setKategoriya(data.data)
+        // setKategoriya(data?.data.MarketKategoriyas);
+      setKategoriyaValue( data?.data[0]?.Market?.name_tm)   
+        //  setKategoriyaValue( data?.data.name_tm)
+
       }).catch((err)=>{
         console.log(err);
       });
@@ -58,16 +75,14 @@ const YolHatyBer = (props) => {
       setMarket_id(value);
       getKategoriyas(value);
     }
-    function onSearch(val) {
-      console.log('search:', val);
-    }
+   
 
   return (
     <div className="yolHatyBer">
       <Drawer
                 width={500}
                 className='lukman-table--drawer'
-                title="Market Goş"
+                title="Kategoryya Goş"
                 placement="right"
                 closable={true}
                 mask={true}
@@ -75,7 +90,7 @@ const YolHatyBer = (props) => {
                 onClose={()=>GoshButton()}
                 visible={Gosh}
             >
-                     <KategoriyaGosh getKategoriyas={getKategoriyas} getData={getData} market={market_id} onClick={GoshButton}/>
+                     <KategoriyaGosh getKategoriyas={getKategoriyas} getData={getData} market={market_Id} onClick={GoshButton}/>
 
             </Drawer>
       <div className="yolHaty--gozleg">
@@ -84,16 +99,10 @@ const YolHatyBer = (props) => {
         <div>
           {/* <Select
             className="yolHaty-gozle--input"
-            showSearch
             style={{ width: 200 }}
             placeholder="Market Saýla"
             value={kategoriyaValue}
-            optionFilterProp="children"
             onChange={onChange}
-            onSearch={onSearch}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
           >
             {
               data.map((market)=>{
@@ -102,6 +111,7 @@ const YolHatyBer = (props) => {
             }
             
           </Select> */}
+          <h1>Market Kategoryalary</h1>
         </div>
         <div>
           <Button

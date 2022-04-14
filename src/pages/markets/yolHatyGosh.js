@@ -31,6 +31,7 @@ let getData = props.getData;
   const [dastawkaPrice,setDastawkaPrice] = useState();
   const [is_cart,setIs_cart] = useState();
   const [loading,setLoading] = useState(false);
+  const [currency_exchange,setCurrency_exchange] = useState(null);
   const [ data, setData ] = useState({
     img_name:"",
     img:"",
@@ -102,6 +103,7 @@ const [kategory_id,setKategory_id] = useState();
             dastawkaEndII:endII,
             dastawkaPrice:dastawkaPrice,
             is_cart:is_cart,
+            currency_exchange:currency_exchange,
             WelayatlarId:welayat_id,
             KategoriyaOfMarketId:kategory_id,
            }
@@ -301,6 +303,14 @@ const [kategory_id,setKategory_id] = useState();
                 value={dastawkaPrice}
                 onChange={(e)=>setDastawkaPrice(e.target.value)}
               />
+              <Input
+              style={{marginTop:"5px"}}
+                addonBefore="Walyuta Baha"
+                name="description_en"
+                className="suruji-uytget--input"
+                value={currency_exchange}
+                onChange={(e)=>setCurrency_exchange(e.target.value)}
+              />
               <Select
               style={{width:"100%"}}
               placeholder="Market kartdan söwda edýärmi?"
@@ -308,6 +318,8 @@ const [kategory_id,setKategory_id] = useState();
                 <Option value={true}>Howa</Option>
                 <Option value={false}>Ýok</Option>
               </Select>
+               
+              
               <h3 className="step2-header">Market Surat</h3>
               <input 
               style={{width:"100%"}}

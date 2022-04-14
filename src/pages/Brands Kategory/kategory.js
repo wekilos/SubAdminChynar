@@ -10,7 +10,7 @@ import WelayatGosh from './kategoryGosh';
 import WelayatGozle from './kategoryGozle';
 
 const {Option} = Select;
-const Welayatlar = prop =>{
+const Welayatlar = (prop) =>{
 
     const [Gosh,setGosh]=useState(false);
     const [welayatlar,setWelayatlar] = useState([]);
@@ -33,9 +33,10 @@ const Welayatlar = prop =>{
     },[welayatId])
     
     const getDataSort = ()=>{
-      axiosInstance.get("/api/brand/kategory",{
+       axiosInstance.get("/api/brand/kategory/"+welayatId,{
         params:{
           WelayatlarId:welayatId,
+          active:true
         }
       }).then((data)=>{
         console.log(data.data);
@@ -45,9 +46,10 @@ const Welayatlar = prop =>{
       })
     }
     const getData = (id)=>{
-      axiosInstance.get("/api/brand/kategory",{
+      axiosInstance.get("/api/brand/kategory/"+id,{
         params:{
           WelayatlarId:id,
+          active:true
         }
       }).then((data)=>{
         console.log(data.data);
@@ -70,6 +72,7 @@ const Welayatlar = prop =>{
 
     const onChangeW = (value)=>{
       setWelayatId(value)
+      getData(value)
     }
 
     return(

@@ -20,12 +20,15 @@ const SurujiYagdayy = props =>{
     const [welayatId,setWelayatId] = useState(null);
     const [brands,setBrands] = props.brands;
     const [brandId,setBrandId] = useState(null);
+    let market_Id = localStorage.getItem("SubMarketId");
     const [marketId,setMarketId] = useState(null);
 
     const [units,setUnits] = useState([]);
     const [ kategoriya, setKategoriya ] = useState([]);
+    const [ subKategoriya, setSubKategoriya ] = useState([]);
     const [ market_id , setMarket_id ] = useState();
     const [ kategoriya_id, setKategoriya_id] = useState();
+    const [ subKategoriya_id, setSubKategoriya_id] = useState();
     const [unit_id, setUnit_id]=useState();
     const [name_tm,setName_tm] = useState();
     const [name_ru,setName_ru] = useState();
@@ -48,6 +51,8 @@ const SurujiYagdayy = props =>{
     const [surat1,setSurat1] = useState();
     const [surat2,setSurat2] = useState();
     const [surat3,setSurat3] = useState();
+    const [product_code,setProduct_code] = useState();
+    const [gelenBaha,setGelenBaha] = useState();
     const [loading, setLoading] = useState(false);
     
     const [productId,setProductId] = useState();
@@ -67,7 +72,6 @@ const SurujiYagdayy = props =>{
       reader.onload = () => resolve(reader.result);
       reader.onerror = error => reject(error);
       });
-      let MarketId = localStorage.getItem("SubMarketId");
       let data={}
       
             data={
@@ -75,6 +79,8 @@ const SurujiYagdayy = props =>{
             name_ru:name_ru,
             name_en:name_en,
             price:price,
+            product_code:product_code,
+            gelenBaha:gelenBaha,
             // sale_price:sale_price,
             // sale_until:sale_until,
             step:step,
@@ -91,6 +97,7 @@ const SurujiYagdayy = props =>{
             is_valyuta_price:is_valyuta,
             search:search,
             MarketKategoriyaId:kategoriya_id,
+            MarketSubKategoriyaId:subKategoriya_id,
             UnitId:unit_id,
             BrandId:brandId,
             WelayatlarId:welayatId,
@@ -115,14 +122,15 @@ const SurujiYagdayy = props =>{
                 data.img=await toBase64(surat);
             }
 console.log("data",data)
-        axiosInstance.post("/api/product/create/"+MarketId,{data}).then((data)=>{
+        axiosInstance.post("/api/product/create/"+market_Id,{data}).then((data)=>{
           console.log(data.data);
           setProductId(data.data?.data?.id);
           setRenkRazmer(true);
           getRazmerler()
           getProducts();
           message.success(data.data.msg);
-          
+          setGelenBaha();
+          setProduct_code()
           setName_tm();
           setName_ru();
           setName_en();
@@ -153,18 +161,24 @@ console.log("data",data)
   useEffect(()=>{
     getUnits();
     getKategoriyas();
+    getMarket();
   },[])
 
       const getUnits = ()=>{
-          axiosInstance.get("/api/units").then((data)=>{
+          axiosInstance.get("/api/units",{
+            params:{
+              active:true
+            }
+          }).then((data)=>{
               setUnits(data.data);
           }).catch((err)=>{
               console.log(err);
           })
       }  
       const getKategoriyas = (e)=>{
-        let MarketId = localStorage.getItem("SubMarketId");
-        axiosInstance.get("/api/market/kategoriya/"+MarketId).then((data)=>{
+        axiosInstance.get("/api/market/kategoriya/"+market_Id,{
+          active:true
+        }).then((data)=>{
           console.log(data.data);
           setKategoriya(data.data);
         }).catch((err)=>{
@@ -172,9 +186,24 @@ console.log("data",data)
         });
       }
 
+      const getSubKategoriyas = (e)=>{
+        axiosInstance.get("/api/market/subKategoriya/"+e,{
+          active:true
+        }).then((data)=>{
+          console.log(data.data);
+          setSubKategoriya(data.data);
+        }).catch((err)=>{
+          console.log(err);
+        });
+      }
+
       const getMarkets = (id)=>{
         axiosInstance.get("/api/markets",{
-              params:{WelayatlarId:id}
+              params:{
+                WelayatlarId:id,
+                active:true,
+                deleted:false
+            }
           }).then((data)=>{
               console.log(data.data);
               setMarkets(data.data);
@@ -185,10 +214,23 @@ console.log("data",data)
       }
 
       const getBrands = (id)=>{
-        axiosInstance.get("/api/brands").then((data)=>{
+        axiosInstance.get("/api/brands",{
+          params:{
+            active:true
+          }
+        }).then((data)=>{
               setBrands(data.data);
           }).catch((err)=>{
               console.log(err);
+          })
+      }
+      const getMarket = ()=>{
+        axiosInstance.get("/api/market/"+market_Id).then((data)=>{
+          setWelayatId(data.data.WelayatlarId);
+          }).catch((err)=>{
+              console.log(err);
+          }).catch((err)=>{
+            console.log(err);
           })
       }
       const onChangeW = (value)=>{
@@ -211,6 +253,11 @@ console.log("data",data)
       function onChangeK(value) {
         console.log(`selected ${value}`);
         setKategoriya_id(value);
+        getSubKategoriyas(value);
+      }
+      function onChangeSubK(value) {
+        console.log(`selected ${value}`);
+        setSubKategoriya_id(value);
       }
       function onSearchK(val) {
         console.log('search:', val);
@@ -229,7 +276,11 @@ console.log("data",data)
       }
       
       const getRazmerler = ()=>{
-        axiosInstance.get("/api/razmerler/"+productId)
+        axiosInstance.get("/api/razmerler/"+productId,{
+          active:{
+            active:true
+          }
+        })
         .then((data)=>{
           setRazmerler(data.data);
         }).catch((err)=>{
@@ -269,7 +320,11 @@ console.log("data",data)
       }
 
       const getRenkler = ()=>{
-        axiosInstance.get("/api/renkler/"+productId)
+        axiosInstance.get("/api/renkler/"+productId,{
+          params:{
+            active:true
+          }
+        })
         .then((data)=>{
           setRenkler(data.data);
         }).catch((err)=>{
@@ -307,13 +362,18 @@ console.log("data",data)
         })
       }
 
+      const onChangeBaha = (value)=>{
+        let baha = (gelenBaha*value)/100;
+        setPrice(parseInt(gelenBaha)+baha);
+      }
+
     return (
       <React.Fragment>
         {!renkRazmer && <div
             className='suruji-yagdayy'>
             {!loading ? <form className='suruji-yagdayy--form' >
             
-            <Select
+            {/* <Select
             className='suruji-yagdayy--input' 
             placeholder="Welayat Saýla"
             onChange={onChangeW}
@@ -323,7 +383,7 @@ console.log("data",data)
                 return <Option value={welayat.id}>{welayat.name_tm}</Option>
               })
             }
-          </Select>
+          </Select> */}
 
           <Select
             className='suruji-yagdayy--input' 
@@ -375,6 +435,26 @@ console.log("data",data)
               })
             }
           </Select>
+
+          <Select
+           className='suruji-yagdayy--input'
+            // className="yolHaty-gozle--input"
+            showSearch
+            // style={{ width: 200 }}
+            placeholder="Market SubKategoriýa Saýla"
+            optionFilterProp="children"
+            onChange={onChangeSubK}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {
+              subKategoriya.map((kategor)=>{
+                return <Option value={kategor.id}>{kategor.name_tm}</Option>
+              })
+            }
+          </Select>
+
           <Select
             // className="yolHaty-gozle--input"
             className='suruji-yagdayy--input'
@@ -397,18 +477,34 @@ console.log("data",data)
            <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
            <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
            <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-           <Input value={price} onChange={(e)=>{setPrice(e.target.value)}} addonBefore='baha'  className='suruji-yagdayy--input' />
+           <Input value={product_code} type="number" onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore='product code'  className='suruji-yagdayy--input' />
+           <Input value={gelenBaha} type="number"  onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore='gelen baha'  className='suruji-yagdayy--input' />
+           <Select
+            className='suruji-yagdayy--input'
+            // style={{ width: 200 }}
+            placeholder="Satysh Baha %"
+            onChange={onChangeBaha}
+          >
+            <Option value={5}>5%</Option>
+            <Option value={10}>10%</Option>
+            <Option value={15}>15%</Option>
+            <Option value={20}>20%</Option>
+            <Option value={25}>25%</Option>
+            <Option value={30}>30%</Option>
+          </Select>
+           <Input value={price} type="number"  onChange={(e)=>{setPrice(e.target.value)}} addonBefore='baha'  className='suruji-yagdayy--input' />
            {/* <Input value={sale_price} onChange={(e)=>{setSale_price(e.target.value)}} addonBefore='Satyş baha'  className='suruji-yagdayy--input' /> */}
            {/* <Input value={step} onChange={(e)=>{setStep(e.target.value)}} addonBefore='Step'  className='suruji-yagdayy--input' />
            <Input value={article_tm} onChange={(e)=>{setArticle_tm(e.target.value)}} addonBefore='Article tm'  className='suruji-yagdayy--input' />
            <Input value={article_ru} onChange={(e)=>{setArticle_ru(e.target.value)}} addonBefore='Article ru'  className='suruji-yagdayy--input' />
            <Input value={article_en} onChange={(e)=>{setArticle_en(e.target.value)}} addonBefore='Article en'  className='suruji-yagdayy--input' /> */}
-           <Input value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
-           <Input value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
-           <Input value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
+          <Input value={total_amount} type="number"  onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore='Ambardaky Sany'  className='suruji-yagdayy--input' />
+
+           <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
            {/* <Input  onChange={(e)=>{setSale_until(e.target.value)}} type="date" addonBefore='Sale until'  className='suruji-yagdayy--input' /> */}
-           <Input value={total_amount} onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore='Ambardaky Sany'  className='suruji-yagdayy--input' />
-           <Input value={search} style={{width:"95%"}} onChange={(e)=>{setSearch(e.target.value)}} addonBefore='Gözleg söz'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore='Gözleg söz'  className='suruji-yagdayy--input' />
            {/* <Input  onChange={()=>ChangeCheckboxNew()} type="checkbox" addonBefore='Täzemi'  className='suruji-yagdayy--input' /> */}
            {/* <Input  onChange={} type="checkbox" addonBefore='Valýutamy'  className='suruji-yagdayy--input' /> */}
            <Select

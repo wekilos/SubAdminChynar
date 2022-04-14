@@ -19,7 +19,12 @@ const Lukman = () =>{
     },[]);
 
     const getUnits = ()=>{
-        axiosInstance.get("/api/units").then((data)=>{
+        axiosInstance.get("/api/units",{
+            params:{
+                active:true,
+                deleted:false
+            }
+        }).then((data)=>{
             console.log(data.data);
             setUnits(data.data)
         }).catch((err)=>{

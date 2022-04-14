@@ -7,7 +7,7 @@ import history from "./history";
 import { Users, NotFound,Doctor,Doctor_Sanaw,Markets,YolHatyBermek,
    Login,Ugurlar, Orders,KategoryOfBrands, OrderStatus,
     Slider, Config, ArchiveOrders, YatyrlanOrders, HideProducts, Posts,
-     Notifications, Welayatlar, KategoryOfMarkets, Brands } from "../pages/index";
+     Notifications, Welayatlar, KategoryOfMarkets, Brands,SubKategories } from "../pages/index";
 import Test from "../pages/test";
 import ScrollIntoView from "./ScrollIntoView";
 import { Loading } from "../components/loading";
@@ -69,6 +69,12 @@ const App = () => {
               restricted={false}
               component={YolHatyBermek}
               path="/marketCategory"
+              exact
+            />
+             <PrivateRoute
+              restricted={false}
+              component={SubKategories}
+              path="/marketSubCategories"
               exact
             />
             <PrivateRoute

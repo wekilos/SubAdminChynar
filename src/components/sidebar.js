@@ -130,10 +130,13 @@ export default class SiderDemo extends React.Component {
             <Link to="kategoryOfMarkets">Kategory Marketlerin</Link>
             </Menu.Item> */}
             <Menu.Item className="menuitem menuitem2" key="17">
-            <Link to="markets">Marketler</Link>
+            <Link to="/markets">Marketler</Link>
             </Menu.Item>
             <Menu.Item className="menuitem menuitem2" key="18">
-            <Link to="marketCategory">Markediň Kategoryasy</Link>
+            <Link to="/marketCategory"> Kategoryalar</Link>
+            </Menu.Item>
+            <Menu.Item className="menuitem menuitem2" key="1888">
+            <Link to="/marketSubCategories"> SubKategoryalar</Link>
             </Menu.Item>
           </SubMenu>
           <SubMenu

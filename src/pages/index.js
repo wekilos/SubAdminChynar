@@ -8,6 +8,7 @@ export const Doctor = lazy(() => import("./products/lukman"));
 export const Doctor_Sanaw=lazy(()=>import('./products/lukman_sanaw')); 
 export const Markets = lazy(()=>import('./markets/yolHaty'));
 export const YolHatyBermek = lazy(()=>import('./markets/yolHatyBer'));
+export const SubKategories = lazy(()=>import("./markets/subKategoriya"))
 export const Login = lazy(()=>import('./login/login'));
 
 export const Orders = lazy(()=>import('./Orders/lukman'));

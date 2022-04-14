@@ -22,7 +22,7 @@ let market_id = props.market;
     setLoading(true);
     console.log("marketId",event);
     let market_id = event;
-    axiosInstance.post("/api/market/kategoriya/create/"+market_id,{
+    axiosInstance.post("/api/market/subKategoriya/create/"+market_id,{
       name_tm:name_tm,
       name_ru:name_ru,
       name_en:name_en,

@@ -1,7 +1,7 @@
 
 import React,{useEffect, useState} from 'react';
 
-import {Button,Input,Drawer,Select} from 'antd';
+import {Button,Input,Drawer,Select,message} from 'antd';
 import "antd/dist/antd.css";
 import { SearchOutlined,PlusCircleFilled } from '@ant-design/icons';
 
@@ -17,15 +17,21 @@ const Lukman = () =>{
 
     const [ markets,setMarkets] = useState([]);
     const [ kategoriyalar,setKategoriyalar] = useState([]);
+    const [ subKategoriyalar, setSubKategoriyalar] = useState([]);
     const [ products, setProducts] = useState([]);
 
     const [all,setAll] = useState();
-    const [market_id,setMarket_id] = useState();
+    let market_Id = localStorage.getItem("SubMarketId");
+    const [market_id,setMarket_id] = useState(market_Id);
     const [kategoriya_id, setKategoriya_id] = useState();
+    const [subKategoriya_id, setSubKategoriya_id] = useState(null);
     const [is_sale, setIs_sale] = useState(); 
     const [welayatlar,setWelayatlar] = useState([]);
     const [welayatId,setWelayatId] = useState(null);
     const [brands,setBrands] = useState();
+    const [pageNo,setPageNo] = useState(0);
+    const [code, setCode] = useState(null);
+
     useEffect(()=>{
         getMarkets();
         getProducts();
@@ -38,14 +44,16 @@ const Lukman = () =>{
             getProducts();
           }, 500);
         return ()=> clearTimeout(time);
-    },[all,market_id,kategoriya_id,is_sale,welayatId])
+    },[all,market_id,kategoriya_id,is_sale,welayatId,code])
 
     const getProducts = ()=>{
-        let MarketId = localStorage.getItem("SubMarketId");
         axiosInstance.get("/api/products/disActive",{
             params:{
+                code:code,
+                // limit:pageNo===0?15:(pageNo)*15+15,
+                limit:999,
                 all:all,
-                market_id:MarketId, 
+                market_id:market_Id, 
                 kategoriya_id:kategoriya_id,
                 is_sale:is_sale,
                 welayatId:welayatId,
@@ -57,6 +65,33 @@ const Lukman = () =>{
             console.log(err);
         })
     }
+
+    useEffect(()=>{
+        getProductsPerPage()
+    },[pageNo])
+    const getProductsPerPage = ()=>{
+        axiosInstance.get("/api/products/disActive",{
+            params:{
+                page:pageNo,
+                limit:999,
+                all:all,
+                market_id:market_Id, 
+                kategoriya_id:kategoriya_id,
+                is_sale:is_sale,
+                welayatId:welayatId,
+            }
+        }).then((data)=>{
+                console.log(data.data);
+                let array = products
+                data.data?.map((pro)=>{
+                    array.push(pro)
+                })
+                setProducts([...array]);
+        }).catch((err)=>{
+            console.log(err);
+        })
+    }
+
     const getWelayatlar = () =>{
         axiosInstance.get("/api/welayatlar").then((data)=>{
             setWelayatlar(data.data);
@@ -85,13 +120,25 @@ const Lukman = () =>{
 
     useEffect(()=>{
         getKategoriyas()
-    },[])
+    },[market_id])
 
     const getKategoriyas = ()=>{
-        
-        let MarketId = localStorage.getItem("SubMarketId");
-        axiosInstance.get("/api/market/kategoriya/"+MarketId).then((data)=>{
+        axiosInstance.get("/api/market/kategoriya/"+market_Id).then((data)=>{
             setKategoriyalar(data.data);
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
+    const getSubKategoriyas = (id)=>{
+        axiosInstance.get("/api/market/subKategoriya/"+id,{
+            params:{
+                active:true
+            }
+        }).then((data)=>{
+            setSubKategoriyalar(data.data);
+        }).catch((err)=>{
+            console.log(err);
         })
     }
 
@@ -130,6 +177,8 @@ const Lukman = () =>{
              <div className='lukman--gozleg'>
                     <form className='lukman-gozleg--form'>
                         <div>
+                        <Input value={code} onChange={(e)=>setCode(e.target.value)} placeholder='Haryt Code' className='lukman-gozleg--input' />
+
                         <Input value={all} onChange={(e)=>setAll(e.target.value)} placeholder='Umumy gözleg' className='lukman-gozleg--input' />
                         {/* <Select onChange={OnChangeW} placeholder="Welayat Sayla!"  className='lukman-gozleg--input'>
                             <Option value={null}>Ählisi</Option>
@@ -147,10 +196,18 @@ const Lukman = () =>{
                                 })
                             }
                         </Select> */}
-                        <Select onChange={(v)=>setKategoriya_id(v)} placeholder="Ählisi" className='lukman-gozleg--input'>
+                        <Select onChange={(v)=>{setKategoriya_id(v);getSubKategoriyas(v)}} placeholder="Kategoryalar" className='lukman-gozleg--input'>
                             <Option value={null}>Ählisi</Option>
                             {
                                 kategoriyalar.map((kategoriya)=>{
+                                    return <Option value={kategoriya.id}>{kategoriya.name_tm}</Option>
+                                })
+                            }
+                        </Select>
+                        <Select onChange={(v)=>setKategoriya_id(v)} placeholder="SubKategoryalar" className='lukman-gozleg--input'>
+                            <Option value={null}>Ählisi</Option>
+                            {
+                                subKategoriyalar.map((kategoriya)=>{
                                     return <Option value={kategoriya.id}>{kategoriya.name_tm}</Option>
                                 })
                             }
@@ -160,9 +217,12 @@ const Lukman = () =>{
                             <Option value={true}>Skidkada</Option>
                             <Option value={false}>Skidka däl</Option>
                         </Select>
+                        <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>Haryt goş</Button>
+                        <Button onClick={()=>{setPageNo(pageNo+1);message.success("Yene 1000 haryt goshuldy!")}} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>+1000</Button>
+
                         </div>
                         <div>
-                        <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>Haryt goş</Button>
+                        {/* <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>Haryt goş</Button> */}
 
                         </div>
                         </form>

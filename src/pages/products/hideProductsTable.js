@@ -180,6 +180,10 @@ const saveData = (event)=>{
                     <td style={{height:"40px"}}>ID </td>
                     <td>{maglumat && maglumat.id} </td>
                     </tr>
+                    <tr className="modalLi" key={maglumat?.product_code}>
+                    <td style={{height:"40px"}}>Haryt Code </td>
+                    <td>{maglumat?.product_code} </td>
+                    </tr>
                     <tr className="modalLi" key={maglumat && maglumat.name_tm}>
                     <td style={{height:"40px"}}>Ady tm </td>
                     <td>{maglumat &&  maglumat.name_tm}</td>
@@ -227,6 +231,10 @@ const saveData = (event)=>{
                     <tr className="modalLi" key={maglumat && JSON.stringify(maglumat.is_valyuta_price)}>
                     <td style={{height:"40px"}}>Is_Valyuta_Price </td>
                     <td>{maglumat &&  maglumat.is_valyuta_price===true?"Howwa":"Yok"}</td>
+                    </tr>
+                    <tr className="modalLi" key={maglumat && maglumat.gelenBaha}>
+                    <td style={{height:"40px"}}>Gelen Bahasy</td>
+                    <td>{maglumat &&  maglumat.gelenBaha}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.price}>
                     <td style={{height:"40px"}}>Bahasy</td>

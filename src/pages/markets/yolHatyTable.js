@@ -87,7 +87,7 @@ const YolHatyTable = (props) => {
           >
              Surat 
           </Button>
-            {/* <Popconfirm
+            <Popconfirm
             title="Siz çyndan öçürmek isleýärsiňizmi?"
             onConfirm={() => DeleteMarket(record.id)}
             // onCancel={cancel}
@@ -102,7 +102,7 @@ const YolHatyTable = (props) => {
             >
               <DeleteOutlined />
             </Button>
-          </Popconfirm> */}
+          </Popconfirm>
          
         </Space>
       ),
@@ -130,7 +130,10 @@ const YolHatyTable = (props) => {
   const [ endII,setEndII ] = useState();
   const [dastawkaPrice,setDastawkaPrice] = useState();
   const [is_cart,setIs_cart] = useState();
+  const [currency_exchange,setCurrency_exchange] = useState();
   const [ loading , setLoading ] = useState(false);
+  const [cashBack, setCashBack] = useState(null);
+  const [cashBackPrasent,setCashBackPrasent] = useState(null)
   /////////////////////////////////////////////////////
   
   ////////////////////////////////////////////////////
@@ -232,22 +235,24 @@ const YolHatyTable = (props) => {
   const ShowDrawer = (event) => {
     setEdit(!edit);
     setVisible(false);
-    console.log(event);
+    console.log("market",event);
     setMaglumat([]);
     setMaglumat(event);
-    if(event && event.MarketAddresses[0]){
-    setAddres_tm(event.MarketAddresses[0].name_tm);
-    setAddres_ru(event.MarketAddresses[0].name_ru);
-    setAddres_en(event.MarketAddresses[0].name_en);
-    setDescription_tm(event.MarketAddresses[0].description_tm);
-    setDescription_ru(event.MarketAddresses[0].description_ru);
-    setDescription_en(event.MarketAddresses[0].description_en);
-    setStartI(event.MarketAddresses[0].dastawkaStartI);
-    setEndI(event.MarketAddresses[0].dastawkaEndI);
-    setStartII(event.MarketAddresses[0].dastawkaStartII);
-    setEndII(event.MarketAddresses[0].dastawkaEndII);
-    setDastawkaPrice(event.MarketAddresses[0].dastawkaPrice);
-    setIs_cart(event.MarketAddresses[0].is_cart);
+    if(event){
+    setAddres_tm(event.name_tm);
+    setAddres_ru(event.name_ru);
+    setAddres_en(event.name_en);
+    setDescription_tm(event.description_tm);
+    setDescription_ru(event.description_ru);
+    setDescription_en(event.description_en);
+    setStartI(event.dastawkaStartI);
+    setEndI(event.dastawkaEndI);
+    setStartII(event.dastawkaStartII);
+    setEndII(event.dastawkaEndII);
+    setDastawkaPrice(event.dastawkaPrice);
+    setIs_cart(event.is_cart);
+    setCurrency_exchange(event.currency_exchange);
+    setCashBackPrasent(event.cashBackPrasent)
     }
   };
   const inputChangeHandler = (event) => {
@@ -277,6 +282,12 @@ const YolHatyTable = (props) => {
       dastawkaEndII:endII,
       dastawkaPrice:dastawkaPrice,
       is_cart:is_cart,
+      currency_exchange:currency_exchange,
+      cashBack:cashBack,
+      cashBackPrasent:cashBackPrasent,
+      description_tm:description_tm,
+      description_ru:description_ru,
+      description_en:description_en
     }).then((data)=>{
       console.log(data.data);
       
@@ -306,6 +317,10 @@ const YolHatyTable = (props) => {
 
   const IsCart = (value)=>{
     setIs_cart(value);
+  }
+
+  const Cashback = (value)=>{
+    setCashBack(value);
   }
 
   return (
@@ -348,6 +363,10 @@ const YolHatyTable = (props) => {
             <tr className="modalLi" key={maglumat && maglumat.dastawkaPrice}>
               <td style={{height:"40px"}}>dastawka Baha </td>
               <td>{maglumat && maglumat.dastawkaPrice}</td>
+            </tr>
+            <tr className="modalLi" key={maglumat && maglumat.currency_exchange}>
+              <td style={{height:"40px"}}>Walyuta Baha </td>
+              <td> <b> {maglumat && maglumat.currency_exchange} </b> </td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.is_cart}>
               <td style={{height:"40px"}}>Kartdan Sowda etyarmi? </td>
@@ -563,6 +582,14 @@ const YolHatyTable = (props) => {
             value={dastawkaPrice}
             onChange={(e)=>setDastawkaPrice(e.target.value)}
           />
+          <Input
+              style={{marginTop:"5px"}}
+                addonBefore="Walyuta Baha"
+                name="description_en"
+                className="suruji-uytget--input"
+                value={currency_exchange}
+                onChange={(e)=>setCurrency_exchange(e.target.value)}
+              />
           <Select
           style={{width:"100%"}}
           placeholder="Market kartdan söwda edýärmi?"
@@ -570,6 +597,21 @@ const YolHatyTable = (props) => {
             <Option value={true}>Howa</Option>
             <Option value={false}>Ýok</Option>
           </Select>
+          <Select
+          style={{width:"100%"}}
+          placeholder="Market CashBack söwda edýärmi?"
+          onChange={Cashback}>
+            <Option value={true}>Howa</Option>
+            <Option value={false}>Ýok</Option>
+          </Select>
+          <Input
+              style={{marginTop:"5px"}}
+                addonBefore="CashBack Prasent"
+                name="CashBack Prasent"
+                className="suruji-uytget--input"
+                value={cashBackPrasent}
+                onChange={(e)=>setCashBackPrasent(e.target.value)}
+              />
           {/* { maglumat.PhoneNumbers &&
             maglumat.PhoneNumbers.map((number,i)=>{
              return <Input

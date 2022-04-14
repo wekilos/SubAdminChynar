@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 
 import {Button,Space,message,Table,Select,Drawer,Popconfirm,Input} from 'antd';
 import "antd/dist/antd.css";
@@ -14,6 +14,16 @@ const LukmanTable = props=>{
     const [data,setData]=props.data;
     const getProducts = props.getProducts;
 
+    
+    const [brands,setBrands] = props?.brands;
+    const [brandId,setBrandId] = useState();
+    const [kategoriyalar,setKategoriyalar] = useState([]);
+    const [ kategoriya_id, setKategoriya_id] = useState();
+    const [ subKategoriya, setSubKategoriya ] = useState([]);
+    const [ subKategoriya_id, setSubKategoriya_id] = useState();
+    const [units,setUnits] = useState([]);
+    const [unit_id, setUnit_id]=useState();
+
     const [edit,setEdit]=useState(false);
     const [skidka,setSkidka]=useState(false);
 
@@ -26,6 +36,8 @@ const LukmanTable = props=>{
     const [name_ru,setName_ru] = useState();
     const [name_en,setName_en] = useState();
     const [price,setPrice] = useState();
+    const [gelenBaha,setGelenBaha] = useState();
+    const [product_code,setProduct_code] = useState();
     const [sale_price,setSale_price] = useState();
     const [step,setStep] = useState();
     const [article_tm,setArticle_tm] = useState();
@@ -56,6 +68,22 @@ const LukmanTable = props=>{
     const [name_tm1,setName_tm1] = useState();
     const [name_ru1,setName_ru1] = useState();
 
+
+    useEffect(()=>{
+      getUnits()
+    })
+
+    const getMarketKategories = (id)=>{
+      axiosInstance.get("/api/market/kategoriya/"+id,{
+          params:{
+              active:true
+          }
+      }).then((data)=>{
+          setKategoriyalar(data.data);
+      })
+    }
+
+
    // updating product
    const EditProduct = async()=>{
     setLoading(true);
@@ -70,6 +98,8 @@ const LukmanTable = props=>{
               name_tm:name_tm,
               name_ru:name_ru,
               name_en:name_en,
+              product_code:product_code,
+              gelenBaha:gelenBaha,
               price:price,
               sale_price:sale_price,
               sale_until:sale_until,
@@ -87,8 +117,11 @@ const LukmanTable = props=>{
               is_valyuta_price:is_valyuta,
               is_new:is_new,
               search:search,
-              // MarketKategoriyaId:kategoriya_id,
-              // UnitId:unit_id,
+              MarketKategoriyaId:kategoriya_id,
+              MarketSubKategoriyaId:subKategoriya_id,
+              UnitId:unit_id,
+              BrandId:brandId
+              
              }
             
             if(surat != null){
@@ -257,6 +290,7 @@ const ChangeCheckboxTaze = (value)=>{
         
 }
 const ShowDrawer = async(event)=>{
+    getMarketKategories(event?.MarketId)
     setProductId(event?.id);
     getRazmerler2(event?.id);
     getRenkler2(event?.id)
@@ -269,6 +303,7 @@ const ShowDrawer = async(event)=>{
           setName_tm(event.name_tm);
           setName_ru(event.name_ru);
           setName_en(event.name_en);
+          setGelenBaha(event.gelenBaha)
           setPrice(event.price);
           setSale_price(event.sale_price);
           setStep(event.step);
@@ -424,6 +459,54 @@ const getRazmerler = ()=>{
     })
   }
 
+  const onChangeBaha = (value)=>{
+    let baha = (gelenBaha*value)/100;
+    setPrice(parseInt(gelenBaha)+baha);
+  }
+
+  const onChangeB = (value)=>{
+    setBrandId(value);
+  }
+
+  const onChangeK = (value)=> {
+    console.log(`selected ${value}`);
+    setKategoriya_id(value);
+    setSubKategoriya_id(null)
+    getSubKategoriyas(value);
+  }
+
+  const getSubKategoriyas = (e)=>{
+    axiosInstance.get("/api/market/subKategoriya/"+e,{
+      active:true
+    }).then((data)=>{
+      console.log(data.data);
+      setSubKategoriya(data.data);
+    }).catch((err)=>{
+      console.log(err);
+    });
+  }
+
+  const onChangeSubK = (value)=> {
+    console.log(`selected ${value}`);
+    setSubKategoriya_id(value);
+  }
+
+  const getUnits = ()=>{
+    axiosInstance.get("/api/units",{
+      params:{
+        active:true
+      }
+    }).then((data)=>{
+        setUnits(data.data);
+    }).catch((err)=>{
+        console.log(err);
+    })
+} 
+
+  const onChangeU = (value)=> {
+    console.log(`selected ${value}`);
+    setUnit_id(value);
+  }
     return(
         <div className='LukmanTable'>
                 <Drawer
@@ -438,6 +521,10 @@ const getRazmerler = ()=>{
                     <tr className="modalLi" key={maglumat && maglumat.id}>
                     <td style={{height:"40px"}}>ID </td>
                     <td>{maglumat && maglumat.id} </td>
+                    </tr>
+                    <tr className="modalLi" key={maglumat?.product_code}>
+                    <td style={{height:"40px"}}>Haryt Code </td>
+                    <td>{maglumat?.product_code} </td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.name_tm}>
                     <td style={{height:"40px"}}>Ady tm </td>
@@ -491,6 +578,10 @@ const getRazmerler = ()=>{
                     <td style={{height:"40px"}}>Tazemi  </td>
                     <td>{maglumat &&  maglumat.is_new===true?"Howwa":"Yok"}</td>
                     </tr>
+                    <tr className="modalLi" key={maglumat && maglumat.gelenBaha}>
+                    <td style={{height:"40px"}}>Gelen Bahasy</td>
+                    <td>{maglumat &&  maglumat.gelenBaha}</td>
+                    </tr>
                     <tr className="modalLi" key={maglumat && maglumat.price}>
                     <td style={{height:"40px"}}>Bahasy</td>
                     <td>{maglumat &&  maglumat.price}</td>
@@ -527,6 +618,10 @@ const getRazmerler = ()=>{
                     <td style={{height:"40px"}}>Market Kategoriýa</td>
                     <td>{maglumat && maglumat.MarketKategoriya && maglumat.MarketKategoriya.name_tm}</td>
                     </tr>
+                    <tr className="modalLi" key={maglumat && maglumat.MarketKategoriya && maglumat.MarketKategoriya.name_tm+"dfgh"}>
+                    <td style={{height:"40px"}}>Market SubKategoriýa</td>
+                    <td>{maglumat?.MarketSubKategoriya?.name_tm}</td>
+                    </tr>
                     <tr className="modalLi" key={maglumat && maglumat.Unit && maglumat.total_amount}>
                     <td style={{height:"40px"}}>Unit</td>
                     <td>{maglumat && maglumat.Unit &&  maglumat.Unit.name_tm}</td>
@@ -539,7 +634,7 @@ const getRazmerler = ()=>{
                     <td style={{height:"40px"}}>Brand</td>
                     <td>{maglumat && maglumat.Brand && maglumat.Brand.name_tm}</td>
                     </tr>
-                    <tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
+                    <tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm+"saassdf"}>
                     <td style={{height:"40px"}}>Brand surat</td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.Brand.surat} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>
@@ -576,18 +671,79 @@ const getRazmerler = ()=>{
                     {!loading ? <form className='suruji-yagdayy--form' >
                     <Button style={{width:"95%"}} onClick={()=>setRenkRazmer(true)}  shape='round' type='primary' className='suruji-yagdayy--button'>Renk we Razmer Üýget </Button>
 
+                      <Select
+                        className='suruji-yagdayy--input' 
+                        placeholder="Brand Saýla"
+                        onChange={onChangeB}
+                      >
+                        {
+                          brands?.map((brand)=>{
+                            return <Option key={brand.id+"brand"} value={`${brand.id}`}>{brand.name_tm}</Option>
+                          })
+                        }
+                      </Select>
+
+                      <Select
+                        className='suruji-yagdayy--input'
+                        placeholder="Unit Saýla"
+                        onChange={onChangeU}
+                      >
+                        {
+                          units.map((unit)=>{
+                            return <Option key={unit.id+"unit"} value={unit.id}>{unit.name_tm}</Option>
+                          })
+                        }
+                      </Select>
+
+                      <Select
+                          className='suruji-yagdayy--input'
+                            placeholder="Market Kategoriýa Saýla"
+                            onChange={onChangeK}
+                          >
+                            {
+                              kategoriyalar?.map((kategor)=>{
+                                return <Option key={kategor.id+"kategor"} value={kategor.id}>{kategor.name_tm}</Option>
+                              })
+                            }
+                          </Select>
+                          <Select
+                            className='suruji-yagdayy--input'
+                              placeholder="Market SubKategoriýa Saýla"
+                              onChange={onChangeSubK}
+                            >
+                              {
+                                subKategoriya.map((kategor)=>{
+                                  return <Option key={kategor.id+"subkategor"} value={kategor.id}>{kategor.name_tm}</Option>
+                                })
+                              }
+                            </Select>
                         <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
                         <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
                         <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
+                        <Input value={product_code} onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore='Haryt Code'  className='suruji-yagdayy--input' />
+                        <Input value={gelenBaha} onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore='Gelen baha'  className='suruji-yagdayy--input' />
+                        <Select
+                          className='suruji-yagdayy--input'
+                          // style={{ width: 200 }}
+                          placeholder="Satysh Baha %"
+                          onChange={onChangeBaha}
+                        >
+                          <Option value="5">5%</Option>
+                          <Option value="10">10%</Option>
+                          <Option value="15">15%</Option>
+                          <Option value="20">20%</Option>
+                          <Option value="25">25%</Option>
+                          <Option value="30">30%</Option>
+                        </Select>
                         <Input value={price} onChange={(e)=>{setPrice(e.target.value)}} addonBefore='baha'  className='suruji-yagdayy--input' />
                         <Input value={sale_price} onChange={(e)=>{setSale_price(e.target.value)}} addonBefore='Satyş baha'  className='suruji-yagdayy--input' />
                         {/* <Input value={step} onChange={(e)=>{setStep(e.target.value)}} addonBefore='Step'  className='suruji-yagdayy--input' />
                         <Input value={article_tm} onChange={(e)=>{setArticle_tm(e.target.value)}} addonBefore='Article tm'  className='suruji-yagdayy--input' />
                         <Input value={article_ru} onChange={(e)=>{setArticle_ru(e.target.value)}} addonBefore='Article ru'  className='suruji-yagdayy--input' />
                         <Input value={article_en} onChange={(e)=>{setArticle_en(e.target.value)}} addonBefore='Article en'  className='suruji-yagdayy--input' /> */}
-                        <Input value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
-                        <Input value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
-                        <Input value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
                         <Input  onChange={(e)=>{setSale_until(e.target.value)}} type="date" addonBefore='Sale until'  className='suruji-yagdayy--input' />
                         <Input value={total_amount} onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore='Ambardaky Sany'  className='suruji-yagdayy--input' />
                         {/* <Input  onChange={()=>ChangeCheckbox()} type="checkbox" addonBefore='Valýutamy'  className='suruji-yagdayy--input' /> */}
@@ -597,8 +753,8 @@ const getRazmerler = ()=>{
                             optionFilterProp="children"
                             onChange={ChangeCheckbox}
                             >
-                            <Option value={true}>Howwa</Option>
-                            <Option value={false}>Yok</Option>
+                            <Option key="howwawalyuta" value="true">Howwa</Option>
+                            <Option key="yokwalyuta" value="false">Yok</Option>
                         </Select>
                         <Select
                             className='suruji-yagdayy--input'
@@ -606,14 +762,14 @@ const getRazmerler = ()=>{
                             optionFilterProp="children"
                             onChange={ChangeCheckboxTaze}
                             >
-                            <Option value={true}>Howwa</Option>
-                            <Option value={false}>Yok</Option>
+                            <Option key="howwataze" value="true">Howwa</Option>
+                            <Option key="yoktaze" value="false">Yok</Option>
                         </Select>
-                        <Input style={{width:"100%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore='Gözleg söz'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"100%"}} onChange={(e)=>{setSurat(e.target.files[0])}} type="file" addonBefore='Haryt Surat 1'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"100%"}} onChange={(e)=>{setSurat1(e.target.files[0])}} type="file" addonBefore='Haryt Surat 2'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"100%"}} onChange={(e)=>{setSurat2(e.target.files[0])}} type="file" addonBefore='Haryt Surat 3'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"100%"}} onChange={(e)=>{setSurat3(e.target.files[0])}} type="file" addonBefore='Haryt Surat 4'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore='Gözleg söz'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat(e.target.files[0])}} type="file" addonBefore='Haryt Surat 1'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat1(e.target.files[0])}} type="file" addonBefore='Haryt Surat 2'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat2(e.target.files[0])}} type="file" addonBefore='Haryt Surat 3'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat3(e.target.files[0])}} type="file" addonBefore='Haryt Surat 4'  className='suruji-yagdayy--input' />
                         
                                 <div style={{width:"100%"}}>
                                 <Button style={{width:"40%"}} onClick={EditProduct} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'> Üýget </Button>
