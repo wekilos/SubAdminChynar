@@ -30,29 +30,29 @@ const SurujiYagdayy = props =>{
     const [ kategoriya_id, setKategoriya_id] = useState();
     const [ subKategoriya_id, setSubKategoriya_id] = useState();
     const [unit_id, setUnit_id]=useState();
-    const [name_tm,setName_tm] = useState();
-    const [name_ru,setName_ru] = useState();
-    const [name_en,setName_en] = useState();
-    const [price,setPrice] = useState();
+    const [name_tm,setName_tm] = useState("");
+    const [name_ru,setName_ru] = useState("");
+    const [name_en,setName_en] = useState("");
+    const [price,setPrice] = useState(0);
     const [sale_price,setSale_price] = useState();
     const [step,setStep] = useState();
-    const [article_tm,setArticle_tm] = useState();
-    const [article_ru,setArticle_ru] = useState();
-    const [article_en,setArticle_en] = useState();
-    const [description_tm,setDescription_tm] = useState();
-    const [description_ru,setDescription_ru] = useState();
-    const [description_en,setDescription_en] = useState();
+    const [article_tm,setArticle_tm] = useState("");
+    const [article_ru,setArticle_ru] = useState("");
+    const [article_en,setArticle_en] = useState("");
+    const [description_tm,setDescription_tm] = useState("");
+    const [description_ru,setDescription_ru] = useState("");
+    const [description_en,setDescription_en] = useState("");
     const [sale_until,setSale_until] = useState();
-    const [total_amount,setTotal_amount] = useState();
-    const [is_valyuta,setIs_valyuta] = useState();
+    const [total_amount,setTotal_amount] = useState(0);
+    const [is_valyuta,setIs_valyuta] = useState(false);
     const [is_new, setIs_new] = useState(false);
-    const [search,setSearch] = useState();
+    const [search,setSearch] = useState("");
     const [surat,setSurat] = useState();
     const [surat1,setSurat1] = useState();
     const [surat2,setSurat2] = useState();
     const [surat3,setSurat3] = useState();
-    const [product_code,setProduct_code] = useState();
-    const [gelenBaha,setGelenBaha] = useState();
+    const [product_code,setProduct_code] = useState(0);
+    const [gelenBaha,setGelenBaha] = useState(0);
     const [loading, setLoading] = useState(false);
     
     const [productId,setProductId] = useState();
@@ -391,7 +391,7 @@ console.log("data",data)
             onChange={onChangeB}
           >
             {
-              brands.map((brand)=>{
+              brands?.map((brand)=>{
                 return <Option value={brand.id}>{brand.name_tm}</Option>
               })
             }
@@ -430,7 +430,7 @@ console.log("data",data)
             }
           >
             {
-              kategoriya.map((kategor)=>{
+              kategoriya?.map((kategor)=>{
                 return <Option value={kategor.id}>{kategor.name_tm}</Option>
               })
             }
@@ -449,7 +449,7 @@ console.log("data",data)
             }
           >
             {
-              subKategoriya.map((kategor)=>{
+              subKategoriya?.map((kategor)=>{
                 return <Option value={kategor.id}>{kategor.name_tm}</Option>
               })
             }
@@ -469,7 +469,7 @@ console.log("data",data)
             }
           >
             {
-              units.map((unit)=>{
+              units?.map((unit)=>{
                 return <Option value={unit.id}>{unit.name_tm}</Option>
               })
             }
