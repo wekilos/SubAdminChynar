@@ -10,7 +10,7 @@ import WelayatGosh from './brandsGosh';
 import WelayatGozle from './brandsGozle';
 
 const {Option} = Select;
-const Welayatlar = prop =>{
+const Welayatlar = (prop) =>{
 
     const [Gosh,setGosh]=useState(false);
     const [welayatlar,setWelayatlar] = useState([]);
@@ -31,25 +31,26 @@ const Welayatlar = prop =>{
     },[])
 
     useEffect(()=>{
-      getDataSort()
-    },[kategoryId])
+      getData(kategoryId)
+    },[kategoryId,welayatId])
     
-    const getDataSort = ()=>{
-      axiosInstance.get("/api/brands",{
-        params:{
-          KategoryId:kategoryId,
-        }
-      }).then((data)=>{
-        console.log(data.data);
-        setData(data.data);
-      }).catch((err)=>{
-        console.log(err);
-      })
-    }
+    // const getDataSort = ()=>{
+    //   axiosInstance.get("/api/brands",{
+    //     params:{
+    //       KategoryId:kategoryId,
+    //     }
+    //   }).then((data)=>{
+    //     console.log(data.data);
+    //     setData(data.data);
+    //   }).catch((err)=>{
+    //     console.log(err);
+    //   })
+    // }
     const getData = (id)=>{
       axiosInstance.get("/api/brands",{
         params:{
           KategoryId:id,
+          welayatId:welayatId
         }
       }).then((data)=>{
         console.log(data.data);
@@ -70,7 +71,7 @@ const Welayatlar = prop =>{
     }
 
     const getKategories = (id)=>{
-      axiosInstance.get("/api/brand/kategory",{
+      axiosInstance.get("/api/brand/kategory/"+id,{
         params:{WelayatlarId:id}
       }).then((data)=>{
         setKategories(data.data);
@@ -80,10 +81,12 @@ const Welayatlar = prop =>{
     }
 
     const onChangeW = (value)=>{
+      console.log(value)
       setWelayatId(value);
       getKategories(value);
     }
     const onChangeK = (value)=>{
+      console.log(value)
       setKategoryId(value)
     }
 
@@ -115,21 +118,21 @@ const Welayatlar = prop =>{
                       
                     </div>
                     <Select 
-                      value={welayatId}
+                      // value={welayatId}
                       onChange={onChangeW} style={{minWidth:"250px"}}>
                         {
-                          welayatlar.map((welayat)=>{
+                          welayatlar?.map((welayat)=>{
                             return <Option value={welayat.id}>{welayat.name_tm}</Option>
                           })
                         }
                       </Select>
                       <Select 
-                      value={kategoryId}
+                      // value={kategoryId}
                       placeholder="Kategoriya Sayla!"
                       onChange={onChangeK} style={{minWidth:"250px"}}>
                         <Option value={null}>Ahlisi</Option>
                         {
-                          kategories.map((kategory)=>{
+                          kategories && kategories?.map((kategory)=>{
                             return <Option value={kategory.id}>{kategory.name_tm}</Option>
                           })
                         }

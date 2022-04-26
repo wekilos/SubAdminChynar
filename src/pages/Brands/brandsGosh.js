@@ -109,7 +109,7 @@ const [kategory_id,setKategory_id] = useState();
             placeholder="Welayat Sayla!"
             style={{width:"100%",marginBottom:"15px"}}
             onChange = {onChangeW}>
-              {welayatlar.map((welayat)=>{
+              {welayatlar?.map((welayat)=>{
                   return <Option value={welayat.id}>{welayat.name_tm}</Option>
               })}
             </Select>
@@ -118,7 +118,7 @@ const [kategory_id,setKategory_id] = useState();
             placeholder="Brand Kategory Sayla!"
             style={{width:"100%",marginBottom:"15px"}}
             onChange = {onChangeK}>
-              {brandKategory.map((brand)=>{
+              {brandKategory?.map((brand)=>{
                   return <Option value={brand.id}>{brand.name_tm}</Option>
               })}
             </Select>
