@@ -4,7 +4,7 @@ import { token} from './token'
  const BASE_URL = 'http://95.85.122.39:8080'
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
-    timeout: 100000,
+    timeout: 100000000,
   
     headers:{
       //  Authorization: 'Bearer ' + token(),
