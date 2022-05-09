@@ -29,11 +29,12 @@ password: password,
 } ).then((res)=>{
  
  console.log(res.data)
-  if(res.data.login===true){
-        localStorage.setItem("SubProfile", JSON.stringify(res.data))
-        message.success("Successfully")
+  if(res.data.login===true && res.data.subAdmin===true){
         if(res.data?.type && res.data?.type?.MarketId){
           history.push('/orders')
+
+          localStorage.setItem("SubProfile", JSON.stringify(res.data))
+         message.success("Successfully")
           localStorage.setItem("SubMarketId", JSON.stringify(res.data?.type?.MarketId))
         }else{
           history.push("/");
