@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Input, Steps, Button, message, Select } from "antd";
 import "antd/dist/antd.css";
@@ -7,12 +7,14 @@ import { axiosInstance } from "../../utils/axiosIntance";
 import "./kategoryGosh.css";
 import axios from "axios";
 import fetch from "node-fetch";
+import { SebedimContext } from "../../context/Sebedim";
 
 const  {Option} = Select;
 
 const WelayatGosh = (props) => {
 let getData = props.getData;
 
+const {dil} = useContext(SebedimContext);
   const [ name_tm ,setName_tm] = useState(null);
   const [ name_ru ,setName_ru] = useState("");
   const [ name_en ,setName_en] = useState("");
@@ -58,7 +60,7 @@ const [kategory_id,setKategory_id] = useState();
       });
 
     setLoading(true)
-    !kategory_id &&  message.warn("Brand Kategory Saylan!") 
+    !kategory_id &&  message.warn(dil==="TM"?"Brand Kategory Saylan!":"Выберите категорию бренда!") 
     !kategory_id && setLoading(false);
     let data = {};
     if(surat){
@@ -70,13 +72,13 @@ const [kategory_id,setKategory_id] = useState();
         data.BrandsKategoryId = kategory_id;
         data.welayatId = welayat_id;
     }else{
-      message.warn("Surat Saylan!");
+      message.warn(dil==="TM"?"Surat Saylan!":"Выберите изображение!");
       setLoading(false);
     }
     surat && kategory_id && await axiosInstance.post("/api/brand/create",{
       data
     }).then((data)=>{
-       message.success("Brand Üstünlikli Döredildi!");
+       message.success(dil==="TM"?"Brand Üstünlikli Döredildi!":"Бренд успешно создан!");
        setName_en("");
        setName_ru("");
        setName_tm("");
@@ -84,7 +86,7 @@ const [kategory_id,setKategory_id] = useState();
        setLoading(false)
     }).catch((err)=>{
       console.log("errorrrrrorr",err);
-      message.warn("Internet baglanşygyňyzy barlaň!")
+      message.warn(dil==="TM"?"Internet baglanyşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
       setLoading(false)
     });
   };
@@ -106,7 +108,7 @@ const [kategory_id,setKategory_id] = useState();
             {!loading ? <div className="step1" style={{width:"100%"}}>
             
             <Select
-            placeholder="Welayat Sayla!"
+            placeholder={dil==="TM"?"Welayat Sayla!":"Выберите регион!"}
             style={{width:"100%",marginBottom:"15px"}}
             onChange = {onChangeW}>
               {welayatlar?.map((welayat)=>{
@@ -115,7 +117,7 @@ const [kategory_id,setKategory_id] = useState();
             </Select>
 
             <Select
-            placeholder="Brand Kategory Sayla!"
+            placeholder={dil==="TM"?"Brand Kategory Sayla!":"Выберите категорию бренда!"}
             style={{width:"100%",marginBottom:"15px"}}
             onChange = {onChangeK}>
               {brandKategory?.map((brand)=>{
@@ -126,25 +128,25 @@ const [kategory_id,setKategory_id] = useState();
               style={{width:"100%"}}
               onChange={(e)=>{setName_tm(e.target.value)}} 
               value={name_tm} 
-              addonBefore="Brand Ady_tm" 
+              addonBefore={dil==="TM"?"Brand Ady_tm":"Бренд название tm" }
               className="yolHaty-gosh--input" />
               <Input 
               style={{width:"100%"}}
               onChange={(e)=>{setName_ru(e.target.value)}} 
               value={name_ru} 
-              addonBefore="Brand Ady_ru" 
+              addonBefore={dil==="TM"?"Brand Ady_ru":"Бренд название ru" }
               className="yolHaty-gosh--input" />
               <Input 
               style={{width:"100%"}}
               onChange={(e)=>{setName_en(e.target.value)}} 
               value={name_en} 
-              addonBefore="Brand Ady_en" 
+              addonBefore={dil==="TM"?"Brand Ady_en":"Бренд название en" }
               className="yolHaty-gosh--input" />
               <Input 
               style={{width:"100%"}} 
               type="file" 
               onChange={(e)=>{setSurat(e.target.files[0])}}
-              addonBefore='Brand Surat'  
+              addonBefore={dil==="TM"?'Brand Surat':"Изображение бренда" } 
               className='yolHaty-gosh--input' />
 
               <br></br>
@@ -160,7 +162,7 @@ const [kategory_id,setKategory_id] = useState();
               type="primary" 
               onClick={()=>{onSubmit()}}
             >
-              Döret
+              {dil==="TM"?"Döret":"Создавать"}
             </Button>
        
         </div>

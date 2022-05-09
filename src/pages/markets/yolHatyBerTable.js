@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Table, Button, Space, Modal, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined,LoadingOutlined } from "@ant-design/icons";
@@ -6,10 +6,12 @@ import { EditOutlined, DeleteOutlined,LoadingOutlined } from "@ant-design/icons"
 import "./yolHatyTable.css";
 import axios from "axios";
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
+import { SebedimContext } from "../../context/Sebedim";
 
 const YolHatyTable = (props) => {
   
 // geting all data from database with api
+const {dil} = useContext(SebedimContext);
   const [data, setData] = props.data;
   console.log("Data:",data)
   const getData = props.getData;
@@ -21,34 +23,34 @@ const YolHatyTable = (props) => {
       dataIndex: "id",
     },
     {
-      title: "Market Surat",
+      title: dil==="TM"?"Market Surat":"Mаркет картина",
       dataIndex: "surat",
       render:(text,record)=>(
-        <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.Market.surat} alt="Market Surat" />
+        <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.Market.surat} alt={dil==="TM"?"Market Surat":"Mаркет картина"} />
       )
     },
     {
-      title: "Market Ady",
+      title: dil==="TM"?"Market Ady":"название маркет",
       dataIndex: "name_tm",
       render:(text,record)=>(
         <h3>{record.Market.name_tm}</h3>
       )
     },
     {
-      title: "Kategoriya ady tm",
+      title: dil==="TM"?"Kategoriya ady tm":"Название категории тм",
       dataIndex: "name_tm",
     },
     {
-      title: "Kategoriya ady ru",
+      title: dil==="TM"?"Kategoriya ady ru":"Название категории ru",
       dataIndex: "name_ru",
     },
     {
-      title: "Kategoriya ady en",
+      title: dil==="TM"?"Kategoriya ady en":"Название категории en",
       dataIndex: "name_en",
     },
     
     {
-      title: "Goşmaça maglumat we Özgertmek",
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space size="middle">
@@ -258,15 +260,15 @@ const YolHatyTable = (props) => {
               <td>{maglumat && maglumat.id} </td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_tm}>
-              <td>Kategorýa tm </td>
+              <td>{dil==="TM"?"Kategorýa tm":"Категория tm"} </td>
                {maglumat &&  maglumat.name_tm}
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_ru}>
-              <td>Kategorýa ru </td>
+              <td>{dil==="TM"?"Kategorýa ru":"Категория ru"}  </td>
               <td>{maglumat && maglumat.name_ru}</td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_en}>
-              <td>Kategorýa en </td>
+              <td>{dil==="TM"?"Kategorýa en":"Категория en"}  </td>
               <td>{maglumat && maglumat.name_en}</td>
             </tr>
             
@@ -280,7 +282,7 @@ const YolHatyTable = (props) => {
       <Drawer
         width={500}
         className="lukman-table--drawer"
-        title="Üýtgetmeler"
+        title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
         onClose={() => ShowDrawer()}
         visible={edit}
@@ -294,7 +296,7 @@ const YolHatyTable = (props) => {
               type="primary"
               onClick={()=>ShowDrawer()}
             >
-              Goý bolsun
+              {dil==="TM"?"Goý bolsun":"Отмена"}
             </Button>
             <Button
               className="DrawerButton"
@@ -303,7 +305,7 @@ const YolHatyTable = (props) => {
               type="primary"
               onClick={()=>saveData(maglumat)}
             >
-              Üýtget <EditOutlined />
+              {dil==="TM"?"Üýtget":"Редактировать"} <EditOutlined />
             </Button>
           </div>
         }
@@ -312,7 +314,7 @@ const YolHatyTable = (props) => {
          
           <Input
             style={{ margin: "10px 0" }}
-            addonBefore="Name tm"
+            addonBefore={dil==="TM"?"Name tm":"Название тм"}
             className="suruji-uytget--input"
             type="text"
             name="name_tm"
@@ -321,7 +323,7 @@ const YolHatyTable = (props) => {
           />
           <Input
             style={{ margin: "10px 0" }}
-            addonBefore="Name ru"
+            addonBefore={dil==="TM"?"Name ru":"Название ru"}
             className="suruji-uytget--input"
             name="name_ru"
             value={maglumat && maglumat.name_ru}
@@ -329,7 +331,7 @@ const YolHatyTable = (props) => {
           />
           <Input
             style={{ margin: "10px 0" }}
-            addonBefore="Name en"
+            addonBefore={dil==="TM"?"Name en":"Название en"}
             className="suruji-uytget--input"
             name="name_en"
             value={maglumat && maglumat.name_en}

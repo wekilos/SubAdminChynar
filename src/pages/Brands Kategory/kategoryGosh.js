@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Input, Steps, Button, message, Select } from "antd";
 import "antd/dist/antd.css";
@@ -7,12 +7,14 @@ import { axiosInstance } from "../../utils/axiosIntance";
 import "./kategoryGosh.css";
 import axios from "axios";
 import fetch from "node-fetch";
+import { SebedimContext } from "../../context/Sebedim";
 
 const  {Option} = Select;
 
 const WelayatGosh = (props) => {
 let getData = props.getData;
 
+const {dil}  = useContext(SebedimContext);
   const [ name_tm ,setName_tm] = useState(null);
   const [ name_ru ,setName_ru] = useState("");
   const [ name_en ,setName_en] = useState("");
@@ -45,12 +47,12 @@ const [kategory_id,setKategory_id] = useState();
   const onSubmit = async(id) => {
     // event.preventDefault();
     setLoading(true)
-    !kategory_id &&  message.warn("Welayat Saylan!") 
+    !kategory_id &&  message.warn(dil==="TM"?"Welayat Saylan!":"Выберите регион!") 
     !kategory_id && setLoading(false)
     kategory_id && await axiosInstance.post("/api/brand/kategory/create",{
       name_tm,name_ru,name_en,WelayatlarId:kategory_id,
     }).then((data)=>{
-       message.success("Kategoriya Üstünlikli Döredildi!");
+       message.success(dil==="TM"?"Kategoriya Üstünlikli Döredildi!":"Категория успешно создана!");
        setName_en("");
        setName_ru("");
        setName_tm("");
@@ -58,7 +60,7 @@ const [kategory_id,setKategory_id] = useState();
        setLoading(false)
     }).catch((err)=>{
       console.log("errorrrrrorr",err);
-      message.warn("Internet baglanşygyňyzy barlaň!")
+      message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
       setLoading(false)
     });
   };
@@ -80,7 +82,7 @@ const [kategory_id,setKategory_id] = useState();
             {!loading ? <div className="step1" style={{width:"100%"}}>
             
             <Select
-            placeholder="Welayat Sayla"
+            placeholder={dil==="TM"?"Welayat Sayla":"Выберите регион!"}
             style={{width:"100%",marginBottom:"15px"}}
             onChange = {onChangeK}>
               {welayatlar.map((welayat)=>{
@@ -91,19 +93,19 @@ const [kategory_id,setKategory_id] = useState();
               style={{width:"100%"}}
               onChange={(e)=>{setName_tm(e.target.value)}} 
               value={name_tm} 
-              addonBefore="Market Ady_tm" 
+              addonBefore={dil==="TM"?"Market Ady tm":"Торговое название тм" }
               className="yolHaty-gosh--input" />
               <Input 
               style={{width:"100%"}}
               onChange={(e)=>{setName_ru(e.target.value)}} 
               value={name_ru} 
-              addonBefore="Market Ady_ru" 
+              addonBefore={dil==="TM"?"Market Ady ru":"Торговое название ru" }
               className="yolHaty-gosh--input" />
               <Input 
               style={{width:"100%"}}
               onChange={(e)=>{setName_en(e.target.value)}} 
               value={name_en} 
-              addonBefore="Market Ady_en" 
+              addonBefore={dil==="TM"?"Market Ady en":"Торговое название en" }
               className="yolHaty-gosh--input" />
               <br></br>
             </div>
@@ -118,7 +120,7 @@ const [kategory_id,setKategory_id] = useState();
               type="primary" 
               onClick={()=>{onSubmit()}}
             >
-              Döret
+              {dil==="TM"?"Döret":"Создавать"}
             </Button>
        
         </div>

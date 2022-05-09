@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {  Button, Drawer, Select } from "antd";
 import "antd/dist/antd.css";
@@ -9,9 +9,11 @@ import YolHatyGozle from "./yolHatyGozle";
 import YolHatyBerTable from "./subKategoryiyaTable";
 
 import "./yolHatyBer.css";
+import { SebedimContext } from "../../context/Sebedim";
 const { Option } = Select;
 
 const YolHatyBer = (props) => {
+  const {dil} = useContext(SebedimContext)
   const [Gosh, setGosh] = useState(false);
   const GoshButton = () => {
     setGosh(!Gosh);
@@ -105,7 +107,7 @@ const YolHatyBer = (props) => {
       <Drawer
                 width={500}
                 className='lukman-table--drawer'
-                title="SubKategoryya Goş"
+                title={dil==="TM"?"SubKategoryya Goş":"Создать подкатегорию"}
                 placement="right"
                 closable={true}
                 mask={true}
@@ -145,7 +147,7 @@ const YolHatyBer = (props) => {
             className="yolHaty-gozle--input"
             showSearch
             style={{ width: 200 }}
-            placeholder="Kategoriya Saýla"
+            placeholder={dil==="TM"?"Kategoriya Saýla":"выбрать категорию"}
             value={kategoriyaValue}
             optionFilterProp="children"
             onChange={onChangeK}
@@ -156,7 +158,7 @@ const YolHatyBer = (props) => {
           >
             {
               kategoriya.map((kategory)=>{
-                return <Option value={kategory.id}>{kategory.name_tm}</Option>
+                return <Option value={kategory.id}>{dil==="TM"?kategory.name_tm:kategory.name_ru}</Option>
               })
             }
             

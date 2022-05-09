@@ -1,12 +1,13 @@
-import React,{useEffect, useState} from "react";
+import React,{useContext, useEffect, useState} from "react";
 import "./header.css";
 import "antd/dist/antd.css";
-import { Layout, Menu, Input, Dropdown, Badge, Popover, message } from "antd";
+import { Layout, Menu, Input, Dropdown, Badge, Popover, message, Select } from "antd";
 
 import { UserOutlined, BellOutlined, LogoutOutlined } from "@ant-design/icons";
 import { logout } from "../utils/index";
 import { axiosInstance } from "../utils/axiosIntance";
 import { Link, useHistory } from "react-router-dom";
+import { SebedimContext } from "../context/Sebedim";
 const { Search } = Input;
 const content = (
   <div>
@@ -35,7 +36,7 @@ const profile_menu = (
   const [bool, setBool] = useState(false);
   const [bool2, setBool2] = useState(false);
   const [newOrder,setNewOrder] = useState();
-
+  const { ChangeDil, dil } = useContext(SebedimContext)
   useEffect(()=>{
     const time = setTimeout(() => {
         getOrders();
@@ -85,6 +86,14 @@ const LogOUT = ()=>{
   history.push("/")
 }
 
+const handleLanguage = (value)=>{
+  if(value==="🇷🇺"){
+    ChangeDil("RU")
+  }else{
+
+    ChangeDil("TM")
+  }
+}
     return (
       <Header
         className="site-layout-background header"
@@ -120,6 +129,13 @@ const LogOUT = ()=>{
               <BellOutlined style={{ fontSize: 22 }} />
             </Badge>
           </Popover>
+        </div>
+        <div className="notify2">
+          <Select defaultValue="🇹🇲" onChange={handleLanguage}>
+            <option value="🇹🇲" > 🇹🇲 </option>
+
+            <option value="🇷🇺" > 🇷🇺 </option>
+          </Select>
         </div>
       </Header>
     );

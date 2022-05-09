@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { Input, Steps, Button, message, Upload } from "antd";
 import "antd/dist/antd.css";
@@ -7,9 +7,11 @@ import { axiosInstance } from "../../utils/axiosIntance";
 import "./yolHatyGosh.css";
 import axios from "axios";
 import fetch from "node-fetch";
+import { SebedimContext } from "../../context/Sebedim";
 
 
 const YolHatyGosh = (props) => {
+  const {dil} = useContext(SebedimContext);
 let getData = props.getData;
 let getKategoriyas = props.getKategoriyas;
 let market_id = props.market;
@@ -53,7 +55,7 @@ let market_id = props.market;
               <div className="yolHatyTable--uytgetmeler" style={{width:"100%",justifyContent:"center"}}>
                 <Input
                     style={{margin:"10px 0px"}}
-                    addonBefore="Ady tm"
+                    addonBefore={dil==="TM"?"Ady tm":"Название тм"}
                     className="suruji-uytget--input"
                     name="name_tm"
                     value={name_tm}
@@ -61,14 +63,14 @@ let market_id = props.market;
                     />
                     <Input
                     style={{margin:"10px 0px"}}
-                    addonBefore="Ady ru"
+                    addonBefore={dil==="TM"?"Ady ru":"Название ru"}
                     className="suruji-uytget--input"
                     value={name_ru}
                     onChange={(e)=>setName_ru(e.target.value)}
                     />
                     <Input
                     style={{margin:"10px 0px"}}
-                    addonBefore="Ady en"
+                    addonBefore={dil==="TM"?"Ady en":"Название en"}
                     className="suruji-uytget--input"
                     value={name_en}
                     onChange={(e)=>setName_en(e.target.value)}
@@ -79,7 +81,7 @@ let market_id = props.market;
                     shape="round"
                     onClick={()=>KategoriyaGosh(market_id)}
                     >
-                    Gosh
+                    {dil==="TM"?"Gosh":"Создавать"}
                     </Button>
                 </div>
                 :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 210px"}} />}

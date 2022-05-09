@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import { Button,Select,Drawer } from 'antd';
 import "antd/dist/antd.css";
 import { PlusCircleFilled } from '@ant-design/icons';
@@ -8,10 +8,12 @@ import './kategory.css';
 import WelayatTable from './kategoryTable';
 import WelayatGosh from './kategoryGosh';
 import WelayatGozle from './kategoryGozle';
+import { SebedimContext } from '../../context/Sebedim';
 
 const {Option} = Select;
 const Welayatlar = (prop) =>{
 
+  const {dil} = useContext(SebedimContext);
     const [Gosh,setGosh]=useState(false);
     const [welayatlar,setWelayatlar] = useState([]);
     const [welayatId,setWelayatId] = useState();
@@ -85,7 +87,7 @@ const Welayatlar = (prop) =>{
             <Drawer
                 width={500}
                 className='lukman-table--drawer'
-                title="Brand Kategoryya Goş"
+                title={dil==="TM"?"Brand Kategoryya Goş":"Добавить категорию бренда"}
                 placement="right"
                 closable={true}
                 mask={true}
@@ -99,7 +101,7 @@ const Welayatlar = (prop) =>{
             <div className='yolHaty--gozleg'>
                <form  className=" welayatGozleg">
                     <div>
-                    <h2 >Brandlerin Kategoryya sahypasy</h2>
+                    <h2 >{dil==="TM"?"Brandlerin Kategoryya sahypasy":"Страница категории брендов"}</h2>
                       
                     </div>
                     <Select 
@@ -107,7 +109,7 @@ const Welayatlar = (prop) =>{
                       onChange={onChangeW} style={{minWidth:"250px"}}>
                         {
                           welayatlar.map((welayat)=>{
-                            return <Option value={welayat.id}>{welayat.name_tm}</Option>
+                            return <Option value={welayat.id}>{dil==="TM"?welayat.name_tm:welayat.name_ru}</Option>
                           })
                         }
                       </Select>
@@ -119,7 +121,7 @@ const Welayatlar = (prop) =>{
                       icon={<PlusCircleFilled />}
                       className="yolHaty-gozle--button"
                     >
-                      Kategory Döret
+                     {dil==="TM"?"Kategory Döret":"Создать категорию"}
                     </Button>}
                   </div>
                 </form>

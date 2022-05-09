@@ -2,8 +2,12 @@ import logo from "./logo.svg";
 import "./App.css";
 
 import Routes from "./routes/routes";
+import SebedimContextProvider from "./context/Sebedim";
 function App() {
-  return <Routes />;
+  return(
+        <SebedimContextProvider>
+           <Routes />
+        </SebedimContextProvider>);
 }
 
 export default App;

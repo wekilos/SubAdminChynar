@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Table, Button, Space, Select, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -6,11 +6,13 @@ import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons
 import "./kategoryTable.css";
 import axios from "axios";
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
+import { SebedimContext } from "../../context/Sebedim";
 const {Option} = Select;
 
 const WelayatTable = (props) => {
   
 // geting all data from database with api
+const { dil } = useContext(SebedimContext)
   const [data, setData] = props.data;
   const getData = props.getData;
 
@@ -20,19 +22,19 @@ const WelayatTable = (props) => {
       dataIndex: "id",
     },
     {
-      title: "Kategoryya Ady tm",
+      title: dil==="TM"?"Kategoryya Ady tm":"Название категории тм",
       dataIndex: "name_tm",
     },
     {
-      title: "Kategoryya Ady ru",
+      title: dil==="TM"?"Kategoryya Ady ru":"Название категории ru",
       dataIndex: "name_ru",
     },
     {
-      title: "Kategoryya Ady en",
+      title: dil==="TM"?"Kategoryya Ady en":"Название категории en",
       dataIndex: "name_en",
     },
     {
-      title: "Goşmaça maglumat we Özgertmek",
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space size="middle">
@@ -65,11 +67,11 @@ const WelayatTable = (props) => {
              Surat 
           </Button> */}
             <Popconfirm
-            title="Siz çyndan öçürmek isleýärsiňizmi?"
+            title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
             onConfirm={() => DeleteMarket(record)}
             // onCancel={cancel}
-            okText="Hawa"
-            cancelText="Ýok"
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Нет"}
           >
              <Button
               type="primary"
@@ -164,7 +166,7 @@ const WelayatTable = (props) => {
       }).catch((err)=>{
         console.log(err);
         setLoading(false);
-        message.warn("Internet baglanşygyňyzy barlaň!")
+        message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
       })
 
   }
@@ -195,7 +197,7 @@ const WelayatTable = (props) => {
     }).catch((err)=>{
       console.log(err);
       setLoading(false);
-      message.warn("Internet baglanşygyňyzy barlaň!")
+      message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
     })
   }
   const ShowModal = (event) => {
@@ -240,7 +242,7 @@ const WelayatTable = (props) => {
       }).catch((err)=>{
         console.log(err);
         setLoading(false);
-        message.warn("Internet baglanşygyňyzy barlaň!")
+        message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
       })
       
     
@@ -349,7 +351,7 @@ const WelayatTable = (props) => {
       <Drawer
         width={500}
         className="lukman-table--drawer"
-        title="Üýtgetmeler"
+        title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
         onClose={() => ShowDrawer()}
         visible={edit}
@@ -363,7 +365,7 @@ const WelayatTable = (props) => {
               type="primary"
               onClick={()=>ShowDrawer()}
             >
-              Goý bolsun
+              {dil==="TM"?"Goý bolsun":"Отмена"}
             </Button>
             <Button
               className="DrawerButton"
@@ -372,7 +374,7 @@ const WelayatTable = (props) => {
               type="primary"
               onClick={()=>saveData(maglumat)}
             >
-              Üýtget <EditOutlined />
+              {dil==="TM"?"Üýtget":"Редактировать"} <EditOutlined />
             </Button>
           </div>
         }
@@ -381,7 +383,7 @@ const WelayatTable = (props) => {
          
           <Input
             style={{ marginRight: "20px" }}
-            addonBefore="Name tm"
+            addonBefore={dil==="TM"?"Ady tm":"Название tm"}
             className="suruji-uytget--input"
             type="text"
             name="name_tm"
@@ -389,14 +391,14 @@ const WelayatTable = (props) => {
             onChange={inputChangeHandler}
           />
           <Input
-            addonBefore="Name ru"
+            addonBefore={dil==="TM"?"Ady ru":"Название ru"}
             className="suruji-uytget--input"
             name="name_ru"
             value={maglumat && maglumat.name_ru}
             onChange={inputChangeHandler}
           />
           <Input
-            addonBefore="Name en"
+            addonBefore={dil==="TM"?"Ady en":"Название en"}
             className="suruji-uytget--input"
             name="name_en"
             value={maglumat && maglumat.name_en}

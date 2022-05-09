@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import { Button,Select,Drawer } from 'antd';
 import "antd/dist/antd.css";
 import { PlusCircleFilled } from '@ant-design/icons';
@@ -8,10 +8,12 @@ import './kategory.css';
 import WelayatTable from './brandsTable';
 import WelayatGosh from './brandsGosh';
 import WelayatGozle from './brandsGozle';
+import { SebedimContext } from "../../context/Sebedim";
 
 const {Option} = Select;
 const Welayatlar = (prop) =>{
 
+  const { dil } = useContext(SebedimContext);
     const [Gosh,setGosh]=useState(false);
     const [welayatlar,setWelayatlar] = useState([]);
     const [kategories,setKategories] = useState([]);
@@ -100,7 +102,7 @@ const Welayatlar = (prop) =>{
             <Drawer
                 width={500}
                 className='lukman-table--drawer'
-                title="Brand Goş"
+                title={dil==="TM"?"Brand Goş":"Создать бренд"}
                 placement="right"
                 closable={true}
                 mask={true}
@@ -114,7 +116,7 @@ const Welayatlar = (prop) =>{
             <div className='yolHaty--gozleg'>
                <form  className=" welayatGozleg">
                     <div>
-                    <h2 >Brandlerin Kategoryya sahypasy</h2>
+                    <h2 >{dil==="TM"?"Brandlerin Kategoryya sahypasy":"Страница категории брендов"}</h2>
                       
                     </div>
                     <Select 
@@ -122,18 +124,18 @@ const Welayatlar = (prop) =>{
                       onChange={onChangeW} style={{minWidth:"250px"}}>
                         {
                           welayatlar?.map((welayat)=>{
-                            return <Option value={welayat.id}>{welayat.name_tm}</Option>
+                            return <Option value={welayat.id}>{dil==="TM"?welayat.name_tm:welayat.name_ru}</Option>
                           })
                         }
                       </Select>
                       <Select 
                       // value={kategoryId}
-                      placeholder="Kategoriya Sayla!"
+                      placeholder={dil==="TM"?"Kategoriya Sayla!":"Выбрать категорию!"}
                       onChange={onChangeK} style={{minWidth:"250px"}}>
-                        <Option value={null}>Ahlisi</Option>
+                        <Option value={null}>{dil==="TM"?"Ahlisi":"Бсе"}</Option>
                         {
                           kategories && kategories?.map((kategory)=>{
-                            return <Option value={kategory.id}>{kategory.name_tm}</Option>
+                            return <Option value={kategory.id}>{dil==="TM"?kategory.name_tm:kategory.name_ru}</Option>
                           })
                         }
                       </Select>
@@ -145,7 +147,7 @@ const Welayatlar = (prop) =>{
                       icon={<PlusCircleFilled />}
                       className="yolHaty-gozle--button"
                     >
-                      Brand Döret
+                      {dil==="TM"?"Brand Döret":"Создать бренд"}
                     </Button>}
                   </div>
                 </form>

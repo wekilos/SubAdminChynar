@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import { Button,Input,Drawer, Select, message } from 'antd';
 import "antd/dist/antd.css";
 import { PlusCircleFilled } from '@ant-design/icons';
@@ -9,9 +9,12 @@ import { axiosInstance } from '../../utils/axiosIntance';
 
 import './yolHaty.css';
 import "./yolHatyGozle.css";
+import { SebedimContext } from '../../context/Sebedim';
 const {Option} = Select;
 
 const YolHaty = prop =>{
+
+  const {dil} = useContext(SebedimContext);
 
     const [Gosh,setGosh]=useState(false);
     const [sany,setSany] = useState(0);
@@ -85,7 +88,7 @@ const YolHaty = prop =>{
                 {/* <YolHatyGozle sany={sany} GoshButton={GoshButton}/> */}
                 <form className="yolHaty-gozle--form">
                   <div style={{display:"inline-flex"}}>
-                  <h2 style={{margin:"10px 10px"}}>Admin Market page</h2>
+                  <h2 style={{margin:"10px 10px"}}>{dil==="TM"?"Admin Market page":"Страница администратора рынка"}</h2>
                     {/* <Input
                       className="yolHaty-gozle--input"
                       placeholder="Id No"

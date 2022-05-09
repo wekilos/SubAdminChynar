@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { Input, Steps, Button, Drawer, message, Select } from "antd";
 import "antd/dist/antd.css";
@@ -9,9 +9,11 @@ import YolHatyGozle from "./yolHatyGozle";
 import YolHatyBerTable from "./yolHatyBerTable";
 
 import "./yolHatyBer.css";
+import { SebedimContext } from "../../context/Sebedim";
 const { Option } = Select;
 
 const YolHatyBer = (props) => {
+  const {dil } = useContext(SebedimContext)
   const [Gosh, setGosh] = useState(false);
   const GoshButton = () => {
     setGosh(!Gosh);
@@ -82,7 +84,7 @@ const YolHatyBer = (props) => {
       <Drawer
                 width={500}
                 className='lukman-table--drawer'
-                title="Kategoryya Goş"
+                title={dil==="TM"?"Kategoryya Goş":"Добавить категорию"}
                 placement="right"
                 closable={true}
                 mask={true}
@@ -111,7 +113,7 @@ const YolHatyBer = (props) => {
             }
             
           </Select> */}
-          <h1>Market Kategoryalary</h1>
+          <h1>{dil==="TM"?"Market Kategoryalary":"Категории маркетa"}</h1>
         </div>
         <div>
           <Button
@@ -121,7 +123,7 @@ const YolHatyBer = (props) => {
             icon={<PlusCircleFilled />}
             className="yolHaty-gozle--button"
           >
-            Market Kategoriýa Döret
+            {dil==="TM"?" Kategoriýa Döret":"Создать категорию"}
           </Button>
         </div>
       </form>

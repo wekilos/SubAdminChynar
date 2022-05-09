@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Table, Button, Space, Select, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -6,10 +6,12 @@ import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons
 import "./yolHatyTable.css";
 import axios from "axios";
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
+import { SebedimContext } from "../../context/Sebedim";
 const {Option} = Select;
 
 const YolHatyTable = (props) => {
   
+  const {dil} = useContext(SebedimContext);
 // geting all data from database with api
   const [data, setData] = props.data;
   const getData = props.getData;
@@ -20,23 +22,23 @@ const YolHatyTable = (props) => {
       dataIndex: "id",
     },
     {
-      title: "Market Ady",
-      dataIndex: "name_tm",
+      title: dil==="TM"?"Market Ady":"Название Маркет",
+      dataIndex: dil==="TM"?"name_tm":"name_ru",
     },
     {
-      title: "Address",
-      dataIndex: "address_tm",
+      title: dil==="TM"?"Address":"Адрес",
+      dataIndex: dil==="TM"?"address_tm":"address_ru",
       render:(text,record)=>(
         <Space>
           {record.MarketAddresses && record.MarketAddresses.map(address=>{
-            return <div><h4>{address.name_tm}</h4>
+            return <div><h4>{dil==="TM"?address.name_tm:address.name_ru}</h4>
             </div>
           }) }
         </Space>
       )
     },
     {
-      title: "Telefon No ",
+      title: dil==="TM"?"Telefon No ":"Телефонный номер",
       dataIndex: "phoneNumber",
       render:(text,record)=>(
         <Space>
@@ -48,14 +50,14 @@ const YolHatyTable = (props) => {
       )
     },
     {
-      title: "Market Surat",
+      title: dil==="TM"?"Market Surat":"Изображение маркета",
       dataIndex: "surat",
       render:(text,record)=>(
         <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.surat} alt="Market Surat" />
       )
     },
     {
-      title: "Goşmaça maglumat we Özgertmek",
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space size="middle">
@@ -64,7 +66,7 @@ const YolHatyTable = (props) => {
             shape="round"
             onClick={() => ShowModal(record)}
           >
-            Goşmaça
+            {dil==="TM"?"Goşmaça":"Дополнительная"}
           </Button>
           <Button
             type="primary"
@@ -73,26 +75,26 @@ const YolHatyTable = (props) => {
           >
             <EditOutlined />
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             shape="round"
             onClick={() => ShowTelefon(record)}
           >
-             Telefon 
-          </Button>
+             {dil==="TM"?"Telefon":"Телефон"} 
+          </Button> */}
           <Button
             type="primary"
             shape="round"
             onClick={() => ShowSurat(record)}
           >
-             Surat 
+             {dil==="TM"?'Surat':"Картина"} 
           </Button>
             <Popconfirm
-            title="Siz çyndan öçürmek isleýärsiňizmi?"
+            title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
             onConfirm={() => DeleteMarket(record.id)}
             // onCancel={cancel}
-            okText="Hawa"
-            cancelText="Ýok"
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Нет"}
           >
              <Button
               type="primary"
@@ -132,8 +134,9 @@ const YolHatyTable = (props) => {
   const [is_cart,setIs_cart] = useState();
   const [currency_exchange,setCurrency_exchange] = useState();
   const [ loading , setLoading ] = useState(false);
-  const [cashBack, setCashBack] = useState(null);
+  const [cashBack, setCashBack] = useState(false);
   const [cashBackPrasent,setCashBackPrasent] = useState(null)
+  const [telefon,setTelefon] = useState();
   /////////////////////////////////////////////////////
   
   ////////////////////////////////////////////////////
@@ -168,7 +171,8 @@ const YolHatyTable = (props) => {
     if(event){console.log("market:",event); setMarket(event)};
   };
   const UpdateSurat = async(e)=>{
-    setLoading(true);
+    sur && setLoading(true);
+    !sur && message.warn(dil==="TM"?"Surat sayla!":" Выберите картинку!")
     console.log("eee::",e,sur)
 
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -178,11 +182,11 @@ const YolHatyTable = (props) => {
       reader.onerror = error => reject(error);
       });
 
-      let newImg = {
+      let newImg = sur && {
             img_name:sur.name,
             img:await toBase64(sur)
           }
-      axiosInstance.patch("/api/markets/update/"+e,{surat:newImg}).then((data)=>{
+     sur && axiosInstance.patch("/api/markets/update/"+e,{surat:newImg}).then((data)=>{
         console.log(data.data);
         let oldmarket = market;
         oldmarket.surat = data.data.name;
@@ -192,7 +196,7 @@ const YolHatyTable = (props) => {
       }).catch((err)=>{
         console.log(err);
         setLoading(false);
-        message.warn("Internet baglanşygyňyzy barlaň!")
+        message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
       })
 
   }
@@ -223,7 +227,7 @@ const YolHatyTable = (props) => {
     }).catch((err)=>{
       console.log(err);
       setLoading(false);
-      message.warn("Internet baglanşygyňyzy barlaň!")
+      message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
     })
   }
   const ShowModal = (event) => {
@@ -231,6 +235,8 @@ const YolHatyTable = (props) => {
     console.log("goshmacha",event);
     setMaglumat([]);
     setMaglumat(event);
+    setCashBack(event?.cashBack);
+    setTelefon(event?.tel);
   };
   const ShowDrawer = (event) => {
     setEdit(!edit);
@@ -239,9 +245,9 @@ const YolHatyTable = (props) => {
     setMaglumat([]);
     setMaglumat(event);
     if(event){
-    setAddres_tm(event.name_tm);
-    setAddres_ru(event.name_ru);
-    setAddres_en(event.name_en);
+    setAddres_tm(event.addres_tm);
+    setAddres_ru(event.addres_ru);
+    setAddres_en(event.addres_en);
     setDescription_tm(event.description_tm);
     setDescription_ru(event.description_ru);
     setDescription_en(event.description_en);
@@ -253,6 +259,7 @@ const YolHatyTable = (props) => {
     setIs_cart(event.is_cart);
     setCurrency_exchange(event.currency_exchange);
     setCashBackPrasent(event.cashBackPrasent)
+    setTelefon(event?.tel);
     }
   };
   const inputChangeHandler = (event) => {
@@ -307,7 +314,7 @@ const YolHatyTable = (props) => {
       }).catch((err)=>{
         console.log(err);
         setLoading(false);
-        message.warn("Internet baglanşygyňyzy barlaň!")
+        message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
       })
       
     }).catch((err)=>{
@@ -328,7 +335,7 @@ const YolHatyTable = (props) => {
       <Drawer
         width={500}
         className="lukman-table--drawer"
-        title="Goşmaça"
+        title={dil==="TM"?"Goşmaça maglumat":"Дополнительная информация"}
         placement="right"
         onClose={() => ShowModal()}
         visible={visible}
@@ -340,74 +347,78 @@ const YolHatyTable = (props) => {
               <td>{maglumat && maglumat.id} </td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_tm}>
-              <td style={{height:"40px"}}>Name_tm </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"Ady tm":"Название тм"} </td>
               {maglumat && maglumat.name_tm}
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_ru}>
-              <td style={{height:"40px"}}>Name_ru </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"Ady ru":"Название ru"} </td>
               <td>{maglumat && maglumat.name_ru}</td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_en}>
-              <td style={{height:"40px"}}>Name_en </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"Ady en":"Название en"} </td>
               <td>{maglumat && maglumat.name_en}</td>
             </tr>
 
             <tr className="modalLi" key={maglumat && maglumat.dastawkaStartI}>
-              <td style={{height:"40px"}}>dastawka I </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"dostawka I":"доставка I"} </td>
               <td>{maglumat && maglumat.dastawkaStartI && maglumat.dastawkaStartI.slice(0,5)}-{maglumat && maglumat.dastawkaEndI && maglumat.dastawkaEndI.slice(0,5)}</td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.dastawkaStartII}>
-              <td style={{height:"40px"}}>dastawka II </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"dostawka II":"доставка II"} </td>
               <td>{maglumat && maglumat.dastawkaStartII && maglumat.dastawkaStartII.slice(0,5)}-{maglumat && maglumat.dastawkaEndII && maglumat.dastawkaEndII.slice(0,5)}</td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.dastawkaPrice}>
-              <td style={{height:"40px"}}>dastawka Baha </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"dostawka baha":"цена доставки"} </td>
               <td>{maglumat && maglumat.dastawkaPrice}</td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.currency_exchange}>
-              <td style={{height:"40px"}}>Walyuta Baha </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"Walyuta baha":"Цены на валюту"} </td>
               <td> <b> {maglumat && maglumat.currency_exchange} </b> </td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.is_cart}>
-              <td style={{height:"40px"}}>Kartdan Sowda etyarmi? </td>
+              <td style={{height:"40px"}}>{dil==="TM"?"Kartdan Sowda etyarmi?":"Вы продаете по карте?"} </td>
               <td>{maglumat && maglumat.is_cart===true?"Howa":"Yok"}</td>
             </tr>
-            
+            <tr className="modalLi" key={maglumat && maglumat.cashBackPrasent}>
+              <td style={{height:"40px"}}>{dil==="TM"?"Market CashBack söwda edýärmi?":"Есть ли в вашем маркете система кэшбэка?"} </td>
+              <td>{maglumat && maglumat.cashBack===true?"Howa ":"Yok " + (maglumat.cashBack? maglumat?.cashBackPrasent+"%":"")}</td>
+            </tr>
+
               {maglumat.MarketAddresses &&
                 maglumat.MarketAddresses.map((address)=>{
                   return <React.Fragment>
                     <tr className="modalLi">
-                      <td style={{height:"40px"}}>Address_tm </td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Address tm":"Адрес тм"} </td>
                       <td>
                         {address.name_tm}
                       </td>
                       </tr>
                       <tr className="modalLi">
-                      <td style={{height:"40px"}}>Address_ru </td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Address ru":"Адрес ru"} </td>
                       <td>
                         {address.name_ru}
                       </td>
                       </tr>
                       <tr className="modalLi">
-                      <td style={{height:"40px"}}>Address_en </td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Address en":"Адрес en"} </td>
                       <td>
                         {address.name_en}
                       </td>
                       </tr>
                       <tr className="modalLi">
-                      <td style={{height:"40px"}}>Description_tm</td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Description tm":"Описание тм"}</td>
                       <td>
                         {address.description_tm}
                       </td>
                       </tr>
                       <tr className="modalLi">
-                      <td style={{height:"40px"}}>Description_ru</td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Description ru":"Описание ru"}</td>
                       <td>
                         {address.description_ru}
                       </td>
                       </tr>
                       <tr className="modalLi">
-                      <td style={{height:"40px"}}>Description_en</td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Description en":"Описание en"}</td>
                       <td>
                         {address.description_en}
                       </td>
@@ -419,7 +430,7 @@ const YolHatyTable = (props) => {
                 maglumat.PhoneNumbers.map((number,i)=>{
                   return <React.Fragment>
                     <tr className="modalLi">
-                      <td style={{height:"40px"}}>Telefon No-{i+1} </td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Telefon":"Телефонный"} No-{i+1} </td>
                       <td>
                         {number.phoneNumber}
                       </td>
@@ -428,7 +439,7 @@ const YolHatyTable = (props) => {
                 })
               }
              <tr className="modalLi">
-                      <td style={{height:"40px"}}>Surat</td>
+                      <td style={{height:"40px"}}>{dil==="TM"?"Surat":"Картина"}</td>
                       <td >
                        <img style={{width:"50px",height:"50px",objectFit:"contain"}} src ={BASE_URL +"/"+ maglumat.surat} alt="surat"/>
                       </td>
@@ -443,7 +454,7 @@ const YolHatyTable = (props) => {
       <Drawer
         width={500}
         className="lukman-table--drawer"
-        title="Üýtgetmeler"
+        title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
         onClose={() => ShowDrawer()}
         visible={edit}
@@ -457,7 +468,7 @@ const YolHatyTable = (props) => {
               type="primary"
               onClick={()=>ShowDrawer()}
             >
-              Goý bolsun
+              {dil==="TM"?"Goý bolsun":"Отмена"}
             </Button>
             <Button
               className="DrawerButton"
@@ -466,7 +477,7 @@ const YolHatyTable = (props) => {
               type="primary"
               onClick={()=>saveData(maglumat)}
             >
-              Üýtget <EditOutlined />
+              {dil==="TM"?"Üýtget":"Редактировать"} <EditOutlined />
             </Button>
           </div>
         }
@@ -475,7 +486,7 @@ const YolHatyTable = (props) => {
          
           <Input
             style={{ marginRight: "20px" }}
-            addonBefore="Name tm"
+            addonBefore={dil=="TM"?"Name tm":"Название тм"}
             className="suruji-uytget--input"
             type="text"
             name="name_tm"
@@ -483,35 +494,35 @@ const YolHatyTable = (props) => {
             onChange={inputChangeHandler}
           />
           <Input
-            addonBefore="Name ru"
+            addonBefore={dil=="TM"?"Name ru":"Название ru"}
             className="suruji-uytget--input"
             name="name_ru"
             value={maglumat && maglumat.name_ru}
             onChange={inputChangeHandler}
           />
           <Input
-            addonBefore="Name en"
+            addonBefore={dil=="TM"?"Name en":"Название en"}
             className="suruji-uytget--input"
             name="name_en"
             value={maglumat && maglumat.name_en}
             onChange={inputChangeHandler}
           />
           <Input
-            addonBefore="Address tm"
+            addonBefore={dil==="TM"?"Address tm":"Адрес тм"}
             className="suruji-uytget--input"
             name="address_tm"
             value={address_tm}
             onChange={(e)=>setAddres_tm(e.target.value)}
           />
           <Input
-            addonBefore="Address ru"
+            addonBefore={dil==="TM"?"Address ru":"Адрес ru"}
             name="address_ru"
             className="suruji-uytget--input"
             value={address_ru}
             onChange={(e)=>setAddres_ru(e.target.value)}
           />
           <Input
-            addonBefore="Address en"
+            addonBefore={dil==="TM"?"Address en":"Адрес en"}
             name="address_en"
             className="suruji-uytget--input"
             value={address_en}
@@ -519,28 +530,36 @@ const YolHatyTable = (props) => {
           />
          
           <Input
-            addonBefore="Description tm"
+            addonBefore={dil==="TM"?"Description tm":"Описание тм"}
             name="description_tm"
             className="suruji-uytget--input"
             value={description_tm}
             onChange={(e)=>setDescription_tm(e.target.value)}
           />
           <Input
-            addonBefore="Description ru "
+            addonBefore={dil==="TM"?"Description ru":"Описание ru"}
             name="description_ru"
             className="suruji-uytget--input"
             value={description_ru}
             onChange={(e)=>setDescription_ru(e.target.value)}
           />
+          
           <Input
-            addonBefore="Description en"
+            addonBefore={dil==="TM"?"Description en":"Описание en"}
             name="description_en"
             className="suruji-uytget--input"
             value={description_en}
             onChange={(e)=>setDescription_en(e.target.value)}
           />
+          <Input
+            addonBefore={dil==="TM"?"Telefon":"Телефон"}
+            name="description_ru"
+            className="suruji-uytget--input"
+            value={telefon}
+            onChange={(e)=>setTelefon(e.target.value)}
+          />
               <Input
-                addonBefore="I bashlayan"
+                addonBefore={dil==="TM"?"I bashlayan":"I Начало"}
                 type="time"
                 name="Istart"
                 style={{width:"50%"}}
@@ -549,7 +568,7 @@ const YolHatyTable = (props) => {
                 onChange={(e)=>setStartI(e.target.value)}
               />
               <Input
-                addonBefore="I gutaryan"
+                addonBefore={dil==="TM"?"I gutaryan":"I заканчивать"}
                 type="time"
                 name="Istart"
                 style={{width:"50%"}}
@@ -558,7 +577,7 @@ const YolHatyTable = (props) => {
                 onChange={(e)=>setEndI(e.target.value)}
               />
               <Input
-                addonBefore="II bashlayan"
+                addonBefore={dil==="TM"?"II bashlayan":"II Начало"}
                 type="time"
                 name="Istart"
                 style={{width:"50%"}}
@@ -567,7 +586,7 @@ const YolHatyTable = (props) => {
                 onChange={(e)=>setStartII(e.target.value)}
               />
               <Input
-                addonBefore="II gutaryan"
+                addonBefore={dil==="TM"?"II gutaryan":"II заканчивать"}
                 type="time"
                 name="Istart"
                 style={{width:"50%"}}
@@ -576,7 +595,7 @@ const YolHatyTable = (props) => {
                 onChange={(e)=>setEndII(e.target.value)}
               />
             <Input
-            addonBefore="Dastawka Baha"
+            addonBefore={dil==="TM"?"Dostawka baha":"цена доставки"}
             name="description_en"
             className="suruji-uytget--input"
             value={dastawkaPrice}
@@ -584,7 +603,7 @@ const YolHatyTable = (props) => {
           />
           <Input
               style={{marginTop:"5px"}}
-                addonBefore="Walyuta Baha"
+                addonBefore={dil==="TM"?"Walyuta baha":"Цены на валюту"}
                 name="description_en"
                 className="suruji-uytget--input"
                 value={currency_exchange}
@@ -592,21 +611,21 @@ const YolHatyTable = (props) => {
               />
           <Select
           style={{width:"100%"}}
-          placeholder="Market kartdan söwda edýärmi?"
+          placeholder={dil==="TM"?"Market kartdan söwda edýärmi?":"Вы продаете по карте?"}
           onChange={IsCart}>
             <Option value={true}>Howa</Option>
             <Option value={false}>Ýok</Option>
           </Select>
           <Select
           style={{width:"100%"}}
-          placeholder="Market CashBack söwda edýärmi?"
+          placeholder={dil==="TM"?"Market CashBack söwda edýärmi?":"Есть ли в вашем маркете система кэшбэка?"}
           onChange={Cashback}>
             <Option value={true}>Howa</Option>
             <Option value={false}>Ýok</Option>
           </Select>
           <Input
               style={{marginTop:"5px"}}
-                addonBefore="CashBack Prasent"
+                addonBefore={dil==="TM"?"CashBack Prasent":"процент CashBack"}
                 name="CashBack Prasent"
                 className="suruji-uytget--input"
                 value={cashBackPrasent}
@@ -638,71 +657,11 @@ const YolHatyTable = (props) => {
 
         }
       </Drawer>
+     
       <Drawer
         width={500}
         className="lukman-table--drawer"
-        title="Üýtgetmeler"
-        placement="right"
-        onClose={() => ShowTelefon()}
-        visible={tel}
-        
-      >
-        {!loading ? <div className="yolHatyTable--uytgetmeler">
-        <div style={{width:"100%",display:"inline-flex",justifyContent:"space-between"}}>
-           <Input
-               addonBefore={`Telefon belgi`}
-               className="suruji-uytget--input"
-               style={{width:"80%"}}
-               value={newPhone}
-               onChange={(e)=>{setNewPhone(e.target.value)}}
-             />
-              <Button
-              type="primary"
-              shape="round"
-              onClick={()=>AddPhone(phone.id)}
-            >
-              Gosh
-            </Button>
-            </div>
-          
-          { phone.PhoneNumbers &&
-            phone.PhoneNumbers.map((number,i)=>{
-             return <React.Fragment>
-             <div>
-               <p style={{width:"100%",display:"inline-flex",justifyContent:"space-around"}}>
-                 {i+1+") "}{number.phoneNumber} <Popconfirm
-            title="Siz çyndan öçürmek isleýärsiňizmi?"
-            onConfirm={() => DeleteTel(number.id)}
-            // onCancel={cancel}
-            okText="Hawa"
-            cancelText="Ýok"
-          >
-             <Button
-              type="primary"
-              shape="round"
-              danger
-              // onClick={}
-            >
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm> </p>
-          
-               </div>
-              
-             </React.Fragment>
-         
-            })
-            
-          }
-          
-        </div>
-        :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 210px"}} />
-              }
-      </Drawer>
-      <Drawer
-        width={500}
-        className="lukman-table--drawer"
-        title="Üýtgetmeler"
+        title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
         onClose={() => ShowSurat()}
         visible={img}
@@ -721,7 +680,7 @@ const YolHatyTable = (props) => {
               shape="round"
               onClick={()=>UpdateSurat(market.id)}
             >
-              Gosh
+              {dil==="TM"?"Gosh":"Добавлять"}
             </Button>
             </div>
          {market &&  <img src={BASE_URL+"/"+market.surat} alt="Market Surat" style={{width:"450px",height:"500px",objectFit:"contain"}} />}

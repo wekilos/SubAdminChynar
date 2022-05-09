@@ -80,6 +80,14 @@
   cursor: pointer;
 }
 
+.notify2 {
+  position: fixed;
+  right: 110px;
+  top: -4px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
 .menuitem {
   font-size: 16px;
   font-weight: 600;
