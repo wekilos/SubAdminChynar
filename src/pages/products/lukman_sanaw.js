@@ -105,7 +105,8 @@ const Lukman = () =>{
     const getBrands = ()=>{
         axiosInstance.get("/api/brands",{
             params:{
-                active:true
+                active:true,
+                limit:999
             }
         }).then((data)=>{
             setBrands(data.data);

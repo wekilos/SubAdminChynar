@@ -43,6 +43,7 @@ password: password,
          
     }else{
         message.warn(res.data.msg)
+        message.error("nädogry Telefon belgi yada password")
     }
     
 
