@@ -3,6 +3,7 @@ import React,{useState} from 'react';
 import {Button,Space,message,Table,Modal,Drawer,Popconfirm} from 'antd';
 import "antd/dist/antd.css";
 import { EditOutlined,DeleteOutlined } from '@ant-design/icons';
+import { useSizeComponents } from "../../components/sizeComponent";
 
 import UnitEdit  from '../Orders/UnitEdit';
 import './LukmanTable.css';
@@ -11,11 +12,13 @@ import PrintComponent from "../../components/PrintComponent"
 
 const LukmanTable = props=>{
 
+    
+    const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getOrders = props.getOrders;
     const valyuta = props.valyuta;
 
-    const columns = [
+    const columns = width>850 ? [
         {
             title:"Order No",
             dataIndex:"id"
@@ -102,7 +105,56 @@ const LukmanTable = props=>{
                 </Space>
               ),
         }
-    ];
+    ]
+    :[
+        {
+            title:"Zakaz edilen wagty",
+            dataIndex:"order_date_time",
+            render:(text,record)=>(
+                <div>
+                   <p> { record.order_date_time && record.order_date_time.slice(0,10) }</p> 
+                   <p>{ record.order_date_time && record.order_date_time.slice(11,19)}</p>
+                    
+                </div>
+            )
+        },
+        {
+            title:"Ulanyjy",
+            render:(text,record)=>(
+                
+                <div>
+                     <h3>{record && record.User && record.User.fname} {record && record.User && record.User.lastname} </h3> 
+                     <p>{record.User && record.User.phoneNumber}</p>
+                 </div>
+            )
+        },
+        {
+            title:"Üýygetmek we Özgertmek",
+            dataIndex:"goshmacha",
+            render: (text, record) => (
+                
+                <div>
+                     <Button style={{marginBottom:"5px",marginLeft:"3px"}} type='primary'shape='round'onClick={()=>ShowInformation(record)} >Goşmaça</Button>
+                     <br></br>
+                    
+                    <div style={{display:"inline-flex"}}>
+                        <Button style={{marginRight:"3px"}} type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
+                        <Popconfirm
+                            title="Siz çyndan öçürmek isleýärsinizmi?"
+                            onConfirm={()=>DeleteOrder(record)} 
+                            // onCancel={cancel}
+                            okText="Howwa"
+                            cancelText="Ýok"
+                        >
+                            <Button type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
+
+                        </Popconfirm>
+                    </div>
+                </div>
+            
+              ),
+        }
+    ]
 
     const [edit,setEdit]=useState(false);
     const [info,setInfo] = useState(false);
@@ -170,7 +222,7 @@ const Gowshuryldy = (event)=>{
     return(
         <div className='LukmanTable'>
                 <Drawer
-                    width={500}
+                    width={width>850?500:320}
                     className='lukman-table--drawer'
                     title="Goşmaça Maglumat"
                     placement="right"
@@ -245,7 +297,7 @@ const Gowshuryldy = (event)=>{
                         <PrintComponent maglumat={maglumat} sum={sum} valyuta={valyuta} />
                 </Drawer>
                 <Drawer
-                width={400}
+                width={width>850?500:320}
                 className='lukman-table--drawer'
                 title="Üýtgetmeler"
                 placement="right"

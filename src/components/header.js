@@ -1,13 +1,17 @@
 import React,{useContext, useEffect, useState} from "react";
 import "./header.css";
 import "antd/dist/antd.css";
-import { Layout, Menu, Input, Dropdown, Badge, Popover, message, Select } from "antd";
+import { Layout, Menu, Input, Dropdown, Badge, Popover, message, Select,Button, Drawer } from "antd";
 
 import { UserOutlined, BellOutlined, LogoutOutlined } from "@ant-design/icons";
 import { logout } from "../utils/index";
 import { axiosInstance } from "../utils/axiosIntance";
 import { Link, useHistory } from "react-router-dom";
 import { SebedimContext } from "../context/Sebedim";
+
+import { useSizeComponents } from "./sizeComponent";
+import SiderDemo from "./sidebarMenu";
+
 const { Search } = Input;
 const content = (
   <div>
@@ -32,10 +36,12 @@ const profile_menu = (
 
  const  Headers =()=> {
 
+  const [width,height] = useSizeComponents();
   const history = useHistory();
   const [bool, setBool] = useState(false);
   const [bool2, setBool2] = useState(false);
   const [newOrder,setNewOrder] = useState();
+  const [menu,setMenu] = useState(false);
   const { ChangeDil, dil } = useContext(SebedimContext)
   useEffect(()=>{
     const time = setTimeout(() => {
@@ -43,6 +49,10 @@ const profile_menu = (
       }, 1000*60*5);
     return ()=> clearTimeout(time);
 },[bool]);
+
+useEffect(()=>{
+  console.log("width",width)
+},[width])
 
 // ,{
 //     params: {
@@ -104,9 +114,14 @@ const handleLanguage = (value)=>{
           onSearch={(value) => console.log(value)}
           className="search"
         /> */}
-        <div className="App-title">
+       {width>850 && <div className="App-title">
           Cynar Market
-        </div>
+        </div>}
+        {
+          width<850 && <div style={{marginLeft:"10px"}}>
+            <Button onClick={()=>setMenu(true)}>Menu</Button>
+          </div>
+        }
         <div className="profile">
           <Dropdown overlay={profile_menu}>
             <div
@@ -136,6 +151,19 @@ const handleLanguage = (value)=>{
 
             <option value="🇷🇺" > 🇷🇺 </option>
           </Select>
+        </div>
+        <div className="headerDrawer">
+        <Drawer
+          width={320}
+          className='lukman-table--drawer'
+          title="Menu"
+          placement="left"
+          onClose={()=>setMenu(false)}
+          visible={menu}
+
+        >
+          <SiderDemo close={()=>setMenu(false)}/>
+        </Drawer>
         </div>
       </Header>
     );

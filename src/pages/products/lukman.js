@@ -1,8 +1,8 @@
 import React,{useEffect, useState} from 'react';
 
-import {Button,Input,Drawer} from 'antd';
+import { useSizeComponents } from "../../components/sizeComponent";
+import {Drawer} from 'antd';
 import "antd/dist/antd.css";
-import { SearchOutlined } from '@ant-design/icons';
 
 import LukmanGozleg from './lukmanGozleg'; 
 import UnitGosh from './UnitGosh';
@@ -12,6 +12,7 @@ import { axiosInstance } from '../../utils/axiosIntance';
 
 const Lukman = () =>{
 
+    const [width,height] = useSizeComponents();
     const [units,setUnits] = useState([]);
 
     useEffect(()=>{
@@ -51,7 +52,7 @@ const Lukman = () =>{
                 <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman--gosh'>Hasaba Al</Button>
             </div> */}
             <Drawer
-            width={400}
+            width={width>850?400:320}
             className='lukman-gosh--drawer'
             title="Unit Goş"
             placement="right"

@@ -9,13 +9,17 @@ import './LukmanTable.css';
 import { axiosInstance, BASE_URL } from '../../utils/axiosIntance';
 import PrintComponent from "../../components/PrintComponent"
 
-const LukmanTable = props=>{
 
+import { useSizeComponents } from "../../components/sizeComponent";
+const LukmanTable = (props)=>{
+
+    
+    const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getOrders = props.getOrders;
     const valyuta = props.valyuta;
 
-    const columns = [
+    const columns = width>850 ? [
         {
             title:"Order No",
             dataIndex:"id"
@@ -109,7 +113,54 @@ const LukmanTable = props=>{
                 </Space>
               ),
         }
-    ];
+    ]
+    :[
+
+        {
+            title:"Umumy baha",
+            dataIndex:"sum"
+        },
+        {
+            title:"Zakaz status",
+            render:(text,record)=>(
+                <div>
+                    {record.Status && record.Status.name_tm} 
+                </div>
+            )
+        },
+        {
+            title:"Üýygetmek we Özgertmek",
+            dataIndex:"goshmacha",
+            render: (text, record) => (
+                <div>
+                     <Button style={{marginBottom:"5px",width:"105px"}} type='primary'shape='round'onClick={()=>ShowInformation(record)} >Goşmaça</Button>
+                     <br></br>
+                     <Popconfirm
+                        title="Haryt Gowşuryldymy?"
+                        onConfirm={()=>Gowshuryldy(record)} 
+                        // onCancel={cancel}
+                        okText="Hawa"
+                        cancelText="Ýok"
+                    >
+                     <Button 
+                     style={{marginBottom:"5px",width:"105px"}} type='primary'shape='round' >Gowşuryldy</Button>
+                    </Popconfirm><br></br>
+
+                     <Button style={{marginRight:"5px"}} type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
+                    <Popconfirm
+                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                        onConfirm={()=>DeleteOrder(record)} 
+                        // onCancel={cancel}
+                        okText="Hawa"
+                        cancelText="Ýok"
+                    >
+                        <Button type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
+
+                    </Popconfirm>
+                    </div>
+              ),
+        }
+    ]
 
     const [edit,setEdit]=useState(false);
     const [info,setInfo] = useState(false);
@@ -176,7 +227,7 @@ const Gowshuryldy = (event)=>{
     return(
         <div className='LukmanTable'>
                 <Drawer
-                    width={500}
+                    width={width>850?500:320}
                     className='lukman-table--drawer'
                     title="Goşmaça Maglumat"
                     placement="right"
@@ -251,7 +302,7 @@ const Gowshuryldy = (event)=>{
                         <PrintComponent maglumat={maglumat} sum={sum}  valyuta={valyuta} />
                 </Drawer>
                 <Drawer
-                width={400}
+                width={width>850?500:320}
                 className='lukman-table--drawer'
                 title="Üýtgetmeler"
                 placement="right"

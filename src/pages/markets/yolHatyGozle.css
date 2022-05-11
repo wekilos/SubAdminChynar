@@ -1,6 +1,6 @@
 .yolHaty-gozle{
     background-color: #fff;
-    height: 75px;
+    /* height: 75px; */
     width: 100%;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
@@ -11,6 +11,8 @@
     align-items: center;
     padding-left: 18px;
     padding-right: 18px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     
 }
 .yolHaty-gozle--form{
@@ -33,10 +35,10 @@
     margin: 5px;
 }
 
-@media screen and (max-width:600px){
+@media screen and (max-width:750px){
     .yolHaty-gozle--input{
         display: inline;
         justify-content:left;
-        width: 250px;
+        width: 150px;
     }
 }

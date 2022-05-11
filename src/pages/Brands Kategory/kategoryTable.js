@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
+import { useSizeComponents } from "../../components/sizeComponent";
 import { Table, Button, Space, Select, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -11,12 +12,14 @@ const {Option} = Select;
 
 const WelayatTable = (props) => {
   
+
+  const [width,height] = useSizeComponents()
 // geting all data from database with api
 const { dil } = useContext(SebedimContext)
   const [data, setData] = props.data;
   const getData = props.getData;
 
-  const columns = [
+  const columns = width>850? [
     {
       title: "No",
       dataIndex: "id",
@@ -86,7 +89,51 @@ const { dil } = useContext(SebedimContext)
         </Space>
       ),
     },
-  ];
+  ]
+  :[
+    {
+      title: "No",
+      dataIndex: "id",
+    },
+    {
+      title: dil==="TM"?"Kategoryya Ady tm":"Название категории тм",
+      dataIndex: "name_tm",
+    },
+    {
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
+      dataIndex: "goshmacha",
+      render: (text, record) => (
+        <Space >
+         
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => ShowDrawer(record)}
+          >
+            <EditOutlined />
+          </Button>
+         
+            <Popconfirm
+            title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
+            onConfirm={() => DeleteMarket(record)}
+            // onCancel={cancel}
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Нет"}
+          >
+             <Button
+              type="primary"
+              shape="round"
+              danger
+              // onClick={}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
+         
+        </Space>
+      ),
+    },
+  ]
 
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -255,7 +302,7 @@ const { dil } = useContext(SebedimContext)
   return (
     <div className="yolHatyTable">
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Goşmaça"
         placement="right"
@@ -349,7 +396,7 @@ const { dil } = useContext(SebedimContext)
       </Drawer>
       
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
@@ -410,7 +457,7 @@ const { dil } = useContext(SebedimContext)
         }
       </Drawer>
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmeler"
         placement="right"
@@ -471,7 +518,7 @@ const { dil } = useContext(SebedimContext)
               }
       </Drawer>
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmeler"
         placement="right"

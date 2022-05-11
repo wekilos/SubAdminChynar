@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Table, Button, Space, Modal, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
+import React, { useState } from "react";
+
+import { useSizeComponents } from "../../components/sizeComponent";
+import { Table, Button, Space, Input, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined,LoadingOutlined } from "@ant-design/icons";
 
@@ -9,24 +11,19 @@ import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
 
 const YolHatyTable = (props) => {
   
+  const [width,height] = useSizeComponents();
 // geting all data from database with api
   const [data, setData] = props.data;
   console.log("Data:",data)
   const getData = props.getData;
   const getKategoriyas = props.getKategoriyas;
 
-  const columns = [
+  const columns = width>850?[
     {
       title: "No",
       dataIndex: "id",
     },
-    // {
-    //   title: "Market Surat",
-    //   dataIndex: "surat",
-    //   render:(text,record)=>(
-    //     <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.Market.surat} alt="Market Surat" />
-    //   )
-    // },
+    
     {
       title: "Market Kategoryya Ady",
       dataIndex: "name_tm",
@@ -52,13 +49,7 @@ const YolHatyTable = (props) => {
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space size="middle">
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowModal(record)}
-          >
-            Goşmaça
-          </Button> */}
+          
           <Button
             type="primary"
             shape="round"
@@ -66,20 +57,8 @@ const YolHatyTable = (props) => {
           >
             <EditOutlined />
           </Button>
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowTelefon(record)}
-          >
-             Kategoriýalar 
-          </Button> */}
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowSurat(record)}
-          >
-             Kategoriýa Gosh 
-          </Button> */}
+          
+          
           <Popconfirm
             title="Are you sure to delete this task?"
             onConfirm={() => DeleteMarket(record)}
@@ -101,7 +80,60 @@ const YolHatyTable = (props) => {
         </Space>
       ),
     },
-  ];
+  ]
+  :[
+    {
+      title: "No",
+      dataIndex: "id",
+    },  
+    // {
+    //   title: "Market Kategoryya Ady",
+    //   dataIndex: "name_tm",
+    //   render:(text,record)=>(
+    //     <h3>{record.MarketKategoriya.name_tm}</h3>
+    //   )
+    // },
+    {
+      title: "SubKategoriya ady tm",
+      dataIndex: "name_tm",
+    },
+    {
+      title: "Goşmaça maglumat we Özgertmek",
+      dataIndex: "goshmacha",
+      render: (text, record) => (
+        <Space >
+          
+          
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => ShowDrawer(record)}
+          >
+            <EditOutlined />
+          </Button>
+          
+          <Popconfirm
+            title="Are you sure to delete this task?"
+            onConfirm={() => DeleteMarket(record)}
+            // onCancel={cancel}
+            okText="Howwa"
+            cancelText="Ýok"
+          >
+             <Button
+              type="primary"
+              shape="round"
+              danger
+              // onClick={}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
+            
+         
+        </Space>
+      ),
+    },
+  ]
 
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState(false);

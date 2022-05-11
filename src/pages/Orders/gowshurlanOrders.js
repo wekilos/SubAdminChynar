@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react';
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Input,Drawer,Select} from 'antd';
 import "antd/dist/antd.css";
 import { SearchOutlined } from '@ant-design/icons';
@@ -13,6 +14,7 @@ const {Option} = Select;
 
 const Lukman = () =>{
 
+    const [width,height] = useSizeComponents();
     const [units,setUnits] = useState([]);
             const [ statuses,setStatuses] = useState([]);
             const [ statusId, setStatusId] = useState();
@@ -116,7 +118,7 @@ const Lukman = () =>{
                 <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman--gosh'>Hasaba Al</Button>
             </div> */}
             <Drawer
-            width={400}
+            width={width>850?400:320}
             className='lukman-gosh--drawer'
             title="Unit Goş"
             placement="right"

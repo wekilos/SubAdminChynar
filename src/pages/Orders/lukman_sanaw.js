@@ -4,6 +4,7 @@ import {Button,Input,Drawer} from 'antd';
 import "antd/dist/antd.css";
 import { SearchOutlined,PlusCircleFilled } from '@ant-design/icons';
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import LukmanFilter from './lukmanFilter'; 
 import StatusGosh from './StatusGosh';
 import LukmanSanawTable from './LukmanSanawTable';
@@ -12,6 +13,7 @@ import { axiosInstance } from '../../utils/axiosIntance';
 
 const Lukman = () =>{
 
+    const [width,height] = useSizeComponents();
     const [ data, setData ] = useState([]);
 
     useEffect(()=>{
@@ -48,7 +50,7 @@ const Lukman = () =>{
                 <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman--gosh'>Hasaba Al</Button>
             </div> */}
             <Drawer
-            width={500}
+            width={width>850?500:320}
             className='lukman-gosh--drawer'
             title="Status Goş"
             placement="right"

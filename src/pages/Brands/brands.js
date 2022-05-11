@@ -1,4 +1,5 @@
 import React,{useState,useEffect, useContext} from 'react';
+import { useSizeComponents } from "../../components/sizeComponent";
 import { Button,Select,Drawer } from 'antd';
 import "antd/dist/antd.css";
 import { PlusCircleFilled } from '@ant-design/icons';
@@ -12,6 +13,8 @@ import { SebedimContext } from "../../context/Sebedim";
 
 const {Option} = Select;
 const Welayatlar = (prop) =>{
+
+  const [width,height] = useSizeComponents();
 
   const { dil } = useContext(SebedimContext);
     const [Gosh,setGosh]=useState(false);
@@ -100,7 +103,7 @@ const Welayatlar = (prop) =>{
             </div> */}
             {/* {Gosh && <YolHatyGosh onClick={GoshButton}/>} */}
             <Drawer
-                width={500}
+                width={width>850?500:320}
                 className='lukman-table--drawer'
                 title={dil==="TM"?"Brand Goş":"Создать бренд"}
                 placement="right"
@@ -114,11 +117,11 @@ const Welayatlar = (prop) =>{
 
             </Drawer>
             <div className='yolHaty--gozleg'>
-               <form  className=" welayatGozleg">
-                    <div>
+               <form  className=" welayatGozleg" style={{flexWrap:"wrap"}}>
+                    {width>850&&<div>
                     <h2 >{dil==="TM"?"Brandlerin Kategoryya sahypasy":"Страница категории брендов"}</h2>
                       
-                    </div>
+                    </div>}
                     <Select 
                       // value={welayatId}
                       onChange={onChangeW} style={{minWidth:"250px"}}>

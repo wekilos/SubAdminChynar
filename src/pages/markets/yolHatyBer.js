@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import { Input, Steps, Button, Drawer, message, Select } from "antd";
 import "antd/dist/antd.css";
 import { PlusCircleFilled, CloseCircleOutlined,SearchOutlined } from "@ant-design/icons";
@@ -13,6 +14,8 @@ import { SebedimContext } from "../../context/Sebedim";
 const { Option } = Select;
 
 const YolHatyBer = (props) => {
+
+  const [width,height] = useSizeComponents()
   const {dil } = useContext(SebedimContext)
   const [Gosh, setGosh] = useState(false);
   const GoshButton = () => {
@@ -82,7 +85,7 @@ const YolHatyBer = (props) => {
   return (
     <div className="yolHatyBer">
       <Drawer
-                width={500}
+                width={width>850?500:320}
                 className='lukman-table--drawer'
                 title={dil==="TM"?"Kategoryya Goş":"Добавить категорию"}
                 placement="right"
@@ -99,21 +102,9 @@ const YolHatyBer = (props) => {
       <div className="yolHaty-gozle">
       <form className="yolHaty-gozle--form">
         <div>
-          {/* <Select
-            className="yolHaty-gozle--input"
-            style={{ width: 200 }}
-            placeholder="Market Saýla"
-            value={kategoriyaValue}
-            onChange={onChange}
-          >
-            {
-              data.map((market)=>{
-                return <Option value={market.id}>{market.name_tm}</Option>
-              })
-            }
-            
-          </Select> */}
-          <h1>{dil==="TM"?"Market Kategoryalary":"Категории маркетa"}</h1>
+         
+          {width>850?   <h1>{dil==="TM"?"Market Kategoryalary":"Категории маркетa"}</h1>
+          :             <h1>{dil==="TM"?"Kategorya":"Категории"}</h1>}
         </div>
         <div>
           <Button

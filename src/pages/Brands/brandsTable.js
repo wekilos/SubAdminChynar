@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Table, Button, Space, Select, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
+import React, { useState, useContext } from "react";
+import { useSizeComponents } from "../../components/sizeComponent";
+import { Table, Button, Space, Select, Input, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import "./kategoryTable.css";
-import axios from "axios";
+
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
 import { SebedimContext } from "../../context/Sebedim";
 const {Option} = Select;
 
 const WelayatTable = (props) => {
   
+  const [width,height] = useSizeComponents()
   const { dil } = useContext(SebedimContext);
 // geting all data from database with api
   const [data, setData] = props.data;
   const getData = props.getData;
 
-  const columns = [
+  const columns = width>850?[
     {
       title: "No",
       dataIndex: "id",
@@ -45,13 +47,7 @@ const WelayatTable = (props) => {
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space size="middle">
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowModal(record)}
-          >
-            Goşmaça
-          </Button> */}
+         
           <Button
             type="primary"
             shape="round"
@@ -59,20 +55,7 @@ const WelayatTable = (props) => {
           >
             <EditOutlined />
           </Button>
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowTelefon(record)}
-          >
-             Telefon 
-          </Button> */}
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowSurat(record)}
-          >
-             Surat 
-          </Button> */}
+         
             <Popconfirm
             title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
             onConfirm={() => DeleteMarket(record)}
@@ -93,7 +76,50 @@ const WelayatTable = (props) => {
         </Space>
       ),
     },
-  ];
+  ]:[
+    {
+      title: dil==="TM"?"Brand Ady tm":"Бренд название tm" ,
+      dataIndex: "name_tm",
+    },
+    {
+      title: dil==="TM"?"Brand Surat":"Изображение бренда",
+      dataIndex: "surat",
+      render:(text,record)=>(
+        <img style={{width:"100px",height:"100px",objectFit:"contain"}} src={BASE_URL+"/"+record.surat} alt={record.surat}/>
+      )
+    },
+    {
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
+      dataIndex: "goshmacha",
+      render: (text, record) => (
+        <Space >
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => ShowDrawer(record)}
+          >
+            <EditOutlined />
+          </Button>
+         
+            <Popconfirm
+            title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
+            onConfirm={() => DeleteMarket(record)}
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Нет"}
+          >
+             <Button
+              type="primary"
+              shape="round"
+              danger
+            >
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
+         
+        </Space>
+      ),
+    },
+  ]
 
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -246,7 +272,7 @@ const WelayatTable = (props) => {
   return (
     <div className="yolHatyTable">
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title={dil==="TM"?"Goşmaça maglumat":"Дополнительная информация"}
         placement="right"
@@ -340,7 +366,7 @@ const WelayatTable = (props) => {
       </Drawer>
       
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
@@ -408,7 +434,7 @@ const WelayatTable = (props) => {
         }
       </Drawer>
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmeler"
         placement="right"
@@ -469,7 +495,7 @@ const WelayatTable = (props) => {
               }
       </Drawer>
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmeler"
         placement="right"

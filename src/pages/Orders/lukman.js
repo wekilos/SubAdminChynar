@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react';
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import {Input,Drawer,Select} from 'antd';
 import "antd/dist/antd.css";
 import { SearchOutlined } from '@ant-design/icons';
@@ -11,7 +12,12 @@ import  './lukman.css';
 import { axiosInstance } from '../../utils/axiosIntance';
 const {Option} = Select;
 
+
 const Lukman = () =>{
+
+
+    
+    const [width,height] = useSizeComponents();
 
     const [units,setUnits] = useState([]);
             const [ statuses,setStatuses] = useState([]);
@@ -138,33 +144,9 @@ const Lukman = () =>{
             <form className='lukman-gozleg--form'>
                 <div>
                 <Input onChange={(e)=>{setAll(e.target.value)}} placeholder = 'Umumy Gözleg' className='lukman-gozleg--input' />
+               
+            
                 {/* <Select
-                    className='lukman-gozleg--input'
-                    placeholder="Welayat Saýla"
-                    onChange={OnChangeW}
-                    
-                >
-                    <Option value={null}>Ählisi</Option>
-                    {
-                    welayatlar.map((status)=>{
-                        return <Option value={status.id}>{status.name_tm}</Option>
-                    })
-                    }
-                </Select> */}
-                {/* <Select
-                    className='lukman-gozleg--input'
-                    placeholder="Market Saýla"
-                    onChange={OnChangeM}
-                    
-                >
-                    <Option value={null}>Ählisi</Option>
-                    {
-                    markets.map((status)=>{
-                        return <Option value={status.id}>{status.name_tm}</Option>
-                    })
-                    }
-                </Select> */}
-                <Select
                     className='lukman-gozleg--input'
                     showSearch
                     // style={{ width: 200 }}
@@ -181,10 +163,10 @@ const Lukman = () =>{
                         return <Option value={status.id}>{status.name_tm}</Option>
                     })
                     }
-                </Select>
-                {/* <Input addonBefore='Sene' type='date' className='lukman-gozleg--input' /> */}
+                </Select> */}
+                
                 </div>
-                {/* <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>Unit Goş</Button> */}
+           
             </form>
             
         </div>

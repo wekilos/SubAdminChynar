@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import {  Button, Drawer, Select } from "antd";
 import "antd/dist/antd.css";
 import { PlusCircleFilled, } from "@ant-design/icons";
@@ -13,6 +14,8 @@ import { SebedimContext } from "../../context/Sebedim";
 const { Option } = Select;
 
 const YolHatyBer = (props) => {
+
+  const [width,height] = useSizeComponents()
   const {dil} = useContext(SebedimContext)
   const [Gosh, setGosh] = useState(false);
   const GoshButton = () => {
@@ -94,18 +97,17 @@ const YolHatyBer = (props) => {
     }
 
     function onChangeK(value){
-        setMarketkategoriya(value);
-        getSubKategoriyas(value)
+        setMarketkategoriya(value.target.value);
+        getSubKategoriyas(value.target.value)
+        console.log("seret",value.target.value)
     }
 
-    function onSearchK(val) {
-      console.log('search:', val);
-    }
+   
 
   return (
     <div className="yolHatyBer">
       <Drawer
-                width={500}
+                width={width>850?500:320}
                 className='lukman-table--drawer'
                 title={dil==="TM"?"SubKategoryya Goş":"Создать подкатегорию"}
                 placement="right"
@@ -122,47 +124,24 @@ const YolHatyBer = (props) => {
       <div className="yolHaty-gozle">
       <form className="yolHaty-gozle--form">
         <div>
-          {/* <Select
-            className="yolHaty-gozle--input"
-            showSearch
-            style={{ width: 200 }}
-            placeholder="Market Saýla"
-            value={kategoriyaValue}
-            optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {
-              data.map((market)=>{
-                return <Option value={market.id}>{market.name_tm}</Option>
-              })
-            }
-            
-          </Select> */}
+         
 
-          <Select
+          <select
             className="yolHaty-gozle--input"
-            showSearch
-            style={{ width: 200 }}
+            // showSearch
+            style={{ width: "250px" ,height:"35px"}}
             placeholder={dil==="TM"?"Kategoriya Saýla":"выбрать категорию"}
-            value={kategoriyaValue}
-            optionFilterProp="children"
+            // value={kategoriyaValue}
+           
             onChange={onChangeK}
-            onSearch={onSearchK}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
           >
             {
-              kategoriya.map((kategory)=>{
-                return <Option value={kategory.id}>{dil==="TM"?kategory.name_tm:kategory.name_ru}</Option>
+              kategoriya?.map((kategory)=>{
+                return <option value={kategory.id}>{dil==="TM"?kategory.name_tm:kategory.name_ru}</option>
               })
             }
             
-          </Select>
+          </select>
         </div>
         <div>
           <Button
@@ -172,7 +151,7 @@ const YolHatyBer = (props) => {
             icon={<PlusCircleFilled />}
             className="yolHaty-gozle--button"
           >
-            Market Kategoriýa Döret
+             {width>850?"SubKategoriýa Döret":"SubKategoriya"}
           </Button>
         </div>
       </form>

@@ -8,21 +8,25 @@ import { Loading } from "../components/loading";
 import "antd/dist/antd.css";
 import "./style.css";
 import Login from "../pages/login/login";
+import { useSizeComponents } from "../components/sizeComponent";
 // import Yolhatlar from "../pages/ugrukdyryjy/yolHaty";
 import Orders from "../pages/Orders/lukman";
 const Sidebar = React.lazy(() => import("../components/sidebar"));
 const { Content } = Layout;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
+  const [width,height] = useSizeComponents();
   return (
     <Route
       {...rest}
       render={(props) =>
         isLoginAdmin()  ? (
           <Layout>
+            
             <Suspense fallback={<Loading />}>
-              <Sidebar />
-            </Suspense>
+            {width>850 &&   <Sidebar />}
+              </Suspense>
+            
 
             <Layout className="site-layout">
               <Header />

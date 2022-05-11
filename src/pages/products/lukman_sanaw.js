@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react';
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Input,Drawer,Select, message} from 'antd';
 import "antd/dist/antd.css";
 import { SearchOutlined,PlusCircleFilled } from '@ant-design/icons';
@@ -14,6 +15,7 @@ const {Option}=Select;
 
 const Lukman = () =>{
 
+    const [width,height] = useSizeComponents();
     const [ markets,setMarkets] = useState([]);
     const [ kategoriyalar,setKategoriyalar] = useState([]);
     const [ subKategoriyalar, setSubKategoriyalar] = useState([]);
@@ -176,7 +178,7 @@ const Lukman = () =>{
                 <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman--gosh'>Hasaba Al</Button>
             </div> */}
             <Drawer
-            width={600}
+            width={width>850?600:320}
             className='lukman-gosh--drawer'
             title="Haryt Goş"
             placement="right"
@@ -193,44 +195,29 @@ const Lukman = () =>{
 
                         <Input value={all} onChange={(e)=>setAll(e.target.value)} placeholder='Umumy gözleg' className='lukman-gozleg--input' />
                         
-                        {/* <Select onChange={OnChangeW} placeholder="Welayat Sayla!"  className='lukman-gozleg--input'>
-                            <Option value={null}>Ählisi</Option>
+                   
+                        <select style={{height:"35px",border:"none",borderRadius:"6px"}} onChange={(v)=>{setKategoriya_id(v.target.value);getSubKategoriyas(v.target.value)}}
+                         placeholder="Kategoryya" className='lukman-gozleg--input'>
+                            <option value={null}>Ählisi</option>
                             {
-                                welayatlar.map((welayat)=>{
-                                    return <Option value={welayat.id}>{welayat.name_tm}</Option>
+                                kategoriyalar?.map((kategoriya,i)=>{
+                                    return <option key={"ketegoryi"+i} value={kategoriya.id}>{kategoriya.name_tm}</option>
                                 })
                             }
-                        </Select> */}
-
-                        {/* <Select onChange={(v)=>{setMarket_id(v);getKategoriyas(market_Id)}} placeholder="Ählisi"  className='lukman-gozleg--input'>
-                            <Option value={null}>Ählisi</Option>
+                        </select>
+                        <select style={{height:"35px",border:"none",borderRadius:"6px"}} onChange={(v)=>setSubKategoriya_id(v.target.value)} placeholder="SubKategoryya" className='lukman-gozleg--input'>
+                            <option value={null}>Ählisi</option>
                             {
-                                markets.map((market)=>{
-                                    return <Option value={market.id}>{market.name_tm}</Option>
+                                subKategoriyalar?.map((kategoriya)=>{
+                                    return <option value={kategoriya.id}>{kategoriya.name_tm}</option>
                                 })
                             }
-                        </Select> */}
-                        <Select onChange={(v)=>{setKategoriya_id(v);getSubKategoriyas(v)}} placeholder="Kategoryya" className='lukman-gozleg--input'>
-                            <Option value={null}>Ählisi</Option>
-                            {
-                                kategoriyalar.map((kategoriya)=>{
-                                    return <Option value={kategoriya.id}>{kategoriya.name_tm}</Option>
-                                })
-                            }
-                        </Select>
-                        <Select onChange={(v)=>setSubKategoriya_id(v)} placeholder="SubKategoryya" className='lukman-gozleg--input'>
-                            <Option value={null}>Ählisi</Option>
-                            {
-                                subKategoriyalar.map((kategoriya)=>{
-                                    return <Option value={kategoriya.id}>{kategoriya.name_tm}</Option>
-                                })
-                            }
-                        </Select>
-                        <Select onChange={(v)=>setIs_sale(v)} placeholder="Ählisi" className='lukman-gozleg--input'>
-                            <Option value={null}>Ählisi</Option>
-                            <Option value={true}>Skidkada</Option>
-                            <Option value={false}>Skidka däl</Option>
-                        </Select>
+                        </select>
+                        <select style={{height:"35px",border:"none",borderRadius:"6px"}} onChange={(v)=>setIs_sale(v.target.value)} placeholder="Ählisi" className='lukman-gozleg--input'>
+                            <option value={null}>Ählisi</option>
+                            <option value={true}>Skidkada</option>
+                            <option value={false}>Skidka däl</option>
+                        </select>
                         <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>Haryt goş</Button>
                         <Button onClick={()=>{setPageNo(pageNo+1);message.success("Yene 1000 haryt goshuldy!")}} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>+1000</Button>
 

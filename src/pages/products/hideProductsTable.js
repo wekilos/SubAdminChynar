@@ -1,8 +1,9 @@
 import React,{useState} from 'react';
 
-import {Button,Space,message,Table,Modal,Drawer,Popconfirm} from 'antd';
+import { useSizeComponents } from "../../components/sizeComponent";
+import {Button,Space,message,Table,Drawer,Popconfirm} from 'antd';
 import "antd/dist/antd.css";
-import { EditOutlined,DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
+import { EditOutlined,DeleteOutlined } from '@ant-design/icons';
 
 import ProductEdit from './ProductEdit';
 import ProductSkidga from "./skidga"
@@ -11,9 +12,10 @@ import { axiosInstance, BASE_URL } from '../../utils/axiosIntance';
 
 const LukmanTable = props=>{
 
+    const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getProducts = props.getProducts;
-    const columns = [
+    const columns = width>850? [
         {
             title:"Haryt No",
             dataIndex:"id"
@@ -97,7 +99,52 @@ const LukmanTable = props=>{
                      </Space>
               ),
         }
-    ];
+    ]
+    :[
+        {
+            title:"Haryt Surat",
+            dataIndex:"surat",
+            render:(text,record)=>(
+                <div style={{width:"50px"}}>
+                    <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.surat} alt="Haryt Surat"/>
+                </div>
+            )
+        },
+        {
+            title:"Haryt Ady",
+            dataIndex:"name_tm",
+        },
+        {
+            title:"Goshmacha we Özgertmek",
+            dataIndex:"goshmacha",
+            render: (text, record) => (
+                <div >
+                    <Button style={{marginBottom:"3px",width:"90px"}}  type='primary'shape='round'onClick={()=>MoreInformation(record)}>Goşmaça</Button>
+                    <Button style={{marginBottom:"3px",width:"90px"}}  type='primary'shape='round'onClick={()=>ShowSkidka(record)} >Skidka</Button>
+                    <Button style={{marginBottom:"3px",width:"90px"}}  type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
+                    <Popconfirm
+                        title="Siz çyndan Active etmek isleýärsinizmi?"
+                        onConfirm={()=>Active(record)} 
+                        // onCancel={cancel}
+                        okText="Howwa"
+                        cancelText="Ýok"
+                    >
+                     <Button style={{marginBottom:"3px",width:"90px"}}  type='primary' danger shape='round' >Görkez</Button>
+                    </Popconfirm>
+                    <Popconfirm
+                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                        onConfirm={()=>DeleteUser(record)} 
+                        // onCancel={cancel}
+                        okText="Howwa"
+                        cancelText="Ýok"
+                    >
+                        <Button style={{marginBottom:"3px",width:"90px"}}  type='primary' shape='round' danger  ><DeleteOutlined /></Button>                 
+               
+                    </Popconfirm>
+                </div>
+              ),
+        }
+    ]
 
     const [edit,setEdit]=useState(false);
     const [skidka,setSkidka]=useState(false);
@@ -168,7 +215,7 @@ const saveData = (event)=>{
     return(
         <div className='LukmanTable'>
                 <Drawer
-                width={600}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Goşmça Maglumat"
                 placement="right"
@@ -312,7 +359,7 @@ const saveData = (event)=>{
 }
                 </Drawer>
                 <Drawer
-                width={600}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Üýtgetmeler"
                 placement="right"
@@ -321,7 +368,7 @@ const saveData = (event)=>{
                     <ProductEdit getProducts={getProducts} mag={maglumat} onClick={ShowDrawer}  />
                 </Drawer>
                 <Drawer
-                width={500}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Üýtgetmeler"
                 placement="right"

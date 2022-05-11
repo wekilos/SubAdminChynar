@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react';
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Space,message,Table,Select,Drawer,Popconfirm,Input} from 'antd';
 import "antd/dist/antd.css";
 import { EditOutlined,DeleteOutlined,PlusCircleFilled, LoadingOutlined } from '@ant-design/icons';
@@ -11,6 +12,7 @@ import { axiosInstance, BASE_URL } from '../../utils/axiosIntance';
 const Option = {Select};
 const LukmanTable = props=>{
 
+  const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getProducts = props.getProducts;
 
@@ -71,7 +73,7 @@ const LukmanTable = props=>{
 
     useEffect(()=>{
       getUnits()
-    })
+    },[])
 
     const getMarketKategories = (id)=>{
       axiosInstance.get("/api/market/kategoriya/"+id,{
@@ -183,7 +185,7 @@ const ChangeCheckboxTaze = (value)=>{
 
 
 
-    const columns = [
+    const columns = width>850? [
         {
             title:"Haryt No",
             dataIndex:"id"
@@ -238,7 +240,7 @@ const ChangeCheckboxTaze = (value)=>{
             )
         },
         {
-            title:"Lukman Gözegçiligi we Özgertmek",
+            title:"Goshmacha we Özgertmek",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <Space size="middle">
@@ -268,7 +270,54 @@ const ChangeCheckboxTaze = (value)=>{
                      </Space>
               ),
         }
-    ];
+    ]
+    :[
+      {
+        title:"Haryt Surat",
+        dataIndex:"surat",
+        render:(text,record)=>(
+            <div style={{width:"50px"}}>
+                <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.surat} alt="Haryt Surat"/>
+            </div>
+        )
+    },
+    {
+        title:"Haryt Ady",
+        dataIndex:"name_tm",
+    },
+      {
+        title:"Goshmacha we Özgertmek",
+        dataIndex:"goshmacha",
+        render: (text, record) => (
+            <div >
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>MoreInformation(record)}>Goşmaça</Button>
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowSkidka(record)} >Skidka</Button>
+                <br></br>
+                {/* <Button type='primary'shape='round'onClick={()=>NewProduct(record)} >Täze</Button> */}
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
+                <Popconfirm
+                    title="Siz çyndan Gizlemek isleýärsinizmi?"
+                    onConfirm={()=>Active(record)} 
+                    // onCancel={cancel}
+                    okText="Hawa"
+                    cancelText="Ýok"
+                >
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary' danger shape='round' >Gizle</Button>
+                </Popconfirm>
+                <Popconfirm
+                    title="Siz çyndan öçürmek isleýärsinizmi?"
+                    onConfirm={()=>DeleteUser(record)} 
+                    // onCancel={cancel}
+                    okText="Howwa"
+                    cancelText="Ýok"
+                >
+                    <Button style={{width:"90px"}} type='primary' shape='round' danger  ><DeleteOutlined /></Button>                 
+           
+                </Popconfirm>
+            </div>
+          ),
+    }
+    ]
 
    
     const DeleteUser = (event)=>{
@@ -510,7 +559,7 @@ const getRazmerler = ()=>{
     return(
         <div className='LukmanTable'>
                 <Drawer
-                width={600}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Goşmça Maglumat"
                 placement="right"
@@ -661,7 +710,7 @@ const getRazmerler = ()=>{
 }
                 </Drawer>
                 <Drawer
-                width={600}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Üýtgetmeler"
                 placement="right"
@@ -675,6 +724,10 @@ const getRazmerler = ()=>{
                         className='suruji-yagdayy--input' 
                         placeholder="Brand Saýla"
                         onChange={onChangeB}
+                        showSearch
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                       >
                         {
                           brands?.map((brand)=>{
@@ -781,7 +834,7 @@ const getRazmerler = ()=>{
                 </Drawer>
 
                 <Drawer
-                width={600}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Renkler we Razmerler"
                 placement="right"
@@ -852,7 +905,7 @@ const getRazmerler = ()=>{
 
 
                 <Drawer
-                width={500}
+                width={width>850?600:320}
                 className='lukman-table--drawer'
                 title="Üýtgetmeler"
                 placement="right"

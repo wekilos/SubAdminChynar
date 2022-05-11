@@ -1,4 +1,6 @@
 import React,{useState,useEffect, useContext} from 'react';
+
+import { useSizeComponents } from "../../components/sizeComponent";
 import { Button,Input,Drawer, Select, message } from 'antd';
 import "antd/dist/antd.css";
 import { PlusCircleFilled } from '@ant-design/icons';
@@ -14,6 +16,7 @@ const {Option} = Select;
 
 const YolHaty = prop =>{
 
+  const [width,height] = useSizeComponents()
   const {dil} = useContext(SebedimContext);
 
     const [Gosh,setGosh]=useState(false);

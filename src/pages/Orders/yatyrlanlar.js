@@ -3,6 +3,7 @@ import React,{useEffect, useState} from 'react';
 import {Button,Input,Drawer,Select} from 'antd';
 import "antd/dist/antd.css";
 import { SearchOutlined } from '@ant-design/icons';
+import { useSizeComponents } from "../../components/sizeComponent";
 
 import LukmanGozleg from './lukmanGozleg'; 
 import UnitGosh from './UnitGosh';
@@ -13,6 +14,7 @@ const {Option} = Select;
 
 const Lukman = () =>{
 
+    const [width,height] = useSizeComponents();
     const [units,setUnits] = useState([]);
             const [ statuses,setStatuses] = useState([]);
             const [ statusId, setStatusId] = useState();

@@ -56,14 +56,9 @@ password: password,
 
 return(
     <div  className="login-page" >
-    <div className="login " >
     <div className="login--form">
       <h2 className="login--header">Içeri Gir</h2>
-      {/* <Input      type='text' 
-                          element='input'  
-                          label="Ady" 
-                          validators={[VALIDATOR_REQUIRE()]}  
-                          errorText='Adyňyzy Giriziň!' /> */}
+      
       <label >Admin Telefon:</label>
       <Input
         name="login"
@@ -74,9 +69,10 @@ return(
         type="password" name="password"
         value={password} onChange={(e)=>setPassword(e.target.value)}
       />
+      <div className='button'>
       <Button className="Button" onClick={()=>onSubmit()}  >Içeri Gir</Button>
+      </div>
     </div> 
-  </div>
   </div>
 
     // <div>

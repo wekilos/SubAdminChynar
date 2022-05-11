@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./sidebar.css";
 import { logout } from "../utils";
 // import logo_ from "../../img/logo_.svg";
@@ -15,30 +15,36 @@ import {
   ScheduleOutlined,
   CarOutlined,
   ToolOutlined,
-  FileTextOutlined,CalculatorOutlined,HomeOutlined
+  FileTextOutlined,CalculatorOutlined,HomeOutlined,MediumOutlined,CopyrightOutlined,InboxOutlined
 } from "@ant-design/icons";
+
+
+import { useSizeComponents } from "./sizeComponent";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
-export default class SiderDemo extends React.Component {
-  state = {
-    collapsed: false,
+const SiderDemo =()=> {
+  
+  const [width,height] = useSizeComponents();
+  const  [collapsed,setCollapsed]= useState(false)
+  
+useEffect(()=>{
+  width<850 ? setCollapsed(true): setCollapsed(false)
+},[width])
+  
+
+ const  toggle = () => {
+  setCollapsed(!collapsed)
   };
 
-  toggle = () => {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  };
-
-  render() {
+ 
     return (
-      // <div>
+      <div>
+      
       <Sider
         style={{
           overflow: "auto",
-          height: "100vh",
           position: "sticky",
           top: 0,
           left: 0,
@@ -47,7 +53,7 @@ export default class SiderDemo extends React.Component {
         width={220}
         trigger={null}
         collapsible
-        collapsed={this.state.collapsed}
+        collapsed={collapsed}
       >
         {/* <div
           className="toggle"
@@ -62,7 +68,7 @@ export default class SiderDemo extends React.Component {
           )}
         </div> */}
         <div align="center">
-          {this.state.collapsed ? (
+          {collapsed ? (
             <Tooltip color="green" placement="right" title="Open">
               {/* <img
                 onClick={this.toggle}
@@ -70,19 +76,19 @@ export default class SiderDemo extends React.Component {
                 src={logo}
                 alt="logo"
               /> */}
-              <div onClick={this.toggle} className="logo">
-                Cynar
+              <div onClick={toggle} className="logo">
+                {/* Cynar */}
               </div>
             </Tooltip>
           ) : (
             <Tooltip color="green" placement="right" title="Close">
-              <div onClick={this.toggle} className="logo">
+              <div onClick={toggle} className="logo">
                 Cynar Market
               </div>
             </Tooltip>
           )}
         </div>
-        <Menu
+         <Menu
           mode="inline"
           // defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
@@ -93,7 +99,7 @@ export default class SiderDemo extends React.Component {
             key="sub1"
             title={
               <span>
-                {/* <DashboardOutlined /> */}
+                <DashboardOutlined />
                 <span className="menuitem ">Zakazlar</span>
               </span>
             }
@@ -118,7 +124,7 @@ export default class SiderDemo extends React.Component {
             key="sub8"
             title={
               <span className="menuitem">
-                {/* <FileTextOutlined /> */}
+                <MediumOutlined />
                 <span>Marketler</span>
               </span>
             }
@@ -143,7 +149,7 @@ export default class SiderDemo extends React.Component {
             key="sub222"
             title={
               <span className="menuitem">
-                {/* <ScheduleOutlined /> */}
+                <CopyrightOutlined />
                 <span>Brendler</span>
               </span>
             }
@@ -162,7 +168,7 @@ export default class SiderDemo extends React.Component {
             key="sub2"
             title={
               <span className="menuitem">
-                {/* <ScheduleOutlined /> */}
+                <InboxOutlined />
                 <span>Harytlar</span>
               </span>
             }
@@ -294,14 +300,18 @@ export default class SiderDemo extends React.Component {
           </Menu.Item> */}
         </SubMenu>}
         </Menu>
+        
 
-        <div className="admin-footer">
+       <div className="admin-footer">
           <center style={{ fontSize: 12, color: "#C0C0C0", fontWeight: 600 }}>
             Developed by:
             <br /> WB programmer team
           </center>
         </div>
       </Sider>
+      </div>
     );
-  }
+  
 }
+
+export default  SiderDemo;

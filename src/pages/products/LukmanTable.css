@@ -12,3 +12,11 @@
     list-style: none;
     margin: 0 auto;
 }
+
+@media screen and (max-width:750px) {
+
+    .suruji-yagdayy--input{
+        width:95%;
+    }
+    
+}

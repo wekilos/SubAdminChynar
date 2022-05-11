@@ -20,7 +20,7 @@ body {
   background-color: #fff;
   -webkit-font-feature-settings: "tnum";
   font-feature-settings: "tnum";
-  min-width: 1250px;
+  /* min-width: 1250px; */
 }
 [tabindex="-1"]:focus {
   outline: none !important;

@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Table, Button, Space, Modal, Input, Checkbox, Drawer, Popconfirm, message } from "antd";
+import React, { useState, useContext } from "react";
+
+import { useSizeComponents } from "../../components/sizeComponent";
+import { Table, Button, Space, Input, Drawer, Popconfirm, message } from "antd";
 import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined,LoadingOutlined } from "@ant-design/icons";
 
 import "./yolHatyTable.css";
-import axios from "axios";
+
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
 import { SebedimContext } from "../../context/Sebedim";
 
 const YolHatyTable = (props) => {
+
+  const [width,height] = useSizeComponents();
   
 // geting all data from database with api
 const {dil} = useContext(SebedimContext);
@@ -17,7 +21,7 @@ const {dil} = useContext(SebedimContext);
   const getData = props.getData;
   const getKategoriyas = props.getKategoriyas;
 
-  const columns = [
+  const columns = width>850 ? [
     {
       title: "No",
       dataIndex: "id",
@@ -103,7 +107,51 @@ const {dil} = useContext(SebedimContext);
         </Space>
       ),
     },
-  ];
+  ]
+  :[
+    {
+      title: "No",
+      dataIndex: "id",
+    },
+    {
+      title: dil==="TM"?"Kategoriya ady tm":"Название категории тм",
+      dataIndex: "name_tm",
+    },
+    {
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
+      dataIndex: "goshmacha",
+      render: (text, record) => (
+        <div>
+          <Button
+          style={{marginRight:"3px"}}
+            type="primary"
+            shape="round"
+            onClick={() => ShowDrawer(record)}
+          >
+            <EditOutlined />
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete this task?"
+            onConfirm={() => DeleteMarket(record)}
+            // onCancel={cancel}
+            okText="Howwa"
+            cancelText="Ýok"
+          >
+             <Button
+              type="primary"
+              shape="round"
+              danger
+              // onClick={}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
+            
+         
+        </div>
+      ),
+    },
+  ]
 
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -246,7 +294,7 @@ const {dil} = useContext(SebedimContext);
   return (
     <div className="yolHatyTable">
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Goşmaça"
         placement="right"
@@ -280,7 +328,7 @@ const {dil} = useContext(SebedimContext);
       </Drawer>
       
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
@@ -344,7 +392,7 @@ const {dil} = useContext(SebedimContext);
       </Drawer>
 
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmelerrrrr"
         placement="right"

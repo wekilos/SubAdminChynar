@@ -54,8 +54,8 @@
 .content {
   margin: 5px 5px;
 
-  height: 100% !important;
-  min-height: 100vh;
+  /* height: 100% !important; */
+  min-height: 100vh !important;
 }
 
 .search {
@@ -112,7 +112,7 @@
   left: 30px;
   font-weight: bold;
   font-size: 16px;
-  width: 100px;
+  width: 50px;
   margin-bottom: 10px;
   cursor: pointer;
   color: rgb(100, 94, 94);

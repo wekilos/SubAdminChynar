@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
 
+import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Space,message,Table,Modal,Drawer,Popconfirm} from 'antd';
 import "antd/dist/antd.css";
 import { EditOutlined,DeleteOutlined } from '@ant-design/icons';
@@ -11,10 +12,11 @@ import PrintComponent from '../../components/PrintComponent';
 
 const LukmanTable = props=>{
 
+    const [width,height] = useSizeComponents()
     const [data,setData]=props.data;
     const getOrders = props.getOrders;
     const valyuta = props.valyuta;
-    const columns = [
+    const columns = width>850?[
         {
             title:"Order No",
             dataIndex:"id"
@@ -100,7 +102,43 @@ const LukmanTable = props=>{
                 </Space>
               ),
         }
-    ];
+    ]
+    :[
+        {
+            title:"Umumy baha",
+            dataIndex:"sum"
+        },
+        {
+            title:"Ulanyjy",
+            render:(text,record)=>(
+                
+                <div>
+                     <h3>{record && record.User && record.User.fname} {record && record.User && record.User.lastname} </h3> 
+                     <p>{record.User && record.User.phoneNumber}</p>
+                 </div>
+            )
+        },
+        {
+            title:"Üýygetmek we Özgertmek",
+            dataIndex:"goshmacha",
+            render: (text, record) => (
+                <div >
+                     <Button style={{marginBottom:"5px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowInformation(record)} >Goşmaça</Button>
+                    <br></br>
+                    <Popconfirm
+                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                        onConfirm={()=>DeleteOrder(record)} 
+                        // onCancel={cancel}
+                        okText="Howwa"
+                        cancelText="Ýok"
+                    >
+                        <Button style={{width:"90px"}}  type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
+
+                    </Popconfirm>
+                </div>
+              ),
+        }
+    ]
 
     const [edit,setEdit]=useState(false);
     const [info,setInfo] = useState(false);

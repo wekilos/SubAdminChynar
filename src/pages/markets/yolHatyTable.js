@@ -4,19 +4,20 @@ import "antd/dist/antd.css";
 import { EditOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import "./yolHatyTable.css";
-import axios from "axios";
+import { useSizeComponents } from "../../components/sizeComponent";
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
 import { SebedimContext } from "../../context/Sebedim";
 const {Option} = Select;
 
 const YolHatyTable = (props) => {
   
+  const [width,height] = useSizeComponents();
   const {dil} = useContext(SebedimContext);
 // geting all data from database with api
   const [data, setData] = props.data;
   const getData = props.getData;
 
-  const columns = [
+  const columns = width>850?[
     {
       title: "No",
       dataIndex: "id",
@@ -75,13 +76,6 @@ const YolHatyTable = (props) => {
           >
             <EditOutlined />
           </Button>
-          {/* <Button
-            type="primary"
-            shape="round"
-            onClick={() => ShowTelefon(record)}
-          >
-             {dil==="TM"?"Telefon":"Телефон"} 
-          </Button> */}
           <Button
             type="primary"
             shape="round"
@@ -109,7 +103,74 @@ const YolHatyTable = (props) => {
         </Space>
       ),
     },
-  ];
+  ]
+  :[
+    {
+      title: "No",
+      dataIndex: "id",
+    },
+    {
+      title: dil==="TM"?"Market Ady":"Имя/ Маркет",
+      dataIndex: dil==="TM"?"name_tm":"name_ru",
+    },
+    {
+      title: dil==="TM"?"Market Surat":"маркета",
+      dataIndex: "surat",
+      render:(text,record)=>(
+        <img style={{width:"50px",height:"50px",objectFit:"contain"}} src={BASE_URL+"/"+record.surat} alt="Market Surat" />
+      )
+    },
+    {
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"информация",
+      dataIndex: "goshmacha",
+      render: (text, record) => (
+        <div>
+          <Button
+            style={{width:"100px",marginBottom:"5px",padding:"0"}}
+            type="primary"
+            shape="round"
+            onClick={() => ShowModal(record)}
+          >
+            {dil==="TM"?"Goşmaça":"Дополнительная"}
+          </Button><br></br>
+          
+          <Button
+            style={{width:"100px",marginBottom:"5px"}}
+            type="primary"
+            shape="round"
+            onClick={() => ShowSurat(record)}
+          >
+             {dil==="TM"?'Surat':"Картина"} 
+          </Button><br></br>
+          <Button
+            style={{marginRight:"3px"}}
+            type="primary"
+            shape="round"
+            onClick={() => ShowDrawer(record)}
+          >
+            <EditOutlined />
+          </Button>
+            <Popconfirm
+            title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
+            onConfirm={() => DeleteMarket(record.id)}
+            // onCancel={cancel}
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Нет"}
+          >
+             <Button
+              type="primary"
+              shape="round"
+              danger
+              // onClick={}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
+         
+        </div>
+      ),
+    },
+  ]
 
   const [visible, setVisible] = useState(false);
   const [edit, setEdit] = useState(false);

@@ -13,6 +13,7 @@ import ScrollIntoView from "./ScrollIntoView";
 import { Loading } from "../components/loading";
  
 
+import { useSizeComponents } from "../components/sizeComponent";
 const PrivateRoute = lazy(() => import("./PrivateRoute"));
 const PublicRoute = lazy(() => import("./PublicRoute"));
 // const AdminRoute = lazy(() => import("./AdminRoute"));

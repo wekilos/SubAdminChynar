@@ -1,6 +1,6 @@
 .lukman-gozleg{
     background-color: #fff;
-    height: 75px;
+    /* height: 75px; */
     width: 100%;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
@@ -33,10 +33,11 @@
     margin: 15px;
 }
 
-@media screen and (max-width:600px){
+@media screen and (max-width:650px){
     .lukman-gozleg--input{
         display: inline;
         justify-content:left;
-        width: 250px;
+        width: 80%;
+        /* z-index: 1000; */
     }
 }
