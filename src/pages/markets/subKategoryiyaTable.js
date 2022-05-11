@@ -277,7 +277,7 @@ const YolHatyTable = (props) => {
   return (
     <div className="yolHatyTable">
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Goşmaça"
         placement="right"
@@ -311,7 +311,7 @@ const YolHatyTable = (props) => {
       </Drawer>
       
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmeler"
         placement="right"
@@ -375,7 +375,7 @@ const YolHatyTable = (props) => {
       </Drawer>
 
       <Drawer
-        width={500}
+        width={width>850?500:320}
         className="lukman-table--drawer"
         title="Üýtgetmelerrrrr"
         placement="right"
