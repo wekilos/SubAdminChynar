@@ -38,7 +38,7 @@ const LukmanTable = props=>{
             render: (text, record) => (
                 <Space size="middle">
                     <Button type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="Siz çyndan öçürmek isleýärsinizmi?"
                         onConfirm={()=>DeleteUnit(record)} 
                         // onCancel={cancel}
@@ -47,7 +47,7 @@ const LukmanTable = props=>{
                     >
                         <Button type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
 
-                    </Popconfirm>
+                    </Popconfirm> */}
                 </Space>
               ),
         }

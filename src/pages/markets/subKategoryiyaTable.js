@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import { Table, Button, Space, Input, Drawer, Popconfirm, message } from "antd";
@@ -8,9 +8,11 @@ import { EditOutlined, DeleteOutlined,LoadingOutlined } from "@ant-design/icons"
 import "./yolHatyTable.css";
 import axios from "axios";
 import { axiosInstance,BASE_URL } from "../../utils/axiosIntance";
+import { SebedimContext } from "../../context/Sebedim";
 
 const YolHatyTable = (props) => {
   
+  const { dil } = useContext(SebedimContext);
   const [width,height] = useSizeComponents();
 // geting all data from database with api
   const [data, setData] = props.data;
@@ -25,27 +27,27 @@ const YolHatyTable = (props) => {
     },
     
     {
-      title: "Market Kategoryya Ady",
+      title: dil==="TM"?"Market Kategoryya Ady":"Название категории маркет",
       dataIndex: "name_tm",
       render:(text,record)=>(
         <h3>{record.MarketKategoriya.name_tm}</h3>
       )
     },
     {
-      title: "SubKategoriya ady tm",
+      title: dil==="TM"?"SubKategoriya ady tm":"Название подкатегории тм",
       dataIndex: "name_tm",
     },
     {
-      title: "SubKategoriya ady ru",
+      title: dil==="TM"?"SubKategoriya ady ru":"Название подкатегории ru",
       dataIndex: "name_ru",
     },
     {
-      title: "SubKategoriya ady en",
+      title:dil==="TM"?"SubKategoriya ady en":"Название подкатегории en",
       dataIndex: "name_en",
     },
     
     {
-      title: "Goşmaça maglumat we Özgertmek",
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space size="middle">
@@ -60,11 +62,11 @@ const YolHatyTable = (props) => {
           
           
           <Popconfirm
-            title="Are you sure to delete this task?"
+            title={dil==="TM"?"Siz cyndan ochurmek isleyarsinizmi?":"Вы уверены, что хотите удалить эту задачу?"}
             onConfirm={() => DeleteMarket(record)}
             // onCancel={cancel}
-            okText="Howwa"
-            cancelText="Ýok"
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Hет"}
           >
              <Button
               type="primary"
@@ -94,11 +96,11 @@ const YolHatyTable = (props) => {
     //   )
     // },
     {
-      title: "SubKategoriya ady tm",
+      title: dil==="TM"?"SubKategoriya ady tm":"Название подкатегории тм",
       dataIndex: "name_tm",
     },
     {
-      title: "Goşmaça maglumat we Özgertmek",
+      title: dil==="TM"?"Goşmaça maglumat we Özgertmek":"Дополнительная информация и редактирование",
       dataIndex: "goshmacha",
       render: (text, record) => (
         <Space >
@@ -113,11 +115,11 @@ const YolHatyTable = (props) => {
           </Button>
           
           <Popconfirm
-            title="Are you sure to delete this task?"
+            title={dil==="TM"?"Siz cyndan ochurmek isleyarsinizmi?":"Вы уверены, что хотите удалить эту задачу?"}
             onConfirm={() => DeleteMarket(record)}
             // onCancel={cancel}
-            okText="Howwa"
-            cancelText="Ýok"
+            okText={dil==="TM"?"Hawa":"Да"}
+            cancelText={dil==="TM"?"Ýok":"Hет"}
           >
              <Button
               type="primary"
@@ -251,7 +253,7 @@ const YolHatyTable = (props) => {
     }).catch((err)=>{
       console.log(err);
       setLoading(false);
-      message.warn("Internet baglanşygyňyzy barlaň!")
+      message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
     })
   }
 
@@ -268,7 +270,7 @@ const YolHatyTable = (props) => {
     }).then((data)=>{
       console.log(data.data);
       getKategoriyas(market_id)
-      message.success("Uytgedildi!")
+      message.success(dil==="TM"?"Uytgedildi!":"Измененный!")
     }).catch((err)=>{
       console.log(err);
     })
@@ -279,7 +281,7 @@ const YolHatyTable = (props) => {
       <Drawer
         width={width>850?500:320}
         className="lukman-table--drawer"
-        title="Goşmaça"
+        title={dil==="TM"?"Goşmaça maglumat":"Дополнительная информация"}
         placement="right"
         onClose={() => ShowModal()}
         visible={visible}
@@ -291,7 +293,7 @@ const YolHatyTable = (props) => {
               <td>{maglumat && maglumat.id} </td>
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_tm}>
-              <td>Kategorýa tm </td>
+              <td>{dil==="TM"?"SubKategoriya ady tm":"Название подкатегории тм"} </td>
                {maglumat &&  maglumat.name_tm}
             </tr>
             <tr className="modalLi" key={maglumat && maglumat.name_ru}>
@@ -313,7 +315,7 @@ const YolHatyTable = (props) => {
       <Drawer
         width={width>850?500:320}
         className="lukman-table--drawer"
-        title="Üýtgetmeler"
+        title={dil==="TM"?"Üýtgetmeler":"Изменения"}
         placement="right"
         onClose={() => ShowDrawer()}
         visible={edit}
@@ -327,7 +329,7 @@ const YolHatyTable = (props) => {
               type="primary"
               onClick={()=>ShowDrawer()}
             >
-              Goý bolsun
+              {dil==="TM"?"Goý bolsun":"Отмена"}
             </Button>
             <Button
               className="DrawerButton"
@@ -336,7 +338,7 @@ const YolHatyTable = (props) => {
               type="primary"
               onClick={()=>saveData(maglumat)}
             >
-              Üýtget <EditOutlined />
+              {dil==="TM"?"Üýtget":"Редактировать"} <EditOutlined />
             </Button>
           </div>
         }
@@ -345,7 +347,7 @@ const YolHatyTable = (props) => {
          
           <Input
             style={{ margin: "10px 0" }}
-            addonBefore="Name tm"
+            addonBefore={dil==="TM"?"SubKategoriya ady tm":"Название подкатегории тм"}
             className="suruji-uytget--input"
             type="text"
             name="name_tm"
@@ -354,7 +356,7 @@ const YolHatyTable = (props) => {
           />
           <Input
             style={{ margin: "10px 0" }}
-            addonBefore="Name ru"
+            addonBefore={dil==="TM"?"SubKategoriya ady ru":"Название подкатегории ru"}
             className="suruji-uytget--input"
             name="name_ru"
             value={maglumat && maglumat.name_ru}
@@ -362,7 +364,7 @@ const YolHatyTable = (props) => {
           />
           <Input
             style={{ margin: "10px 0" }}
-            addonBefore="Name en"
+            addonBefore={dil==="TM"?"SubKategoriya ady en":"Название подкатегории en"}
             className="suruji-uytget--input"
             name="name_en"
             value={maglumat && maglumat.name_en}

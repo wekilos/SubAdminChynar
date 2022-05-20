@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Input,Drawer,Select} from 'antd';
@@ -10,13 +10,14 @@ import UnitGosh from './UnitGosh';
 import LukmanTable from './LukmanTable';
 import  './lukman.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 const {Option} = Select;
 
 
 const Lukman = () =>{
 
 
-    
+    const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
 
     const [units,setUnits] = useState([]);
@@ -143,27 +144,27 @@ const Lukman = () =>{
              <div className='lukman-gozleg'>
             <form className='lukman-gozleg--form'>
                 <div>
-                <Input onChange={(e)=>{setAll(e.target.value)}} placeholder = 'Umumy Gözleg' className='lukman-gozleg--input' />
+                <Input onChange={(e)=>{setAll(e.target.value)}} placeholder = {dil==="TM"?'Umumy Gözleg':"Общий поиск"} className='lukman-gozleg--input' />
                
             
-                {/* <Select
+                <select
                     className='lukman-gozleg--input'
                     showSearch
-                    // style={{ width: 200 }}
-                    placeholder="Zakaz Status Saýla"
+                    style={{ height: "35px",border:"none",boxShadow:"0px 0 1px grey" }}
+                    placeholder={dil==="TM"?"Zakaz Status Saýla":"Выберите статус заказа"}
                     optionFilterProp="children"
                     onChange={(value)=>setStatusId(value)}
                     filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
                 >
-                    <Option value={null}>Ählisi</Option>
+                    <option value={null}>{dil==="TM"?"Ählisi":"Все"}</option>
                     {
                     statuses.map((status)=>{
-                        return <Option value={status.id}>{status.name_tm}</Option>
+                        return <option value={status.id}>{dil==="TM"?status.name_tm:status.name_ru}</option>
                     })
                     }
-                </Select> */}
+                </select>
                 
                 </div>
            
