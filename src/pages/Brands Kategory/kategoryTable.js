@@ -69,7 +69,7 @@ const { dil } = useContext(SebedimContext)
           >
              Surat 
           </Button> */}
-            <Popconfirm
+            {/* <Popconfirm
             title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
             onConfirm={() => DeleteMarket(record)}
             // onCancel={cancel}
@@ -84,7 +84,7 @@ const { dil } = useContext(SebedimContext)
             >
               <DeleteOutlined />
             </Button>
-          </Popconfirm>
+          </Popconfirm> */}
          
         </Space>
       ),

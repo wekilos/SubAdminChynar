@@ -56,7 +56,7 @@ const WelayatTable = (props) => {
             <EditOutlined />
           </Button>
          
-            <Popconfirm
+            {/* <Popconfirm
             title={dil==="TM"?"Siz çyndan öçürmek isleýärsiňizmi?":"Вы действительно хотите удалить?"}
             onConfirm={() => DeleteMarket(record)}
             // onCancel={cancel}
@@ -71,7 +71,7 @@ const WelayatTable = (props) => {
             >
               <DeleteOutlined />
             </Button>
-          </Popconfirm>
+          </Popconfirm> */}
          
         </Space>
       ),
