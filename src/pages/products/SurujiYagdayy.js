@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Select,Input,Button, message, Popconfirm} from 'antd'
 import "antd/dist/antd.css";
@@ -7,11 +7,13 @@ import { PlusCircleFilled,LoadingOutlined } from '@ant-design/icons';
 import './SurujiYagdayy.css';
 import TextArea from 'antd/lib/input/TextArea';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const Option = {Select};
 
 const SurujiYagdayy = props =>{
     
+  const { dil } = useContext(SebedimContext);
     const getProducts = props.getProducts
 
     const [data,setData]=useState();
@@ -152,7 +154,7 @@ console.log("data",data)
         }).catch((err)=>{
           console.log("Errorrr",err);
           setLoading(false);
-          message.warn("Internet baglanşygyňyzy barlaň!")
+          message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
         })
     }
 
@@ -388,12 +390,12 @@ console.log("data",data)
 
           <Select
             className='suruji-yagdayy--input' 
-            placeholder="Brand Saýla"
+            placeholder={dil==="TM"?"Brand Saýla!":"Выбор бренда!"}
             onChange={onChangeB}
           >
             {
               brands?.map((brand)=>{
-                return <Option value={brand.id}>{brand.name_tm}</Option>
+                return <Option value={brand.id}>{dil==="TM"?brand.name_tm:brand.name_ru}</Option>
               })
             }
           </Select>
@@ -422,7 +424,7 @@ console.log("data",data)
             // className="yolHaty-gozle--input"
             showSearch
             // style={{ width: 200 }}
-            placeholder="Market Kategoriýa Saýla"
+            placeholder={dil==="TM"?"Market Kategoriýa Saýla!":"Выберите категорию маркет!"}
             optionFilterProp="children"
             onChange={onChangeK}
             onSearch={onSearchK}
@@ -432,7 +434,7 @@ console.log("data",data)
           >
             {
               kategoriya?.map((kategor)=>{
-                return <Option value={kategor.id}>{kategor.name_tm}</Option>
+                return <Option value={kategor.id}>{dil==="TM"?kategor.name_tm:kategor.name_ru}</Option>
               })
             }
           </Select>
@@ -442,7 +444,7 @@ console.log("data",data)
             // className="yolHaty-gozle--input"
             showSearch
             // style={{ width: 200 }}
-            placeholder="Market SubKategoriýa Saýla"
+            placeholder={dil==="TM"?"Market SubKategoriýa Saýla!":"Выберите подкатегория маркет!"}
             optionFilterProp="children"
             onChange={onChangeSubK}
             filterOption={(input, option) =>
@@ -451,7 +453,7 @@ console.log("data",data)
           >
             {
               subKategoriya?.map((kategor)=>{
-                return <Option value={kategor.id}>{kategor.name_tm}</Option>
+                return <Option value={kategor.id}>{dil==="TM"?kategor.name_tm:kategor.name_ru}</Option>
               })
             }
           </Select>
@@ -461,7 +463,7 @@ console.log("data",data)
             className='suruji-yagdayy--input'
             showSearch
             // style={{ width: 200 }}
-            placeholder="Unit Saýla"
+            placeholder={dil==="TM"?"Unit Saýla":"Выберите тип продажи"}
             optionFilterProp="children"
             onChange={onChangeU}
             onSearch={onSearchU}
@@ -471,19 +473,19 @@ console.log("data",data)
           >
             {
               units?.map((unit)=>{
-                return <Option value={unit.id}>{unit.name_tm}</Option>
+                return <Option value={unit.id}>{dil==="TM"?unit.name_tm:unit.name_ru}</Option>
               })
             }
           </Select>
-           <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
-           <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
-           <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-           <Input value={product_code} type="number" onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore='product code'  className='suruji-yagdayy--input' />
-           <Input value={gelenBaha} type="number"  onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore='gelen baha'  className='suruji-yagdayy--input' />
+           <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore={dil==="TM"?'ady tm':"имя тм" } className='suruji-yagdayy--input' />
+           <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore={dil==="TM"?'ady ru':"имя ru" }   className='suruji-yagdayy--input' />                
+           <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore={dil==="TM"?'ady en':"имя en" }   className='suruji-yagdayy--input' />
+           <Input value={product_code} type="number" onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore={dil==="TM"?'product code':"код продукта" } className='suruji-yagdayy--input' />
+           <Input value={gelenBaha} type="number"  onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore={dil==="TM"?'gelen baha':"входящая цена" } className='suruji-yagdayy--input' />
            <Select
             className='suruji-yagdayy--input'
             // style={{ width: 200 }}
-            placeholder="Satysh Baha %"
+            placeholder={dil==="TM"?"Satysh Baha %":"Продажная цена %"}
             onChange={onChangeBaha}
           >
             <Option value={5}>5%</Option>
@@ -493,19 +495,19 @@ console.log("data",data)
             <Option value={25}>25%</Option>
             <Option value={30}>30%</Option>
           </Select>
-           <Input value={price} type="number"  onChange={(e)=>{setPrice(e.target.value)}} addonBefore='baha'  className='suruji-yagdayy--input' />
+           <Input value={price} type="number"  onChange={(e)=>{setPrice(e.target.value)}} addonBefore={dil==="TM"?'baha':"цена" } className='suruji-yagdayy--input' />
            {/* <Input value={sale_price} onChange={(e)=>{setSale_price(e.target.value)}} addonBefore='Satyş baha'  className='suruji-yagdayy--input' /> */}
            {/* <Input value={step} onChange={(e)=>{setStep(e.target.value)}} addonBefore='Step'  className='suruji-yagdayy--input' />
            <Input value={article_tm} onChange={(e)=>{setArticle_tm(e.target.value)}} addonBefore='Article tm'  className='suruji-yagdayy--input' />
            <Input value={article_ru} onChange={(e)=>{setArticle_ru(e.target.value)}} addonBefore='Article ru'  className='suruji-yagdayy--input' />
            <Input value={article_en} onChange={(e)=>{setArticle_en(e.target.value)}} addonBefore='Article en'  className='suruji-yagdayy--input' /> */}
-          <Input value={total_amount} type="number"  onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore='Ambardaky Sany'  className='suruji-yagdayy--input' />
+          <Input value={total_amount} type="number"  onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore={dil==="TM"?'Ambardaky Sany':"Запас в склад" } className='suruji-yagdayy--input' />
 
-           <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
-           <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
-           <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore={dil==="TM"?'Description tm':"Описание тм"}  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore={dil==="TM"?'Description ru':"Описание ru"}   className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore={dil==="TM"?'Description en':"Описание en"}   className='suruji-yagdayy--input' />
            {/* <Input  onChange={(e)=>{setSale_until(e.target.value)}} type="date" addonBefore='Sale until'  className='suruji-yagdayy--input' /> */}
-           <Input style={{width:"94%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore='Gözleg söz'  className='suruji-yagdayy--input' />
+           <Input style={{width:"94%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore={dil==="TM"?'Gözleg söz':"Поисковое слово"}  className='suruji-yagdayy--input' />
            {/* <Input  onChange={()=>ChangeCheckboxNew()} type="checkbox" addonBefore='Täzemi'  className='suruji-yagdayy--input' /> */}
            {/* <Input  onChange={} type="checkbox" addonBefore='Valýutamy'  className='suruji-yagdayy--input' /> */}
            <Select
@@ -513,23 +515,23 @@ console.log("data",data)
             className='suruji-yagdayy--input'
             showSearch
             style={{ width: "95%" }}
-            placeholder="Haryt Walyuta gorami?"
+            placeholder={dil==="TM"?"Haryt Walyuta görämi?":"Товар в валюте?"}
             optionFilterProp="children"
             onChange={ChangeCheckbox}
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }>
-             <Option key={1} value={true}>Howwa</Option>
-             <Option key={2} value={false}>Yok</Option>
+             <Option key={1} value={true}>{dil==="TM"?"Hawa":"Да"}</Option>
+             <Option key={2} value={false}>{dil==="TM"?"Yok":"Нет"}</Option>
           </Select>
-           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat(e.target.files[0])}} type="file" addonBefore='Haryt Surat 1'  className='suruji-yagdayy--input' />
-           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat1(e.target.files[0])}} type="file" addonBefore='Haryt Surat 2'  className='suruji-yagdayy--input' />
-           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat2(e.target.files[0])}} type="file" addonBefore='Haryt Surat 3'  className='suruji-yagdayy--input' />
-           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat3(e.target.files[0])}} type="file" addonBefore='Haryt Surat 4'  className='suruji-yagdayy--input' />
+           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 1':"Фото продукта 1"}  className='suruji-yagdayy--input' />
+           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat1(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 2':"Фото продукта 2"}  className='suruji-yagdayy--input' />
+           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat2(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 3':"Фото продукта 3"}  className='suruji-yagdayy--input' />
+           <Input style={{width:"95%"}}  onChange={(e)=>{setSurat3(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 4':"Фото продукта 4"}   className='suruji-yagdayy--input' />
            
                 
-                <Button style={{width:"35%"}} onClick={CreateProduct} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Hasaba al</Button>
-                <Button style={{width:"35%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
+                <Button style={{width:"35%"}} onClick={CreateProduct} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Hasaba al":"Добавить продукт"}</Button>
+                <Button style={{width:"35%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Cancel":"Отмена"}</Button>
             </form>
             :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 250px"}} />
           }
@@ -539,11 +541,11 @@ console.log("data",data)
           renkRazmer && <div
               className='suruji-yagdayy'>
               {!loading ? <form className='suruji-yagdayy--form' >
-                <h2 style={{width:"100%",marginTop:"-15px",marginBottom:"0px"}}>Razmerler</h2>
-                <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
-                <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
-                <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-                <Button style={{width:"46%"}} onClick={CreateRazmer} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Razmer Gosh</Button>
+                <h2 style={{width:"100%",marginTop:"-15px",marginBottom:"0px"}}>{dil==="TM"?"Razmerler":"Габаритные размеры"}</h2>
+                <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore={dil==="TM"?'ady tm':"имя тм" } className='suruji-yagdayy--input' />
+                <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore={dil==="TM"?'ady ru':"имя ru" }  className='suruji-yagdayy--input' />                
+                <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore={dil==="TM"?'ady en':"имя en" } className='suruji-yagdayy--input' />
+                <Button style={{width:"46%"}} onClick={CreateRazmer} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Razmer Gosh":"Добавить размер"}</Button>
 
                 {/* <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly"}}>
                 <Button style={{width:"35%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
@@ -551,25 +553,25 @@ console.log("data",data)
                 <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly",margin:"10px auto 20px",borderBottom:"2px solid black",padding:"10px",borderRadius:"3px"}}>
                       {razmerler?.map((razmer)=>{
                         return <Popconfirm
-                        title="Siz çyndan ochurmek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                         onConfirm={()=>DeleteRazmer(razmer.id)} 
                         // onCancel={cancel}
-                        okText="Howwa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
-                       <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{razmer.name_tm}</div>
+                       <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{dil==="TM"?razmer.name_tm:razmer.name_ru}</div>
 
                     </Popconfirm>
                       })}
                 </div>
 
                
-                <h2 style={{width:"100%",marginTop:"-5px",marginBottom:"0px"}}>Renkler</h2>
+                <h2 style={{width:"100%",marginTop:"-5px",marginBottom:"0px"}}>{dil==="TM"?"Renkler":"Цвета"}</h2>
 
-                <Input value={name_tm2} onChange={(e)=>{setName_tm2(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
-                <Input value={name_ru2} onChange={(e)=>{setName_ru2(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
-                <Input value={name_en2} onChange={(e)=>{setName_en2(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-                <Button style={{width:"46%"}} onClick={CreateRenk} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Renk Gosh</Button>
+                <Input value={name_tm2} onChange={(e)=>{setName_tm2(e.target.value)}} addonBefore={dil==="TM"?'ady tm':"имя тм" }  className='suruji-yagdayy--input' />
+                <Input value={name_ru2} onChange={(e)=>{setName_ru2(e.target.value)}} addonBefore={dil==="TM"?'ady ru':"имя ru" } className='suruji-yagdayy--input' />                
+                <Input value={name_en2} onChange={(e)=>{setName_en2(e.target.value)}} addonBefore={dil==="TM"?'ady en':"имя en" }  className='suruji-yagdayy--input' />
+                <Button style={{width:"46%"}} onClick={CreateRenk} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Renk Gosh":"Добавить цвет"}</Button>
 
                 {/* <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly"}}>
                 <Button style={{width:"35%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
@@ -578,13 +580,13 @@ console.log("data",data)
                 <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly",margin:"10px auto 20px",borderBottom:"2px solid black",padding:"10px",borderRadius:"2px"}}>
                       {renkler?.map((renk)=>{
                         return <Popconfirm
-                        title="Siz çyndan ochurmek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                         onConfirm={()=>DeleteRenk(renk.id)} 
                         // onCancel={cancel}
-                        okText="Howwa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
-                       <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{renk.name_tm}</div>
+                       <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{dil==="TM"?renk.name_tm:renk.name_ru}</div>
 
                     </Popconfirm>
                       })}
@@ -593,7 +595,7 @@ console.log("data",data)
               </form>
                :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 250px"}} />
               }
-            <Button style={{width:"95%"}} onClick={()=>{setRenkRazmer(false);}} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
+            <Button style={{width:"95%"}} onClick={()=>{setRenkRazmer(false);}} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Cancel":"Отмена"}</Button>
 
           </div>
         }

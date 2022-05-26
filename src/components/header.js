@@ -13,11 +13,7 @@ import { useSizeComponents } from "./sizeComponent";
 import SiderDemo from "./sidebarMenu";
 
 const { Search } = Input;
-const content = (
-  <div>
-    <Link to="/canceledOrders"  style={{cursor:"pointer"}}>Taze Sargytlar</Link>
-  </div>
-);
+
 const { Header } = Layout;
 const profile_menu = (
   <Menu>
@@ -43,6 +39,7 @@ const profile_menu = (
   const [newOrder,setNewOrder] = useState();
   const [menu,setMenu] = useState(false);
   const { ChangeDil, dil } = useContext(SebedimContext)
+  const [baydak,setBaydak] = useState(dil=="TM"?"🇹🇲":"🇷🇺");
   useEffect(()=>{
     const time = setTimeout(() => {
         getOrders();
@@ -53,6 +50,27 @@ const profile_menu = (
 useEffect(()=>{
   console.log("width",width)
 },[width])
+
+const content = (
+  <div>
+    <Link to="/canceledOrders"  style={{cursor:"pointer"}}>{dil==="TM"?"Täze Zakazlar":"Новые заказы"}</Link>
+  </div>
+);
+
+const profile_menu = (
+  <Menu>
+    <Menu.Item>
+      {/* <a target="_blank" rel="noopener noreferrer">
+        <UserOutlined /> Profile
+      </a> */}
+    </Menu.Item>
+    <Menu.Item>
+      <a target="_blank" rel="noopener noreferrer">
+        <LogoutOutlined /> {dil==="TM"?"Logout":"Выйти"}
+      </a>
+    </Menu.Item>
+  </Menu>
+);
 
 // ,{
 //     params: {
@@ -98,11 +116,13 @@ const LogOUT = ()=>{
 
 const handleLanguage = (value)=>{
   if(value==="🇷🇺"){
-    ChangeDil("RU")
+    ChangeDil("RU");
+    setBaydak("🇷🇺");
   }else{
-
-    ChangeDil("TM")
+    setBaydak("🇹🇲");
+    ChangeDil("TM");
   }
+  // ChangeDil(value)
 }
     return (
       <Header
@@ -146,10 +166,13 @@ const handleLanguage = (value)=>{
           </Popover>
         </div>
         <div className="notify2">
-          <Select defaultValue="🇹🇲" onChange={handleLanguage}>
-            <option value="🇹🇲" > 🇹🇲 </option>
+          <Select 
+            defaultValue={baydak} 
+            // value={baydak}
+            onChange={handleLanguage}>
+              <option value="🇹🇲" > 🇹🇲 </option>
 
-            <option value="🇷🇺" > 🇷🇺 </option>
+              <option value="🇷🇺" > 🇷🇺 </option>
           </Select>
         </div>
         <div className="headerDrawer">

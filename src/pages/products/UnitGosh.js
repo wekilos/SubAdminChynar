@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Select,Input,Button, message} from 'antd'
 import "antd/dist/antd.css";
@@ -6,9 +6,11 @@ import { PlusCircleFilled,LoadingOutlined } from '@ant-design/icons';
 
 import './SurujiYagdayy.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 
 const UnitGosh = props =>{
+    const { dil } = useContext(SebedimContext);
     const getUnits = props.getUnits;
     const [name_tm,setName_tm] = useState();
     const [name_ru,setName_ru] = useState();
@@ -32,7 +34,7 @@ const UnitGosh = props =>{
         }).catch((err)=>{
             console.log(err);
             setLoading(false);
-            message.warn("Internet baglanşygyňyzy barlaň!")
+            message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
         })
     }
 
@@ -40,13 +42,13 @@ const UnitGosh = props =>{
         <div className='suruji-yagdayy'>
             {!loading ? <form className='suruji-yagdayy--form' >
             
-               <Input style={{width:"100%"}} value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}}  name='surujiNo' addonBefore='Unit ady tm'  className='suruji-yagdayy--input' />
-               <Input style={{width:"100%"}} value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}}  name='surujiNo' addonBefore='Unit ady ru'  className='suruji-yagdayy--input' />
-               <Input style={{width:"100%"}} value={name_en} onChange={(e)=>{setName_en(e.target.value)}}  name='surujiNo' addonBefore='Unit ady en'  className='suruji-yagdayy--input' />
+               <Input style={{width:"100%"}} value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}}  name='surujiNo' addonBefore={dil==="TM"?'Unit ady tm':"имя тм"}  className='suruji-yagdayy--input' />
+               <Input style={{width:"100%"}} value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}}  name='surujiNo' addonBefore={dil==="TM"?'Unit ady ru':"имя ru"}   className='suruji-yagdayy--input' />
+               <Input style={{width:"100%"}} value={name_en} onChange={(e)=>{setName_en(e.target.value)}}  name='surujiNo' addonBefore={dil==="TM"?'Unit ady en':"имя en"}   className='suruji-yagdayy--input' />
          
 
-                <Button onClick={UnitGosh} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Goş</Button>
-                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
+                <Button onClick={UnitGosh} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Goş":"Добавлять"}</Button>
+                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Cancel":"Отмена"}</Button>
                 
             </form>
             :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 210px"}} />

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Select,Input,Button, message} from 'antd'
 import "antd/dist/antd.css";
@@ -7,10 +7,13 @@ import { PlusCircleFilled,CloseCircleOutlined } from '@ant-design/icons';
 import './SurujiYagdayy.css';
 import TextArea from 'antd/lib/input/TextArea';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const Option = {Select};
 
 const SurujiYagdayy = props =>{
+
+    const { dil } = useContext(SebedimContext);
     const getOrders = props.getOrders;
     const [emaglumat,setEmaglumat] =  props.order;
     const [status,setStatus ] = useState([]);
@@ -56,7 +59,7 @@ const SurujiYagdayy = props =>{
     return (
         <div className='suruji-yagdayy'>
             <form className='suruji-yagdayy--form' >
-                <h1 style={{width:"90%"}}>{emaglumat && emaglumat.Status && emaglumat.Status.name_tm}</h1>
+                <h1 style={{width:"90%"}}>{emaglumat && emaglumat.Status && (dil==="TM"?emaglumat.Status.name_tm:emaglumat.Status.name_ru)}</h1>
                 
                 <Select
                     style={{width:"90%"}}
@@ -64,7 +67,7 @@ const SurujiYagdayy = props =>{
                     // className="yolHaty-gozle--input"
                     showSearch
                     // style={{ width: 200 }}
-                    placeholder="Status üýtget"
+                    placeholder={dil==="TM"?"Status üýtget":"Изменить статус"}
                     optionFilterProp="children"
                     value={statusId}
                     onChange={onChangeS}
@@ -75,13 +78,13 @@ const SurujiYagdayy = props =>{
             
             {
               status.map((sta)=>{
-                return <Option value={sta.id}>{sta.name_tm}</Option>
+                return <Option value={sta.id}>{dil==="TM"?sta.name_tm:sta.name_ru}</Option>
               })
             }
           </Select>
 
-                <Button onClick={Uytget} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Unit üýtget</Button>
-                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Goýbolsun</Button>
+                <Button onClick={Uytget} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'> {dil==="TM"?"üýtget":"Изменить"}</Button>
+                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Goýbolsun":"Отмена"}</Button>
             </form>
         </div>
     );

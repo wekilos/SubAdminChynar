@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./sidebar.css";
 import { logout } from "../utils";
 // import logo_ from "../../img/logo_.svg";
@@ -20,12 +20,14 @@ import {
 
 
 import { useSizeComponents } from "./sizeComponent";
+import { SebedimContext } from "../context/Sebedim";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 const SiderDemo =(props)=> {
   
+  const { dil } = useContext(SebedimContext);
   const [width,height] = useSizeComponents();
   const  [collapsed,setCollapsed]= useState(false)
   
@@ -65,21 +67,21 @@ const SiderDemo =(props)=> {
             title={
               <span>
                 <DashboardOutlined />
-                <span className="menuitem ">Zakazlar</span>
+                <span className="menuitem ">{dil==="TM"?"Zakazlar":"Заказы"}</span>
               </span>
             }
           >
             <Menu.Item onClick={()=>props.close()} className="menuitem menuitem2" key="63">
-              <Link to="canceledOrders">Täze Zakazlar</Link>
+              <Link to="canceledOrders">{dil==="TM"?"Täze Zakazlar":"Новые заказы"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="1">
-              <Link to="orders">Zakazlar</Link>
+              <Link to="orders">{dil==="TM"?"Zakazlar":"Заказы"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="2">
-              <Link to="orderStatus">Zakazyň Statusy</Link>
+              <Link to="orderStatus">{dil==="TM"?"Zakazyň Statusy":"Статус заказа"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()} className="menuitem menuitem2" key="3">
-              <Link to="archiveOrders">Gowşurlan Zakazlar</Link>
+              <Link to="archiveOrders">{dil==="TM"?"Gowşurlan Zakazlar":"Доставленные заказы"}  </Link>
             </Menu.Item>
             
           </SubMenu>
@@ -89,18 +91,18 @@ const SiderDemo =(props)=> {
             title={
               <span className="menuitem">
                 <MediumOutlined />
-                <span>Marketler</span>
+                <span>{dil==="TM"?"Marketler":"Mаркеты"}</span>
               </span>
             }
           >
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="17">
-            <Link to="/markets">Marketler</Link>
+            <Link to="/markets">{dil==="TM"?"Marketler":"Mаркеты"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="18">
-            <Link to="/marketCategory"> Kategoryalar</Link>
+            <Link to="/marketCategory"> {dil==="TM"?"Kategoryalar":"Категории"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="1888">
-            <Link to="/marketSubCategories"> SubKategoryalar</Link>
+            <Link to="/marketSubCategories"> {dil==="TM"?"SubKategoryalar":"Подкатегории"}</Link>
             </Menu.Item>
           </SubMenu>
           <SubMenu
@@ -108,15 +110,15 @@ const SiderDemo =(props)=> {
             title={
               <span className="menuitem">
                 <CopyrightOutlined />
-                <span>Brendler</span>
+                <span>{dil==="TM"?"Brendler":"Бренды"}</span>
               </span>
             }
           >
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="115">
-            <Link to="brendKategory">Brend Kategoriya</Link>
+            <Link to="/brendKategory">{dil==="TM"?"Brend Kategoriya":"Категория бренда"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="165">
-            <Link to="brendler">Brendler</Link>
+            <Link to="brendler">{dil==="TM"?"Brendler":"Бренды"}</Link>
             </Menu.Item>
             
           </SubMenu>
@@ -125,18 +127,18 @@ const SiderDemo =(props)=> {
             title={
               <span className="menuitem">
                 <InboxOutlined />
-                <span>Harytlar</span>
+                <span>{dil==="TM"?"Harytlar":"Товары"}</span>
               </span>
             }
           >
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="5">
-            <Link to="products">Harytlar</Link>
+            <Link to="products">{dil==="TM"?"Harytlar":"Товары"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="65">
-            <Link to="hideProducts">Gizli Harytlar</Link>
+            <Link to="hideProducts">{dil==="TM"?"Gizli Harytlar":"Скрытые товары"}</Link>
             </Menu.Item>
             <Menu.Item onClick={()=>props.close()}  className="menuitem menuitem2" key="4">
-            <Link to="unit">Harytlaryň Uniti</Link>
+            <Link to="unit">{dil==="TM"?"Harytlaryň Uniti":"Товарное Унити"}</Link>
             </Menu.Item>            
           </SubMenu>
 

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Select,Input,Button, message} from 'antd'
 import "antd/dist/antd.css";
@@ -7,11 +7,13 @@ import { PlusCircleFilled,CloseCircleOutlined } from '@ant-design/icons';
 import './SurujiYagdayy.css';
 import TextArea from 'antd/lib/input/TextArea';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const Option = {Select};
 
 const SurujiYagdayy = props =>{
     
+    const { dil } = useContext(SebedimContext);
     const getStatuses = props.getStatuses;
     const [maglumat,setMaglumat] = props.mag;
     console.log(maglumat)
@@ -46,13 +48,13 @@ const SurujiYagdayy = props =>{
         <div
             className='suruji-yagdayy'>
             <form className='suruji-yagdayy--form' >
-            <Input style={{width:"90%"}} value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='Status ady tm'  className='suruji-yagdayy--input' />
-            <Input style={{width:"90%"}} value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='Status ady ru'  className='suruji-yagdayy--input' />
-            <Input style={{width:"90%"}} value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='Status ady en'  className='suruji-yagdayy--input' />
+            <Input style={{width:"90%"}} value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore={dil==="TM"?"Status ady tm":"Имя статуса тм"} className='suruji-yagdayy--input' />
+            <Input style={{width:"90%"}} value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore={dil==="TM"?"Status ady ru":"Имя статуса ru"}   className='suruji-yagdayy--input' />
+            <Input style={{width:"90%"}} value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore={dil==="TM"?"Status ady en":"Имя статуса en"}   className='suruji-yagdayy--input' />
            
                 
-                <Button onClick={EditStatus} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Üýtget</Button>
-                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Goýbolsyn</Button>
+                <Button onClick={EditStatus} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Üýtget":"Редактировать"}</Button>
+                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Goýbolsyn":"Отмена"}</Button>
             </form>
         </div>
     );

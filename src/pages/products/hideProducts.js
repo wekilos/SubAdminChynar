@@ -1,5 +1,5 @@
 
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Input,Drawer,Select,message} from 'antd';
@@ -11,11 +11,13 @@ import SurujiYagdayy from './SurujiYagdayy';
 import HideProductsTable from './hideProductsTable';
 import  './lukman.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 const {Option}=Select;
 
 
 const Lukman = () =>{
 
+    const { dil } = useContext(SebedimContext)
     const [width,height] = useSizeComponents()
     const [ markets,setMarkets] = useState([]);
     const [ kategoriyalar,setKategoriyalar] = useState([]);
@@ -168,7 +170,7 @@ const Lukman = () =>{
             <Drawer
             width={width>850?600:320}
             className='lukman-gosh--drawer'
-            title="Haryt Goş"
+            title={dil==="TM"?"Haryt Goş":"Добавить продукт"}
             placement="right"
             onClose={()=>Close()}
             visible={state}
@@ -179,33 +181,33 @@ const Lukman = () =>{
              <div className='lukman--gozleg'>
                     <form className='lukman-gozleg--form'>
                         <div>
-                        <Input value={code} onChange={(e)=>setCode(e.target.value)} placeholder='Haryt Code' className='lukman-gozleg--input' />
+                        <Input style={{marginTop:"0px",marginBottom:"10px"}} value={code} onChange={(e)=>setCode(e.target.value)} placeholder={dil==="TM"?'Haryt Code':"Код продукта"} className='lukman-gozleg--input' />
 
-                        <Input value={all} onChange={(e)=>setAll(e.target.value)} placeholder='Umumy gözleg' className='lukman-gozleg--input' />
+                        <Input style={{marginTop:"0px",marginBottom:"10px"}} value={all} onChange={(e)=>setAll(e.target.value)} placeholder={dil==="TM"?'Umumy gözleg':"Общий поиск"} className='lukman-gozleg--input' />
                        
-                        <select style={{height:"35px",border:"none",borderRadius:"6px"}}  onChange={(v)=>{setKategoriya_id(v.target.value);getSubKategoriyas(v.target.value)}} placeholder="Kategoryalar" className='lukman-gozleg--input'>
-                            <option value={null}>Ählisi</option>
+                        <select style={{height:"35px",border:"none",borderRadius:"6px",marginTop:"0px",marginBottom:"10px"}}  onChange={(v)=>{setKategoriya_id(v.target.value);getSubKategoriyas(v.target.value)}} placeholder={dil==="TM"?"Kategoryya":"Категория" } className='lukman-gozleg--input'>
+                            <option value={null}>{dil==="TM"?"Ählisi Kategoryya":"Все Категория"}</option>
                             {
                                 kategoriyalar.map((kategoriya)=>{
-                                    return <option value={kategoriya.id}>{kategoriya.name_tm}</option>
+                                    return <option value={kategoriya.id}>{dil==="TM"?kategoriya.name_tm:kategoriya.name_ru}</option>
                                 })
                             }
                         </select>
-                        <select style={{height:"35px",border:"none",borderRadius:"6px"}}  onChange={(v)=>setKategoriya_id(v.target.value)} placeholder="SubKategoryalar" className='lukman-gozleg--input'>
-                            <option value={null}>Ählisi</option>
+                        <select style={{height:"35px",border:"none",borderRadius:"6px",marginTop:"0px",marginBottom:"10px"}}  onChange={(v)=>setKategoriya_id(v.target.value)} placeholder={dil==="TM"?"Ähli SubKategory":"Все подкатегории"} className='lukman-gozleg--input'>
+                            <option value={null}>{dil==="TM"?"Ähli SubKategory":"Все подкатегории"}</option>
                             {
                                 subKategoriyalar.map((kategoriya)=>{
-                                    return <option value={kategoriya.id}>{kategoriya.name_tm}</option>
+                                    return <option value={kategoriya.id}>{dil==="TM"?kategoriya.name_tm:kategoriya.name_ru}</option>
                                 })
                             }
                         </select>
-                        <select style={{height:"35px",border:"none",borderRadius:"6px"}}  onChange={(v)=>setIs_sale(v.target.value)} placeholder="Ählisi" className='lukman-gozleg--input'>
-                            <option value={null}>Ählisi</option>
-                            <option value={true}>Skidkada</option>
-                            <option value={false}>Skidka däl</option>
+                        <select style={{height:"35px",border:"none",borderRadius:"6px",marginTop:"0px",marginBottom:"10px"}}  onChange={(v)=>setIs_sale(v.target.value)} placeholder={dil==="TM"?"Ählisi":"Все"} className='lukman-gozleg--input'>
+                            <option value={null}>{dil==="TM"?"Ählisi":"Все"}</option>
+                            <option value={true}>{dil==="TM"?"Skidkada":"Cкидка"}</option>
+                            <option value={false}>{dil==="TM"?"Skidka däl":"Hет скидки"}  </option>
                         </select>
-                        <Button onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>Haryt goş</Button>
-                        <Button onClick={()=>{setPageNo(pageNo+1);message.success("Yene 1000 haryt goshuldy!")}} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>+1000</Button>
+                        <Button style={{marginTop:"0px",marginBottom:"10px"}} onClick={()=>GoshButton()} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>{dil==="TM"?"Haryt goş":"Добавить товары"}  </Button>
+                        <Button style={{marginTop:"0px",marginBottom:"10px"}} onClick={()=>{setPageNo(pageNo+1);message.success("Yene 1000 haryt goshuldy!")}} shape='round' type='primary' icon={<PlusCircleFilled />} className='lukman-gozleg--button'>+1000</Button>
 
                         </div>
                         <div>

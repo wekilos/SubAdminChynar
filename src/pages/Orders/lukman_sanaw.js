@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Button,Input,Drawer} from 'antd';
 import "antd/dist/antd.css";
@@ -10,9 +10,11 @@ import StatusGosh from './StatusGosh';
 import LukmanSanawTable from './LukmanSanawTable';
 import  './lukman.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const Lukman = () =>{
 
+    const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [ data, setData ] = useState([]);
 
@@ -52,7 +54,7 @@ const Lukman = () =>{
             <Drawer
             width={width>850?500:320}
             className='lukman-gosh--drawer'
-            title="Status Goş"
+            title={dil==="TM"?"Status Goş":"Добавить статус"}
             placement="right"
             onClose={()=>Close()}
             visible={state}

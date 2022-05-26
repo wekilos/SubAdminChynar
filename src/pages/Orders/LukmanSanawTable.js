@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useContext, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Space,message,Table,Modal,Drawer,Popconfirm} from 'antd';
@@ -8,33 +8,35 @@ import { EditOutlined,DeleteOutlined } from '@ant-design/icons';
 import StatusEdit from './SurujiYagdayy';
 import './LukmanTable.css';
 import { axiosInstance, BASE_URL } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const LukmanTable = props=>{
 
+    const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getStatuses = props.getStatuses;
     
     const columns =width>850? [
         {
-            title:"Status No",
+            title:dil==="TM"?"Status No":"Статус №",
             dataIndex:"id"
         },
         {
-            title:"Status ady tm",
+            title:dil==="TM"?"Status ady tm":"Имя статуса тм",
             dataIndex:"name_tm",
             
         },
         {
-            title:"Status ady ru",
+            title:dil==="TM"?"Status ady ru":"Имя статуса ru",
             dataIndex:"name_ru",
         },
         {
-            title:"Status ady en",
+            title:dil==="TM"?"Status ady en":"Имя статуса en",
             dataIndex:"name_en"
         },
         {
-            title:"Üýtgetmek we Özgertmek",
+            title:dil==="TM"?"Üýtgetmeler":"Изменения",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <Space size="middle">
@@ -55,30 +57,30 @@ const LukmanTable = props=>{
     ]
     :[
         {
-            title:"Status No",
+            title:dil==="TM"?"Status No":"Статус №",
             dataIndex:"id"
         },
         {
-            title:"Status ady tm",
+            title:dil==="TM"?"Status ady tm":"Имя статуса тм",
             dataIndex:"name_tm",
             
         },
         {
-            title:"Üýtgetmek we Özgertmek",
+            title:dil==="TM"?"Üýtgetmeler":"Изменения",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <Space >
                     <Button type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
-                    <Popconfirm
-                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                    {/* <Popconfirm
+                        title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                         onConfirm={()=>DeleteUser(record)} 
                         // onCancel={cancel}
-                        okText="Howwa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
                         <Button type='primary' shape='round' danger  ><DeleteOutlined /></Button>                 
                
-                    </Popconfirm>
+                    </Popconfirm> */}
                      </Space>
               ),
         }
@@ -124,7 +126,7 @@ const saveData = (event)=>{
                 <Drawer
                 width={width>850?500:320}
                 className='lukman-table--drawer'
-                title="Üýtgetmeler"
+                title={dil==="TM"?"Üýtgetmeler":"Изменения"}
                 placement="right"
                 onClose={()=>ShowDrawer()}
                 visible={edit}>

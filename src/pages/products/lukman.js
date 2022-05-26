@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Drawer} from 'antd';
@@ -9,9 +9,11 @@ import UnitGosh from './UnitGosh';
 import LukmanTable from './LukmanTable';
 import  './lukman.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const Lukman = () =>{
 
+    const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [units,setUnits] = useState([]);
 
@@ -54,7 +56,7 @@ const Lukman = () =>{
             <Drawer
             width={width>850?400:320}
             className='lukman-gosh--drawer'
-            title="Unit Goş"
+            title={dil==="TM"?"Unit Goş":"добавить тип продукта"}
             placement="right"
             // closable={true}
             onClose={()=>Close()}

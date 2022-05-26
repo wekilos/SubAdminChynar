@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useContext, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Space,message,Table,Modal,Drawer,Popconfirm} from 'antd';
@@ -9,29 +9,31 @@ import UnitEdit  from './UnitEdit';
 import './LukmanTable.css';
 import { axiosInstance, BASE_URL } from '../../utils/axiosIntance';
 import PrintComponent from '../../components/PrintComponent';
+import { SebedimContext } from '../../context/Sebedim';
 
 const LukmanTable = props=>{
 
+    const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents()
     const [data,setData]=props.data;
     const getOrders = props.getOrders;
     const valyuta = props.valyuta;
     const columns = width>850?[
         {
-            title:"Order No",
+            title:dil==="TM"?"Order No":"№ заказа.",
             dataIndex:"id"
         },
         
         {
-            title:"Umumy baha",
+            title:dil==="TM"?"Umumy baha":"Общая цена",
             dataIndex:"sum"
         },
         {
-            title:"Umumy Haryt sany",
+            title:dil==="TM"?"Umumy Haryt sany":"Всего товаров",
             dataIndex:"sany"
         },
         {
-            title:"Zakaz edilen wagty",
+            title:dil==="TM"?"Zakaz edilen wagty":"Время заказa",
             dataIndex:"order_date_time",
             render:(text,record)=>(
                 <div>
@@ -42,12 +44,12 @@ const LukmanTable = props=>{
             )
         },
         {
-            title:"Töleg görnüşi",
+            title:dil==="TM"?"Töleg görnüşi":"Способ оплаты",
             dataIndex:"is_cash",
             render:(text,record)=>(
                 <div>
-                    {record.is_cash && "Nagt töleg"}
-                    {!record.is_cash && "Kart bilen töleg"}
+                    {record.is_cash && (dil==="TM"?"Nagt töleg":"Наличный расчет")}
+                    {!record.is_cash && (dil==="TM"?"Kart bilen töleg":"Оплата картой")}
                 </div>
             )
         },
@@ -61,7 +63,7 @@ const LukmanTable = props=>{
         //     )
         // },
         {
-            title:"Zakaz Salgy",
+            title:dil==="TM"?"Zakaz Salgy":"Адрес заказа",
             render:(text,record)=>(
                 
                 <div>
@@ -72,7 +74,7 @@ const LukmanTable = props=>{
             )
         },
         {
-            title:"Ulanyjy",
+            title:dil==="TM"?"Ulanyjy":"Пользователь",
             render:(text,record)=>(
                 
                 <div>
@@ -82,19 +84,19 @@ const LukmanTable = props=>{
             )
         },
         {
-            title:"Üýygetmek we Özgertmek",
+            title:dil==="TM"?"Üýygetmek we Özgertmek":"Изменить",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <Space size="middle">
-                     <Button type='primary'shape='round'onClick={()=>ShowInformation(record)} >Goşmaça</Button>
+                     <Button type='primary'shape='round'onClick={()=>ShowInformation(record)} >{dil==="TM"?"Goşmaça":"Дополнительная"}</Button>
                      {/* <Button type='primary'shape='round'onClick={()=>Gowshuryldy(record)} >Gowşuryldy</Button> */}
                      {/* <Button type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button> */}
                     <Popconfirm
-                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                         onConfirm={()=>DeleteOrder(record)} 
                         // onCancel={cancel}
-                        okText="Howwa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
                         <Button type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
 
@@ -105,11 +107,11 @@ const LukmanTable = props=>{
     ]
     :[
         {
-            title:"Umumy baha",
+            title:dil==="TM"?"Umumy baha":"Общая цена",
             dataIndex:"sum"
         },
         {
-            title:"Ulanyjy",
+            title:dil==="TM"?"Ulanyjy":"Пользователь",
             render:(text,record)=>(
                 
                 <div>
@@ -119,18 +121,18 @@ const LukmanTable = props=>{
             )
         },
         {
-            title:"Üýygetmek we Özgertmek",
+            title:dil==="TM"?"Üýygetmek we Özgertmek":"Изменить",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <div >
-                     <Button style={{marginBottom:"5px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowInformation(record)} >Goşmaça</Button>
+                     <Button style={{marginBottom:"5px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowInformation(record)} >{dil==="TM"?"Goşmaça":"Дополнительная"}</Button>
                     <br></br>
                     <Popconfirm
-                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                         onConfirm={()=>DeleteOrder(record)} 
                         // onCancel={cancel}
-                        okText="Howwa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
                         <Button style={{width:"90px"}}  type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
 
@@ -205,7 +207,7 @@ const Gowshuryldy = (event)=>{
     return(
         <div className='LukmanTable'>
                 <Drawer
-                    width={500}
+                    width={width>850?500:320}
                     className='lukman-table--drawer'
                     title="Goşmaça Maglumat"
                     placement="right"
@@ -217,57 +219,57 @@ const Gowshuryldy = (event)=>{
                             <td>{maglumat && maglumat.id} </td>
                             </tr>
                             <tr className="modalLi" key={maglumat && maglumat.sany}>
-                            <td>Sany </td>
+                            <td>{dil==="TM"?"Sany":"Количество"} </td>
                             <td>{maglumat && maglumat.sany} </td>
                             </tr>
                             <tr className="modalLi" key={maglumat && maglumat.sum}>
-                            <td>Umumy Baha </td>
+                            <td>{dil==="TM"?"Umumy Baha":"Общая цена"} </td>
                             <td>{sum && sum} </td>
                             </tr>
                             <tr className="modalLi" key="toleg">
-                            <td>Töleg görnüşi</td>
-                            <td>{maglumat && maglumat.is_cash && "Nagt töleg"}{maglumat && !maglumat.is_cash && "Kart bilen töleg"} </td>
+                            <td>{dil==="TM"?"Töleg görnüşi":"Способ оплаты"}</td>
+                            <td>{maglumat && maglumat.is_cash &&  (dil==="TM"?"Nagt töleg":"Наличный расчет")}{maglumat && !maglumat.is_cash && (dil==="TM"?"Kart bilen töleg":"Оплата картой")} </td>
                             </tr>
                             {maglumat && maglumat.OrderedProducts && maglumat.OrderedProducts.map((product,i)=>{
                                     return <React.Fragment>
                                      <tr className="modalLi" key={`toleg${i}`}>
-                                    <td>{i+1}) Haryt No</td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt No":"Продукт нo"}</td>
                                     <td>{product.ProductId} </td>
                                     </tr>
                                     <tr className="modalLi" key={`tolega${i}`}>
-                                    <td>{i+1}) Haryt Ady</td>
-                                    <td>{product?.Product?.name_tm} </td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt Ady":"Название продукта"}</td>
+                                    <td>{dil==="TM"?product?.Product?.name_tm:product?.Product?.name_ru} </td>
                                     </tr>
                                     <tr className="modalLi" key={`tolegd${i}`}>
-                                    <td>{i+1}) Haryt Dushundirish</td>
-                                    <td>{product?.Product?.description_tm} </td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt Dushundirish":"Описание товара"}</td>
+                                    <td>{dil==="TM"?product?.Product?.description_tm:product?.Product?.description_ru} </td>
                                     </tr>
                                     <tr className="modalLi" key={`tolegpu${i}`}>
-                                    <td>{i+1}) Haryt ölçegi</td>
-                                    <td>{product?.Product?.Unit.name_tm} </td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt ölçegi":"Тип продажи продукта"}</td>
+                                    <td>{dil==="TM"?product?.Product?.Unit.name_tm:product?.Product?.Unit.name_ru} </td>
                                     </tr>
                                     <tr className="modalLi" key={`tolegp${i}`}>
-                                    <td>{i+1}) Haryt baha</td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt baha":"Цена товара"}</td>
                                     <td>{product?.Product?.is_valyuta_price==true ? (product?.Product?.price*valyuta).toFixed(2):product?.Product?.price} </td>
                                     </tr>
                                     <tr className="modalLi" key={`tolegsp${i}`}>
-                                    <td>{i+1}) Haryt skitga baha</td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt skitga baha":"Цена продукта со скидкой"}</td>
                                     <td>{product?.Product?.is_valyuta_price==true ? (product?.Product?.sale_price*valyuta).toFixed(2) :product?.Product?.sale_price} </td>
                                     </tr>
                                     <tr className="modalLi" key={`sany${i}`}>
-                                    <td>{i+1}) Haryt Sany</td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt Sany":"количество товаров"}</td>
                                     <td>{product.amount} </td>
                                     </tr>
                                     {product.razmer && <tr className="modalLi" key={`sanyr${i}`}>
-                                    <td>{i+1}) Haryt Razmer</td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt Razmer":"Размер товара"}</td>
                                     <td>{product.razmer} </td>
                                     </tr>}
                                     {product.renk && <tr className="modalLi" key={`sanyre${i}`}>
-                                    <td>{i+1}) Haryt Renki</td>
+                                    <td>{i+1}) {dil==="TM"?"Haryt Renki":"Цвет продукта"}</td>
                                     <td>{product.renk} </td>
                                     </tr>}
                                     <tr className="modalLi" key={`surat${i}`}>
-                                    <td>{i+1}) {product.Product && product.Product.name_tm }</td>
+                                    <td>{i+1}) {product.Product && (dil==="TM"?product.Product.name_tm:product.Product.name_ru) }</td>
                                     <img src={BASE_URL+"/"+`${product.Product && product.Product.surat }`} style={{width:"50px",height:"50px"}} alt="Haryt Surat"/>
                                     </tr>
                                     <tr className="modalLi" key={`suratM${i}`}>
@@ -283,7 +285,7 @@ const Gowshuryldy = (event)=>{
                 <Drawer
                 width={400}
                 className='lukman-table--drawer'
-                title="Üýtgetmeler"
+                title={dil==="TM"?"Üýtgetmeler":"Изменения"}
                 placement="right"
                 onClose={()=>ShowDrawer()}
                 visible={edit}>

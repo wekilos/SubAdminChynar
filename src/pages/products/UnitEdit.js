@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Select,Input,Button, message} from 'antd'
 import "antd/dist/antd.css";
@@ -7,10 +7,12 @@ import { PlusCircleFilled,LoadingOutlined } from '@ant-design/icons';
 import './SurujiYagdayy.css';
 import TextArea from 'antd/lib/input/TextArea';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const Option = {Select};
 
 const SurujiYagdayy = props =>{
+    const { dil } = useContext(SebedimContext);
     const getUnits = props.getUnits;
     const [maglumat,setMaglumat] =  props.unit;
     const [name_tm,setName_tm] = useState(maglumat && maglumat.name_tm);
@@ -48,7 +50,7 @@ const SurujiYagdayy = props =>{
         }).catch((err)=>{
             console.log(err);
             setLoading(false);
-            message.warn("Internet baglanşygyňyzy barlaň!")
+            message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
         })
     }
     
@@ -58,13 +60,13 @@ const SurujiYagdayy = props =>{
     return (
         <div className='suruji-yagdayy'>
             {!loading ? <form className='suruji-yagdayy--form' >
-                { maglumat && <Input style={{width:"100%"}} value={maglumat.name_tm} onChange={(e)=>{setMaglumat({...maglumat,name_tm:e.target.value })}}  name='surujiNo' addonBefore='Unit ady tm'  className='suruji-yagdayy--input' />
-                }{ maglumat && <Input style={{width:"100%"}} value={maglumat.name_ru} onChange={(e)=>{setMaglumat({...maglumat,name_ru:e.target.value })}}  name='surujiNo' addonBefore='Unit ady ru'  className='suruji-yagdayy--input' />
-                }{ maglumat && <Input style={{width:"100%"}} value={maglumat.name_en} onChange={(e)=>{setMaglumat({...maglumat,name_en:e.target.value })}}  name='surujiNo' addonBefore='Unit ady en'  className='suruji-yagdayy--input' />
+                { maglumat && <Input style={{width:"100%"}} value={maglumat.name_tm} onChange={(e)=>{setMaglumat({...maglumat,name_tm:e.target.value })}}  name='surujiNo' addonBefore={dil==="TM"?'Unit ady tm':"имя тм"} className='suruji-yagdayy--input' />
+                }{ maglumat && <Input style={{width:"100%"}} value={maglumat.name_ru} onChange={(e)=>{setMaglumat({...maglumat,name_ru:e.target.value })}}  name='surujiNo' addonBefore={dil==="TM"?'Unit ady ru':"имя ru"}  className='suruji-yagdayy--input' />
+                }{ maglumat && <Input style={{width:"100%"}} value={maglumat.name_en} onChange={(e)=>{setMaglumat({...maglumat,name_en:e.target.value })}}  name='surujiNo' addonBefore={dil==="TM"?'Unit ady en':"имя en"}  className='suruji-yagdayy--input' />
             }
 
-                <Button onClick={Uytget} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Unit üýtget</Button>
-                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Goýbolsun</Button>
+                <Button onClick={Uytget} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Unit üýtget":"Изменить"}</Button>
+                <Button onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Goýbolsun":"Отмена"}</Button>
             </form>
             :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 210px"}} />
         }

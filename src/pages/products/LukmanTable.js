@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useContext, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Space,message,Table,Drawer,Popconfirm} from 'antd';
@@ -8,32 +8,34 @@ import { EditOutlined,DeleteOutlined } from '@ant-design/icons';
 import UnitEdit  from './UnitEdit';
 import './LukmanTable.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 
 const LukmanTable = props=>{
 
+    const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getUnits = props.getUnits;
 
     const columns = width>850? [
         {
-            title:"Unit No",
+            title:dil==="TM"?"Unit No":"Унит №",
             dataIndex:"id"
         },
         {
-            title:"Unit ady tm",
+            title:dil==="TM"?"Unit ady tm":"имя тм",
             dataIndex:"name_tm"
         },
         {
-            title:"Unit ady ru",
+            title:dil==="TM"?"Unit ady ru":"имя ru",
             dataIndex:"name_ru"
         },
         {
-            title:"Unit ady en",
+            title:dil==="TM"?"Unit ady en":"имя en",
             dataIndex:"name_en"
         },
         {
-            title:"Üýygetmek we Özgertmek",
+            title:dil==="TM"?"Üýygetmek we Özgertmek":"Изменения",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <Space size="middle">
@@ -54,20 +56,20 @@ const LukmanTable = props=>{
     ]
     :[
         {
-            title:"Unit No",
+            title:dil==="TM"?"Unit No":"Унит №",
             dataIndex:"id"
         },
         {
-            title:"Unit ady tm",
+            title:dil==="TM"?"Unit ady tm":"имя тм",
             dataIndex:"name_tm"
         },
         {
-            title:"Üýygetmek we Özgertmek",
+            title:dil==="TM"?"Üýygetmek we Özgertmek":"Изменения",
             dataIndex:"goshmacha",
             render: (text, record) => (
                 <Space >
                     <Button type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="Siz çyndan öçürmek isleýärsinizmi?"
                         onConfirm={()=>DeleteUnit(record)} 
                         // onCancel={cancel}
@@ -76,7 +78,7 @@ const LukmanTable = props=>{
                     >
                         <Button type='primary' shape='round' danger ><DeleteOutlined /></Button>                 
 
-                    </Popconfirm>
+                    </Popconfirm> */}
                 </Space>
               ),
         }
@@ -112,7 +114,7 @@ const ShowDrawer =(event)=>{
                 <Drawer
                 width={width>850?400:320}
                 className='lukman-table--drawer'
-                title="Üýtgetmeler"
+                title={dil=="TM"?"Üýtgetmeler":"Изменения"}
                 placement="right"
                 onClose={()=>ShowDrawer()}
                 visible={edit}>

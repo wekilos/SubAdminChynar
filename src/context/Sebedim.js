@@ -5,13 +5,13 @@ export const SebedimContext = createContext();
 const SebedimContextProvider = (props)=>{
     
    
-    let [dil,setDil]=useState();
+    let [dil,setDil]=useState("RU");
     useEffect(()=>{
-            let dilData = localStorage.getItem("chynarDil");
+            let dilData = localStorage.getItem("chynarSubAdminDil");
         if(dilData){
             setDil(JSON.parse(dilData));
         }else{
-            setDil("TM");
+            setDil("RU");
         }
     },[])
 

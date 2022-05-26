@@ -1,17 +1,19 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
 import {Button,Space,message,Table,Select,Drawer,Popconfirm,Input} from 'antd';
 import "antd/dist/antd.css";
-import { EditOutlined,DeleteOutlined,PlusCircleFilled, LoadingOutlined } from '@ant-design/icons';
+import { EditOutlined,DeleteOutlined,PlusCircleFilled, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 import ProductEdit from './ProductEdit';
 import ProductSkidga from "./skidga"
 import './LukmanTable.css';
 import { axiosInstance, BASE_URL } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 const Option = {Select};
 const LukmanTable = props=>{
 
+  const { dil } = useContext(SebedimContext);
   const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
     const getProducts = props.getProducts;
@@ -168,8 +170,9 @@ const LukmanTable = props=>{
       
     }).catch((err)=>{
       console.log(err);
-      setLoading(false);
-      message.warn("Internet baglanşygyňyzy barlaň!")
+      setLoading(false);  
+      message.warn(dil==="TM"?"Internet baglanşygyňyzy barlaň!":"Проверьте подключение к Интернету!")
+        
     })
 }
 
@@ -187,11 +190,11 @@ const ChangeCheckboxTaze = (value)=>{
 
     const columns = width>850? [
         {
-            title:"Haryt No",
+            title:dil==="TM"?"Haryt No":"Продукт No",
             dataIndex:"id"
         },
         {
-            title:"Haryt Surat",
+            title:dil==="TM"?"Haryt Surat":"Фото продукта",
             dataIndex:"surat",
             render:(text,record)=>(
                 <div>
@@ -200,7 +203,7 @@ const ChangeCheckboxTaze = (value)=>{
             )
         },
         {
-            title:"Haryt Ady",
+            title:dil==="TM"?"Haryt Ady":"Название продукта",
             dataIndex:"name_tm",
         },
         // {
@@ -208,72 +211,74 @@ const ChangeCheckboxTaze = (value)=>{
         //     dataIndex:"article_tm"
         // },
         {
-            title:"Description",
+            title:dil==="TM"?"Description":"Описание",
             dataIndex:"description_tm"
         },
         {
-            title:"Baha",
+            title:dil==="TM"?"Baha":"цена",
             dataIndex:"price"
         },
         {
-            title:"Satyş Baha",
+            title:dil==="TM"?"Satyş Baha":"Продажная цена",
             dataIndex:"sale_price"
         },
         {
-            title:"Satylyşy",
+            title:dil==="TM"?"Satylyşy":"Продажи",
             dataIndex:"is_active",
             render:(text,record)=>(
                 <div>
-               { record.is_active && <p style={{color:"green"}}> Howa </p>}
-               { !record.is_active && <p style={{color:"red"}}>Ýok</p>}
+               { record.is_active && <p style={{color:"green"}}> {dil==="TM"?"Hawa":"Да"} </p>}
+               { !record.is_active && <p style={{color:"red"}}>{dil==="TM"?'Ýok':"Нет"}</p>}
                </div>
             )
         },
         {
-            title:"Skidka ",
+            title:dil==="TM"?"Skidka ":"Скидка",
             dataIndex:"is_active",
             render:(text,record)=>(
                 <div>
-               { record.is_sale && <p style={{color:"green"}}>Howa</p>}
-               { !record.is_sale && <p style={{color:"red"}}>Ýok</p>}
+               { record.is_sale && <p style={{color:"green"}}>{dil==="TM"?"Hawa":"Да"} </p>}
+               { !record.is_sale && <p style={{color:"red"}}>{dil==="TM"?'Ýok':"Нет"}</p>}
                </div>
             )
         },
         {
-            title:"Goshmacha we Özgertmek",
+            title:dil==="TM"?"Goshmacha we Özgertmek":"Дополнение и модификация",
             dataIndex:"goshmacha",
             render: (text, record) => (
-                <Space size="middle">
-                    <Button type='primary'shape='round'onClick={()=>MoreInformation(record)}>Goşmaça</Button>
-                    <Button type='primary'shape='round'onClick={()=>ShowSkidka(record)} >Skidka</Button>
+                <div size="middle">
+                    <Button style={{marginBottom:"5px"}} type='primary'shape='round'onClick={()=>MoreInformation(record)}>{dil==="TM"?"Goşmaça":"Дополнительная"}</Button>
+                    <br></br>
+                    <Button style={{marginRight:"15px"}} type='primary'shape='round'onClick={()=>ShowSkidka(record)} >{dil==="TM"?"Skidka":"Скидка"}</Button>
                     {/* <Button type='primary'shape='round'onClick={()=>NewProduct(record)} >Täze</Button> */}
-                    <Button type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
+                    <Button style={{marginBottom:"5px"}} type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
+                    <br></br>
                     <Popconfirm
-                        title="Siz çyndan Gizlemek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan Gizlemek isleýärsinizmi?":"Вы действительно хотите спрятаться?"}
                         onConfirm={()=>Active(record)} 
                         // onCancel={cancel}
-                        okText="Hawa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
-                    <Button type='primary' danger shape='round' >Gizle</Button>
+                    <Button type='primary' danger shape='round' >{dil==="TM"?"Gizle":"Скрывать"}</Button>
                     </Popconfirm>
                     <Popconfirm
-                        title="Siz çyndan öçürmek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                         onConfirm={()=>DeleteUser(record)} 
                         // onCancel={cancel}
-                        okText="Howwa"
-                        cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                     >
                         <Button type='primary' shape='round' danger  ><DeleteOutlined /></Button>                 
                
                     </Popconfirm>
-                     </Space>
+                     </div>
               ),
         }
     ]
     :[
       {
-        title:"Haryt Surat",
+        title:dil==="TM"?"Haryt Surat":"Фото продукта",
         dataIndex:"surat",
         render:(text,record)=>(
             <div style={{width:"50px"}}>
@@ -282,34 +287,34 @@ const ChangeCheckboxTaze = (value)=>{
         )
     },
     {
-        title:"Haryt Ady",
+        title:dil==="TM"?"Haryt Ady":"Название продукта",
         dataIndex:"name_tm",
     },
       {
-        title:"Goshmacha we Özgertmek",
+        title:dil==="TM"?"Goshmacha we Özgertmek":"Дополнение и модификация",
         dataIndex:"goshmacha",
         render: (text, record) => (
             <div >
-                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>MoreInformation(record)}>Goşmaça</Button>
-                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowSkidka(record)} >Skidka</Button>
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>MoreInformation(record)}><InfoCircleOutlined/></Button>
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowSkidka(record)} >{dil==="TM"?"Skidka":"Скидка"}</Button>
                 <br></br>
                 {/* <Button type='primary'shape='round'onClick={()=>NewProduct(record)} >Täze</Button> */}
                 <Button style={{marginBottom:"3px",width:"90px"}} type='primary'shape='round'onClick={()=>ShowDrawer(record)} ><EditOutlined /></Button>
                 <Popconfirm
-                    title="Siz çyndan Gizlemek isleýärsinizmi?"
+                        title={dil==="TM"?"Siz çyndan Gizlemek isleýärsinizmi?":"Вы действительно хотите спрятаться?"}
                     onConfirm={()=>Active(record)} 
                     // onCancel={cancel}
-                    okText="Hawa"
-                    cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                 >
-                <Button style={{marginBottom:"3px",width:"90px"}} type='primary' danger shape='round' >Gizle</Button>
+                <Button style={{marginBottom:"3px",width:"90px"}} type='primary' danger shape='round' >{dil==="TM"?"Gizle":"Скрывать"}</Button>
                 </Popconfirm>
                 <Popconfirm
-                    title="Siz çyndan öçürmek isleýärsinizmi?"
+                    title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                     onConfirm={()=>DeleteUser(record)} 
                     // onCancel={cancel}
-                    okText="Howwa"
-                    cancelText="Ýok"
+                        okText={dil==="TM"?"Hawa":"Да"}
+                        cancelText={dil==="TM"?"Ýok":"Нет"}
                 >
                     <Button style={{width:"90px"}} type='primary' shape='round' danger  ><DeleteOutlined /></Button>                 
            
@@ -556,12 +561,13 @@ const getRazmerler = ()=>{
     console.log(`selected ${value}`);
     setUnit_id(value);
   }
+  
     return(
         <div className='LukmanTable'>
                 <Drawer
                 width={width>850?600:320}
                 className='lukman-table--drawer'
-                title="Goşmça Maglumat"
+                title={dil==="TM"?"Goşmça Maglumat":"Дополнительная информация"}
                 placement="right"
                 onClose={()=>MoreInformation()}
                 visible={showInfo}>
@@ -572,19 +578,19 @@ const getRazmerler = ()=>{
                     <td>{maglumat && maglumat.id} </td>
                     </tr>
                     <tr className="modalLi" key={maglumat?.product_code}>
-                    <td style={{height:"40px"}}>Haryt Code </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Haryt Code":"Код продукта"} </td>
                     <td>{maglumat?.product_code} </td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.name_tm}>
-                    <td style={{height:"40px"}}>Ady tm </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Ady tm":"Название tm"}</td>
                     <td>{maglumat &&  maglumat.name_tm}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.name_ru}>
-                    <td style={{height:"40px"}}>Ady ru </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Ady ru":"Название ru"} </td>
                     <td>{maglumat &&  maglumat.name_ru}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.name_en}>
-                    <td style={{height:"40px"}}>Ady en </td>
+                    <td style={{height:"40px"}}> {dil==="TM"?"Ady en":"Название en"} </td>
                     <td>{maglumat &&  maglumat.name_en}</td>
                     </tr>
                     {/* <tr className="modalLi" key={maglumat && maglumat.article_tm}>
@@ -600,51 +606,51 @@ const getRazmerler = ()=>{
                     <td>{maglumat &&  maglumat.article_en}</td>
                     </tr> */}
                     <tr className="modalLi" key={maglumat && maglumat.description_tm}>
-                    <td style={{height:"40px"}}>Description tm </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Description":"Описание"} tm </td>
                     <td>{maglumat &&  maglumat.description_tm}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.description_ru}>
-                    <td style={{height:"40px"}}>Description ru </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Description":"Описание"} ru </td>
                     <td>{maglumat &&  maglumat.description_ru}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.description_en}>
-                    <td style={{height:"40px"}}>Description en </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Description":"Описание"} en </td>
                     <td>{maglumat &&  maglumat.description_en}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && JSON.stringify(maglumat.is_active)}>
-                    <td style={{height:"40px"}}>Satylyşy</td>
-                    <td>{maglumat &&  maglumat.is_active===true?"Howwa":"Yok"}</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Satylyşy":"Продажи"}</td>
+                    <td>{maglumat &&  maglumat.is_active===true?"Hawa":"Yok"}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && JSON.stringify(maglumat.is_sale)}>
-                    <td style={{height:"40px"}}>Skidka </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Skidka ":"Скидка"} </td>
                     <td>{maglumat &&  maglumat.is_sale===true?"Howwa":"Yok"}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && (maglumat.is_valyuta_price)}>
-                    <td style={{height:"40px"}}>Is_Valyuta_Price </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Is_Valyuta_Price":"это обмен валюты"} </td>
                     <td>{maglumat &&  maglumat.is_valyuta_price===true?"Howwa":"Yok"}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && (maglumat.is_new)}>
-                    <td style={{height:"40px"}}>Tazemi  </td>
+                    <td style={{height:"40px"}}>{dil === "TM"?"Tazemi":"Новый?"}  </td>
                     <td>{maglumat &&  maglumat.is_new===true?"Howwa":"Yok"}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.gelenBaha}>
-                    <td style={{height:"40px"}}>Gelen Bahasy</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Gelen Bahasy":"Доход Цена"}</td>
                     <td>{maglumat &&  maglumat.gelenBaha}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.price}>
-                    <td style={{height:"40px"}}>Bahasy</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Baha":"цена"}</td>
                     <td>{maglumat &&  maglumat.price}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.sale_price}>
-                    <td style={{height:"40px"}}>Satylyş baha </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Satyş Baha":"Продажная цена"} </td>
                     <td>{maglumat &&  maglumat.sale_price}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.sale_until}>
-                    <td style={{height:"40px"}}>Hachana chenli skidka </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Hachana chenli skidka":"Сколько стоит скидка?"} </td>
                     <td>{maglumat &&  maglumat.sale_until}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.search}>
-                    <td style={{height:"40px"}}>Gözleg üçin söz </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Gözleg üçin söz":"Cлово для поиска"} </td>
                     <td>{maglumat &&  maglumat.search}</td>
                     </tr>
                     {/* <tr className="modalLi" key={maglumat && maglumat.step}>
@@ -652,55 +658,55 @@ const getRazmerler = ()=>{
                     <td>{maglumat &&  maglumat.step}</td>
                     </tr> */}
                     <tr className="modalLi" key={maglumat && maglumat.total_amount}>
-                    <td style={{height:"40px"}}>Ambardaky Umumy sany</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?'Ambardaky Sany':"Запас в склад"}</td>
                     <td>{maglumat &&  maglumat.total_amount}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.total_amount}>
-                    <td style={{height:"40px"}}>Görenleriň sany</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Görenleriň sany":"Количество просмотров"}</td>
                     <td>{maglumat &&  maglumat.view_count}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.Market && maglumat.Market.name_tm}>
-                    <td style={{height:"40px"}}>Market </td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Market":"Mаркет"} </td>
                     <td>{maglumat && maglumat.Market && maglumat.Market.name_tm}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.MarketKategoriya && maglumat.MarketKategoriya.name_tm}>
-                    <td style={{height:"40px"}}>Market Kategoriýa</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Market Kategoriýa":"Категория маркет"}</td>
                     <td>{maglumat && maglumat.MarketKategoriya && maglumat.MarketKategoriya.name_tm}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.MarketKategoriya && maglumat.MarketKategoriya.name_tm+"dfgh"}>
-                    <td style={{height:"40px"}}>Market SubKategoriýa</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Market SubKategoriýa":"подкатегория маркет"}</td>
                     <td>{maglumat?.MarketSubKategoriya?.name_tm}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.Unit && maglumat.total_amount}>
-                    <td style={{height:"40px"}}>Unit</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Unit":"Выберите тип продажи"}</td>
                     <td>{maglumat && maglumat.Unit &&  maglumat.Unit.name_tm}</td>
                     </tr>
-                    <tr className="modalLi" key={maglumat && maglumat.Welayatlar && maglumat.Welayatlar.name_tm}>
+                    {/* <tr className="modalLi" key={maglumat && maglumat.Welayatlar && maglumat.Welayatlar.name_tm}>
                     <td style={{height:"40px"}}>Welayat</td>
                     <td>{maglumat && maglumat.Welayatlar && maglumat.Welayatlar.name_tm}</td>
-                    </tr>
+                    </tr> */}
                     <tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
-                    <td style={{height:"40px"}}>Brand</td>
-                    <td>{maglumat && maglumat.Brand && maglumat.Brand.name_tm}</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Brand":"бренд"}</td>
+                    <td>{maglumat && maglumat.Brand &&(dil==="TM"? maglumat.Brand.name_tm:maglumat.Brand.name_ru)}</td>
                     </tr>
                     <tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm+"saassdf"}>
-                    <td style={{height:"40px"}}>Brand surat</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Brand surat":"картинка бренда"}</td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.Brand.surat} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>
                     {maglumat && maglumat.surat &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
-                    <td style={{height:"40px"}}>Haryt surat1</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat1":"картинка продукта 1"}</td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
                     {maglumat && maglumat.surat1 &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
-                    <td style={{height:"40px"}}>Haryt surat2</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat1":"картинка продукта 2"}</td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat1} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
                     {maglumat && maglumat.surat2 &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
-                    <td style={{height:"40px"}}>Haryt surat3</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat1":"картинка продукта 3"}</td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat2} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
                     {maglumat && maglumat.surat3 &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
-                    <td style={{height:"40px"}}>Haryt surat4</td>
+                    <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat1":"картинка продукта 4"}</td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat3} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
             
@@ -712,17 +718,17 @@ const getRazmerler = ()=>{
                 <Drawer
                 width={width>850?600:320}
                 className='lukman-table--drawer'
-                title="Üýtgetmeler"
+                title={dil==="TM"?"Üýtgetmeler":"Изменения"}
                 placement="right"
                 onClose={()=>ShowDrawer()}
                 visible={edit}>
                     {/* <ProductEdit getProducts={getProducts} mag={maglumat} onClick={ShowDrawer}  /> */}
                     {!loading ? <form className='suruji-yagdayy--form' >
-                    <Button style={{width:"95%"}} onClick={()=>setRenkRazmer(true)}  shape='round' type='primary' className='suruji-yagdayy--button'>Renk we Razmer Üýget </Button>
+                    <Button style={{width:"95%"}} onClick={()=>setRenkRazmer(true)}  shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Renk we Razmer Üýget":"Цвет и размер"} </Button>
 
                       <Select
                         className='suruji-yagdayy--input' 
-                        placeholder="Brand Saýla"
+                        placeholder={dil==="TM"?"Brand Saýla!":"Выбор бренда!"}
                         onChange={onChangeB}
                         showSearch
                         filterOption={(input, option) =>
@@ -731,54 +737,54 @@ const getRazmerler = ()=>{
                       >
                         {
                           brands?.map((brand)=>{
-                            return <Option key={brand.id+"brand"} value={`${brand.id}`}>{brand.name_tm}</Option>
+                            return <Option key={brand.id+"brand"} value={`${brand.id}`}>{dil==="TM"?brand.name_tm:brand.name_ru}</Option>
                           })
                         }
                       </Select>
 
                       <Select
                         className='suruji-yagdayy--input'
-                        placeholder="Unit Saýla"
+                        placeholder={dil==="TM"?"Unit Saýla":"Выберите тип продажи"}
                         onChange={onChangeU}
                       >
                         {
                           units.map((unit)=>{
-                            return <Option key={unit.id+"unit"} value={unit.id}>{unit.name_tm}</Option>
+                            return <Option key={unit.id+"unit"} value={unit.id}>{dil==="TM"?unit.name_tm:unit.name_ru}</Option>
                           })
                         }
                       </Select>
 
                       <Select
                           className='suruji-yagdayy--input'
-                            placeholder="Market Kategoriýa Saýla"
+                            placeholder={dil==="TM"?"Market Kategoriýa Saýla!":"Выберите категорию маркет!"}
                             onChange={onChangeK}
                           >
                             {
                               kategoriyalar?.map((kategor)=>{
-                                return <Option key={kategor.id+"kategor"} value={kategor.id}>{kategor.name_tm}</Option>
+                                return <Option key={kategor.id+"kategor"} value={kategor.id}>{dil==="TM"?kategor.name_tm:kategor.name_ru}</Option>
                               })
                             }
                           </Select>
                           <Select
                             className='suruji-yagdayy--input'
-                              placeholder="Market SubKategoriýa Saýla"
+                            placeholder={dil==="TM"?"Market SubKategoriýa Saýla!":"Выберите подкатегория маркет!"}
                               onChange={onChangeSubK}
                             >
                               {
                                 subKategoriya.map((kategor)=>{
-                                  return <Option key={kategor.id+"subkategor"} value={kategor.id}>{kategor.name_tm}</Option>
+                                  return <Option key={kategor.id+"subkategor"} value={kategor.id}>{dil==="TM"?kategor.name_tm:kategor.name_ru}</Option>
                                 })
                               }
                             </Select>
-                        <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
-                        <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
-                        <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-                        <Input value={product_code} onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore='Haryt Code'  className='suruji-yagdayy--input' />
-                        <Input value={gelenBaha} onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore='Gelen baha'  className='suruji-yagdayy--input' />
+                        <Input value={name_tm} onChange={(e)=>{setName_tm(e.target.value)}} addonBefore={dil==="TM"?'ady tm':"имя тм" } className='suruji-yagdayy--input' />
+                        <Input value={name_ru} onChange={(e)=>{setName_ru(e.target.value)}} addonBefore={dil==="TM"?'ady ru':"имя ru" }  className='suruji-yagdayy--input' />                
+                        <Input value={name_en} onChange={(e)=>{setName_en(e.target.value)}} addonBefore={dil==="TM"?'ady en':"имя en" }  className='suruji-yagdayy--input' />
+                        <Input value={product_code} onChange={(e)=>{setProduct_code(e.target.value)}} addonBefore={dil==="TM"?'product code':"код продукта" }  className='suruji-yagdayy--input' />
+                        <Input value={gelenBaha} onChange={(e)=>{setGelenBaha(e.target.value)}} addonBefore={dil==="TM"?'gelen baha':"входящая цена" }  className='suruji-yagdayy--input' />
                         <Select
                           className='suruji-yagdayy--input'
                           // style={{ width: 200 }}
-                          placeholder="Satysh Baha %"
+                          placeholder={dil==="TM"?"Satysh Baha %":"Продажная цена %"}
                           onChange={onChangeBaha}
                         >
                           <Option value="5">5%</Option>
@@ -788,45 +794,45 @@ const getRazmerler = ()=>{
                           <Option value="25">25%</Option>
                           <Option value="30">30%</Option>
                         </Select>
-                        <Input value={price} onChange={(e)=>{setPrice(e.target.value)}} addonBefore='baha'  className='suruji-yagdayy--input' />
-                        <Input value={sale_price} onChange={(e)=>{setSale_price(e.target.value)}} addonBefore='Satyş baha'  className='suruji-yagdayy--input' />
+                        <Input value={price} onChange={(e)=>{setPrice(e.target.value)}} addonBefore={dil==="TM"?'baha':"цена" } className='suruji-yagdayy--input' />
+                        <Input value={total_amount} onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore={dil==="TM"?'Ambardaky Sany':"Запас в склад" }  className='suruji-yagdayy--input' />
+                        {/* <Input value={sale_price} onChange={(e)=>{setSale_price(e.target.value)}} addonBefore={dil==="TM"?"Satysh Baha ":"Продажная цена "}  className='suruji-yagdayy--input' /> */}
                         {/* <Input value={step} onChange={(e)=>{setStep(e.target.value)}} addonBefore='Step'  className='suruji-yagdayy--input' />
                         <Input value={article_tm} onChange={(e)=>{setArticle_tm(e.target.value)}} addonBefore='Article tm'  className='suruji-yagdayy--input' />
                         <Input value={article_ru} onChange={(e)=>{setArticle_ru(e.target.value)}} addonBefore='Article ru'  className='suruji-yagdayy--input' />
                         <Input value={article_en} onChange={(e)=>{setArticle_en(e.target.value)}} addonBefore='Article en'  className='suruji-yagdayy--input' /> */}
-                        <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore='Description tm'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore='Description ru'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore='Description en'  className='suruji-yagdayy--input' />
-                        <Input  onChange={(e)=>{setSale_until(e.target.value)}} type="date" addonBefore='Sale until'  className='suruji-yagdayy--input' />
-                        <Input value={total_amount} onChange={(e)=>{setTotal_amount(e.target.value)}} addonBefore='Ambardaky Sany'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={description_tm} onChange={(e)=>{setDescription_tm(e.target.value)}} addonBefore={dil==="TM"?'Description tm':"Описание тм"}  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={description_ru} onChange={(e)=>{setDescription_ru(e.target.value)}} addonBefore={dil==="TM"?'Description ru':"Описание ru"}  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={description_en} onChange={(e)=>{setDescription_en(e.target.value)}} addonBefore={dil==="TM"?'Description en':"Описание en"}  className='suruji-yagdayy--input' />
+                        {/* <Input  onChange={(e)=>{setSale_until(e.target.value)}} type="date" addonBefore='Sale until'  className='suruji-yagdayy--input' /> */}
                         {/* <Input  onChange={()=>ChangeCheckbox()} type="checkbox" addonBefore='Valýutamy'  className='suruji-yagdayy--input' /> */}
                         <Select
                             className='suruji-yagdayy--input'
-                            placeholder="Haryt Walyuta gorami?"
+                            placeholder={dil==="TM"?"Haryt Walyuta görämi?":"Товар в валюте?"}
                             optionFilterProp="children"
                             onChange={ChangeCheckbox}
                             >
-                            <Option key="howwawalyuta" value="true">Howwa</Option>
-                            <Option key="yokwalyuta" value="false">Yok</Option>
+                            <Option key="howwawalyuta" value="true">{dil==="TM"?"Hawa":"Да"}</Option>
+                            <Option key="yokwalyuta" value="false">{dil==="TM"?"Yok":"Нет"}</Option>
                         </Select>
                         <Select
                             className='suruji-yagdayy--input'
-                            placeholder="Haryt Täzemi?"
+                            placeholder={dil==="TM"?"Haryt Täzemi?":"Новый продукт?"}
                             optionFilterProp="children"
                             onChange={ChangeCheckboxTaze}
                             >
-                            <Option key="howwataze" value="true">Howwa</Option>
-                            <Option key="yoktaze" value="false">Yok</Option>
+                            <Option key="howwataze" value="true">{dil==="TM"?"Hawa":"Да"}</Option>
+                            <Option key="yoktaze" value="false">{dil==="TM"?"Yok":"Нет"}</Option>
                         </Select>
-                        <Input style={{width:"94%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore='Gözleg söz'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat(e.target.files[0])}} type="file" addonBefore='Haryt Surat 1'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat1(e.target.files[0])}} type="file" addonBefore='Haryt Surat 2'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat2(e.target.files[0])}} type="file" addonBefore='Haryt Surat 3'  className='suruji-yagdayy--input' />
-                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat3(e.target.files[0])}} type="file" addonBefore='Haryt Surat 4'  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} value={search} onChange={(e)=>{setSearch(e.target.value)}} addonBefore={dil==="TM"?'Gözleg söz':"Поисковое слово"}  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 1':"Фото продукта 1"}  className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat1(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 2':"Фото продукта 2"}   className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat2(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 3':"Фото продукта 3"}   className='suruji-yagdayy--input' />
+                        <Input style={{width:"94%"}} onChange={(e)=>{setSurat3(e.target.files[0])}} type="file" addonBefore={dil==="TM"?'Haryt Surat 4':"Фото продукта 4"}  className='suruji-yagdayy--input' />
                         
                                 <div style={{width:"100%"}}>
-                                <Button style={{width:"40%"}} onClick={EditProduct} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'> Üýget </Button>
-                                <Button style={{width:"40%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'> Goýbolsun </Button>
+                                <Button style={{width:"40%"}} onClick={EditProduct} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'> {dil==="TM"?"Üýget":"Редактировать"} </Button>
+                                <Button style={{width:"40%"}} onClick={()=>ShowDrawer()} shape='round' danger type='primary' className='suruji-yagdayy--button'> {dil==="TM"?"Goýbolsun":"Отмена"} </Button>
                                 </div>
                             </form>
                             :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 250px"}} />
@@ -836,18 +842,18 @@ const getRazmerler = ()=>{
                 <Drawer
                 width={width>850?600:320}
                 className='lukman-table--drawer'
-                title="Renkler we Razmerler"
+                title={dil==="TM"?"Renkler we Razmerler":"Цвет и размер"}
                 placement="right"
                 onClose={()=>setRenkRazmer(false)}
                 visible={renkRazmer}>
                      <div
                         className='suruji-yagdayy'>
                         {!loading ? <form className='suruji-yagdayy--form' >
-                            <h2 style={{width:"100%",marginTop:"-15px",marginBottom:"0px"}}>Razmerler</h2>
-                            <Input value={name_tm1} onChange={(e)=>{setName_tm1(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
-                            <Input value={name_ru1} onChange={(e)=>{setName_ru1(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
-                            <Input value={name_en1} onChange={(e)=>{setName_en1(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-                            <Button style={{width:"46%"}} onClick={CreateRazmer} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Razmer Gosh</Button>
+                            <h2 style={{width:"100%",marginTop:"-15px",marginBottom:"0px"}}>{dil==="TM"?"Razmerler":"Pазмер"}</h2>
+                            <Input value={name_tm1} onChange={(e)=>{setName_tm1(e.target.value)}} addonBefore={dil==="TM"?'ady tm':"имя тм" }  className='suruji-yagdayy--input' />
+                            <Input value={name_ru1} onChange={(e)=>{setName_ru1(e.target.value)}} addonBefore={dil==="TM"?'ady ru':"имя ru" } className='suruji-yagdayy--input' />                
+                            <Input value={name_en1} onChange={(e)=>{setName_en1(e.target.value)}} addonBefore={dil==="TM"?'ady en':"имя en" }  className='suruji-yagdayy--input' />
+                            <Button style={{width:"46%"}} onClick={CreateRazmer} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Razmer Gosh":"Добавить размер"}</Button>
 
                             {/* <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly"}}>
                             <Button style={{width:"35%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
@@ -855,25 +861,25 @@ const getRazmerler = ()=>{
                             <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly",margin:"10px auto 20px",borderBottom:"2px solid black",padding:"10px",borderRadius:"3px"}}>
                                 {razmerler?.map((razmer)=>{
                                     return <Popconfirm
-                                    title="Siz çyndan ochurmek isleýärsinizmi?"
+                                    title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                                     onConfirm={()=>DeleteRazmer(razmer.id)} 
                                     // onCancel={cancel}
-                                    okText="Howwa"
-                                    cancelText="Ýok"
+                                    okText={dil==="TM"?"Hawa":"Да"}
+                                    cancelText={dil==="TM"?"Ýok":"Нет"}
                                 >
-                                <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{razmer.name_tm}</div>
+                                <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{dil==="TM"?razmer.name_tm:razmer.name_ru}</div>
 
                                 </Popconfirm>
                                 })}
                             </div>
 
                         
-                            <h2 style={{width:"100%",marginTop:"-5px",marginBottom:"0px"}}>Renkler</h2>
+                            <h2 style={{width:"100%",marginTop:"-5px",marginBottom:"0px"}}>{dil==="TM"?"Renkler":"Renkler"}</h2>
 
-                            <Input value={name_tm2} onChange={(e)=>{setName_tm2(e.target.value)}} addonBefore='ady tm'  className='suruji-yagdayy--input' />
-                            <Input value={name_ru2} onChange={(e)=>{setName_ru2(e.target.value)}} addonBefore='ady ru'  className='suruji-yagdayy--input' />                
-                            <Input value={name_en2} onChange={(e)=>{setName_en2(e.target.value)}} addonBefore='ady en'  className='suruji-yagdayy--input' />
-                            <Button style={{width:"46%"}} onClick={CreateRenk} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>Renk Gosh</Button>
+                            <Input value={name_tm2} onChange={(e)=>{setName_tm2(e.target.value)}} addonBefore={dil==="TM"?'ady tm':"имя тм" }  className='suruji-yagdayy--input' />
+                            <Input value={name_ru2} onChange={(e)=>{setName_ru2(e.target.value)}} addonBefore={dil==="TM"?'ady ru':"имя ru" }  className='suruji-yagdayy--input' />                
+                            <Input value={name_en2} onChange={(e)=>{setName_en2(e.target.value)}} addonBefore={dil==="TM"?'ady en':"имя en" }  className='suruji-yagdayy--input' />
+                            <Button style={{width:"46%"}} onClick={CreateRenk} icon={<PlusCircleFilled/>} shape='round' type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Renk Gosh":"Добавить цвет"}</Button>
 
                             {/* <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly"}}>
                             <Button style={{width:"35%"}} onClick={props.onClick} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
@@ -882,11 +888,11 @@ const getRazmerler = ()=>{
                             <div style={{width:"100%",display:"inline-flex",justifyContent:"space-evenly",margin:"10px auto 20px",borderBottom:"2px solid black",padding:"10px",borderRadius:"2px"}}>
                                 {renkler?.map((renk)=>{
                                     return <Popconfirm
-                                    title="Siz çyndan ochurmek isleýärsinizmi?"
+                                    title={dil==="TM"?"Siz çyndan öçürmek isleýärsinizmi?":"Вы действительно хотите удалить?"}
                                     onConfirm={()=>DeleteRenk(renk.id)} 
                                     // onCancel={cancel}
-                                    okText="Howwa"
-                                    cancelText="Ýok"
+                                    okText={dil==="TM"?"Hawa":"Да"}
+                                    cancelText={dil==="TM"?"Ýok":"Нет"}
                                 >
                                 <div style={{border:"1px solid grey",borderRadius:"6px",padding:"5px 8px",fontWeight:"bold",cursor:"pointer"}}>{renk.name_tm}</div>
 
@@ -897,7 +903,7 @@ const getRazmerler = ()=>{
                         </form>
                         :<LoadingOutlined style={{fontSize:"50px",textAlign:"center",width:"auto",margin:"50px 250px"}} />
                         }
-                        <Button style={{width:"95%"}} onClick={()=>{setRenkRazmer(false);}} shape='round' danger type='primary' className='suruji-yagdayy--button'>Cancel</Button>
+                        <Button style={{width:"95%"}} onClick={()=>{setRenkRazmer(false);}} shape='round' danger type='primary' className='suruji-yagdayy--button'>{dil==="TM"?"Cancel":"Отмена"}</Button>
 
                     </div>
         
@@ -907,7 +913,7 @@ const getRazmerler = ()=>{
                 <Drawer
                 width={width>850?600:320}
                 className='lukman-table--drawer'
-                title="Üýtgetmeler"
+                title={dil==="TM"?"Skidka doret":"Сделать скидку"}
                 placement="right"
                 onClose={()=>ShowSkidka()}
                 visible={skidka}>

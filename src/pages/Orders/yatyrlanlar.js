@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 
 import {Button,Input,Drawer,Select} from 'antd';
 import "antd/dist/antd.css";
@@ -10,10 +10,12 @@ import UnitGosh from './UnitGosh';
 import LukmanTable from './yatyrlanTable';
 import  './lukman.css';
 import { axiosInstance } from '../../utils/axiosIntance';
+import { SebedimContext } from '../../context/Sebedim';
 const {Option} = Select;
 
 const Lukman = () =>{
 
+    const {dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [units,setUnits] = useState([]);
             const [ statuses,setStatuses] = useState([]);
@@ -137,7 +139,7 @@ const Lukman = () =>{
              <div className='lukman-gozleg'>
             <form className='lukman-gozleg--form'>
                 <div>
-                <Input onChange={(e)=>{setAll(e.target.value)}} placeholder = 'Umumy Gözleg' className='lukman-gozleg--input' />
+                <Input onChange={(e)=>{setAll(e.target.value)}} placeholder = {dil==="TM"?'Umumy Gözleg':"Общий поиск"} className='lukman-gozleg--input' />
                 
                 {/* <Select
                     className='lukman-gozleg--input'
