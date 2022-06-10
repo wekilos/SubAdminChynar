@@ -40,15 +40,15 @@ const YolHatyTable = (props) => {
     },
     {
       title: dil==="TM"?"Telefon No ":"Телефонный номер",
-      dataIndex: "phoneNumber",
-      render:(text,record)=>(
-        <Space>
-          {record.PhoneNumbers && record.PhoneNumbers.map(number=>{
-            return <div><h4>{number.phoneNumber}</h4>
-            </div>
-          }) }
-        </Space>
-      )
+      dataIndex: "tel",
+      // render:(text,record)=>(
+      //   <Space>
+      //     {record.PhoneNumbers && record.PhoneNumbers.map(number=>{
+      //       return <div><h4>{number.phoneNumber}</h4>
+      //       </div>
+      //     }) }
+      //   </Space>
+      // )
     },
     {
       title: dil==="TM"?"Market Surat":"Изображение маркета",
@@ -355,7 +355,8 @@ const YolHatyTable = (props) => {
       cashBackPrasent:cashBackPrasent,
       description_tm:description_tm,
       description_ru:description_ru,
-      description_en:description_en
+      description_en:description_en,
+      tel:telefon
     }).then((data)=>{
       console.log(data.data);
       

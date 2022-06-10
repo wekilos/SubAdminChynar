@@ -1,7 +1,7 @@
 import React,{useContext, useState} from 'react';
 
 import { useSizeComponents } from "../../components/sizeComponent";
-import {Button,Space,message,Table,Drawer,Popconfirm} from 'antd';
+import {Button,Space,message,Table,Drawer,Popconfirm, Modal} from 'antd';
 import "antd/dist/antd.css";
 import { EditOutlined,DeleteOutlined ,InfoCircleOutlined} from '@ant-design/icons';
 
@@ -16,6 +16,8 @@ const LukmanTable = props=>{
     const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
+    const [openPro,setOpenPro] = useState(false);
+    const [pro,setPro] = useState();
     const getProducts = props.getProducts;
     const columns = width>850? [
         {
@@ -347,19 +349,19 @@ const saveData = (event)=>{
                     <td style={{height:"40px"}}>{dil==="TM"?"Brand surat":"картинка бренда"}  </td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.Brand.surat} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>
-                    {maglumat && maglumat.surat &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
+                    {maglumat && maglumat.surat &&<tr onClick={()=>{setOpenPro(true);setPro(maglumat.surat)}}  className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
                     <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat1":"картинка продукта 1"}  </td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
-                    {maglumat && maglumat.surat1 &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
+                    {maglumat && maglumat.surat1 &&<tr onClick={()=>{setOpenPro(true);setPro(maglumat.surat1)}}  className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
                     <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat 2":"картинка продукта 2"}  </td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat1} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
-                    {maglumat && maglumat.surat2 &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
+                    {maglumat && maglumat.surat2 &&<tr onClick={()=>{setOpenPro(true);setPro(maglumat.surat2)}}  className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
                     <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat 3":"картинка продукта 3"}  </td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat2} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
-                    {maglumat && maglumat.surat3 &&<tr className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
+                    {maglumat && maglumat.surat3 &&<tr onClick={()=>{setOpenPro(true);setPro(maglumat.surat3)}}  className="modalLi" key={maglumat && maglumat.Brand && maglumat.Brand.name_tm}>
                     <td style={{height:"40px"}}>{dil==="TM"?"Haryt surat 4":"картинка продукта 4"}  </td>
                     <td>{maglumat && maglumat.Brand && <img style={{height:"150px",objectFit:"contain"}} src={BASE_URL +"/"+ maglumat.surat3} alt={maglumat && maglumat.Brand && maglumat.Brand.name_tm} />} </td>
                     </tr>}
@@ -370,6 +372,14 @@ const saveData = (event)=>{
           </table>
 }
                 </Drawer>
+                <Modal
+                    visible={openPro}
+                    onCancel={()=>setOpenPro(false)}
+                    onOk={()=>setOpenPro(false)}
+                >
+                    
+                    <img src={BASE_URL+"/"+`${ pro }`} style={{width:"100%",objectFit:"contain"}} alt="Haryt Surat"/>
+                </Modal>
                 <Drawer
                 width={width>850?600:320}
                 className='lukman-table--drawer'

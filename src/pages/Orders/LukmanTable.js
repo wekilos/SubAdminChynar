@@ -17,6 +17,8 @@ const LukmanTable = (props)=>{
     const { dil } = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [data,setData]=props.data;
+    const [openPro,setOpenPro] = useState(false);
+    const [pro,setPro] = useState();
     const getOrders = props.getOrders;
     const valyuta = props.valyuta;
 
@@ -292,7 +294,7 @@ const Gowshuryldy = (event)=>{
                                     <td>{i+1}) {dil==="TM"?"Haryt Renki":"Цвет продукта"}</td>
                                     <td>{product.renk} </td>
                                     </tr>}
-                                    <tr className="modalLi" key={`surat${i}`}>
+                                    <tr onClick={()=>{setOpenPro(true);setPro(product.Product)}} className="modalLi" key={`surat${i}`}>
                                     <td>{i+1}) {product.Product && (dil==="TM"?product.Product.name_tm:product.Product.name_ru )}</td>
                                     <img src={BASE_URL+"/"+`${product.Product && product.Product.surat }`} style={{width:"50px",height:"50px"}} alt="Haryt Surat"/>
                                     </tr>
@@ -305,6 +307,14 @@ const Gowshuryldy = (event)=>{
                         </table>}
                         <PrintComponent maglumat={maglumat} sum={sum}  valyuta={valyuta} />
                 </Drawer>
+                <Modal
+                    visible={openPro}
+                    onCancel={()=>setOpenPro(false)}
+                    onOk={()=>setOpenPro(false)}
+                >
+                    
+                    <img src={BASE_URL+"/"+`${ pro?.surat }`} style={{width:"100%",objectFit:"contain"}} alt="Haryt Surat"/>
+                </Modal>
                 <Drawer
                 width={width>850?500:320}
                 className='lukman-table--drawer'
