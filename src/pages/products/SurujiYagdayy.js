@@ -131,12 +131,12 @@ console.log("data",data)
           getRazmerler()
           getProducts();
           message.success(data.data.msg);
-          setGelenBaha();
-          setProduct_code()
+          setGelenBaha(0);
+          setProduct_code(0)
           setName_tm();
           setName_ru();
           setName_en();
-          setPrice();
+          setPrice(0);
           setSale_price();
           setStep();
           setArticle_tm();
