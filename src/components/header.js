@@ -35,17 +35,11 @@ const profile_menu = (
   const [width,height] = useSizeComponents();
   const history = useHistory();
   const [bool, setBool] = useState(false);
-  const [bool2, setBool2] = useState(false);
-  const [newOrder,setNewOrder] = useState();
+  const [bool2, setBool2] = useState(false); 
   const [menu,setMenu] = useState(false);
-  const { ChangeDil, dil } = useContext(SebedimContext)
+  const { ChangeDil, dil ,newOrder} = useContext(SebedimContext)
   const [baydak,setBaydak] = useState(dil=="TM"?"🇹🇲":"🇷🇺");
-  useEffect(()=>{
-    const time = setTimeout(() => {
-        getOrders();
-      }, 1000*60*5);
-    return ()=> clearTimeout(time);
-},[bool]);
+   
 
 useEffect(()=>{
   console.log("width",width)
@@ -79,36 +73,8 @@ const profile_menu = (
 //     }
 //   }
 
-const getOrders = ()=>{
-    axiosInstance.get("/api/orders/new").then((data)=>{
-        console.log(data.data.length);
-        localStorage.setItem("taze",data.data.length);
-        let gorulenler = localStorage.getItem("gorulenler");
-        if(data.data.length-gorulenler>0){
-          message.success(`${data.data.length-gorulenler} sany taze sargyt bar!`)
-        }
-        setBool(!bool);
-    }).catch((err)=>{
-        console.log(err);
-    })
-}
 
-useEffect(()=>{
-  const time = setTimeout(() => {
-    BatchNumber();
-    }, 1000);
-  return ()=> clearTimeout(time);
-},[bool2]);
 
-const BatchNumber = ()=>{
-        let tazesi = localStorage.getItem("taze")
-        let gorulenler = localStorage.getItem("gorulenler");
-        if(tazesi-gorulenler>0){
-          setNewOrder(tazesi-gorulenler);
-        }
-        
-        setBool2(!bool2);
-}
 const LogOUT = ()=>{
   logout();
   history.push("/")

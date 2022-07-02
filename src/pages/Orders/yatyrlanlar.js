@@ -15,7 +15,7 @@ const {Option} = Select;
 
 const Lukman = () =>{
 
-    const {dil } = useContext(SebedimContext);
+    const {dil, ChangeGorulen, ChangeTaze} = useContext(SebedimContext);
     const [width,height] = useSizeComponents();
     const [units,setUnits] = useState([]);
             const [ statuses,setStatuses] = useState([]);
@@ -79,6 +79,8 @@ const Lukman = () =>{
             console.log(data.data.length);
             localStorage.setItem("gorulenler",data.data.length)
             localStorage.setItem("taze",data.data.length)
+            ChangeGorulen(data.data.length);
+            ChangeTaze(data.data.length);
             setUnits(data.data)
         }).catch((err)=>{
             console.log(err);

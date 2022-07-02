@@ -392,6 +392,11 @@ console.log("data",data)
             className='suruji-yagdayy--input' 
             placeholder={dil==="TM"?"Brand Saýla!":"Выбор бренда!"}
             onChange={onChangeB}
+            onSearch={onSearchK}
+            showSearch
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
           >
             {
               brands?.map((brand)=>{
