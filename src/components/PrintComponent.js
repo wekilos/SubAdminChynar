@@ -64,7 +64,7 @@ class ComponentToPrint extends React.Component {
                 {" "}
                 <img
                   style={{ height: "50px", objectfit: "contain" }}
-                  src={BASE_URL + "/" + this.props.maglumat.Market.surat}
+                  src={BASE_URL + "/" + this?.props?.maglumat?.Market.surat}
                   alt="logo"
                 />
                 <span
@@ -74,7 +74,7 @@ class ComponentToPrint extends React.Component {
                     color: "orange",
                   }}
                 >
-                  {this.props.maglumat.Market.name_tm}
+                  {this?.props?.maglumat?.Market?.name_tm}
                 </span>
               </td>
             </tr>
@@ -82,16 +82,19 @@ class ComponentToPrint extends React.Component {
               <td style={{ height: "20px" }}></td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> Telefon: +{this.props.maglumat.Market.tel}</td>
+              <td> Telefon: +{this.props?.maglumat?.Market?.tel}</td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> IMO: +{this.props.maglumat.Market.tel}</td>
+              <td> IMO: +{this.props?.maglumat?.Market?.tel}</td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> Salgy: {this.props.maglumat.Market.addres_tm}</td>
+              <td> Salgy: {this.props?.maglumat?.Market?.addres_tm}</td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> Düşündiriş: {this.props.maglumat.Market.description_tm}</td>
+              <td>
+                {" "}
+                Düşündiriş: {this.props?.maglumat?.Market?.description_tm}
+              </td>
             </tr>
           </table>
 
@@ -100,19 +103,19 @@ class ComponentToPrint extends React.Component {
             <tr className="modalLi" key={`sany`}>
               <td> Ady:</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.Address.rec_name}
+                {this.props?.maglumat?.Address?.rec_name}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
               <td> Telefon No:</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.Address.rec_number}{" "}
+                {this.props?.maglumat?.Address?.rec_number}{" "}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
               <td> Salgysy:</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.Address.rec_address}{" "}
+                {this.props?.maglumat?.Address?.rec_address}{" "}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
@@ -134,8 +137,8 @@ class ComponentToPrint extends React.Component {
                 {this.props?.maglumat?.Market?.MarketDeleiveries?.map(
                   (item) => {
                     return (
-                      item.id == this.props?.maglumat?.delivery_time_status &&
-                      item.description_tm
+                      item?.id == this.props?.maglumat?.delivery_time_status &&
+                      item?.description_tm
                     );
                   }
                 )}
@@ -144,17 +147,17 @@ class ComponentToPrint extends React.Component {
             <tr className="modalLi" key={`sany`}>
               <td> Töleg şekili :</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.is_cash == true
+                {this.props?.maglumat?.is_cash == true
                   ? "Nagt"
                   : "Toleg Terminal"}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
               <td> Sargyt No: </td>
-              <td style={{ fontWeight: "600" }}>{this.props.maglumat.id} </td>
+              <td style={{ fontWeight: "600" }}>{this.props?.maglumat?.id} </td>
             </tr>
           </table>
-          {this.props.maglumat && (
+          {this.props?.maglumat && (
             <table
               style={{
                 width: "100%",
@@ -197,18 +200,18 @@ class ComponentToPrint extends React.Component {
                 </td>
               </tr>
 
-              {this.props.maglumat &&
-                this.props.maglumat.OrderedProducts &&
-                this.props.maglumat.OrderedProducts.map((product, i) => {
+              {this.props?.maglumat &&
+                this.props?.maglumat?.OrderedProducts &&
+                this.props?.maglumat?.OrderedProducts?.map((product, i) => {
                   return (
                     <React.Fragment>
                       <tr className="modalLi" key={`tolega${i}`}>
                         <td>{product?.Product?.name_tm} </td>
                         <td style={{ textAlign: "center", padding: "5px" }}>
-                          {product.amount} {product?.Product?.Unit.name_tm}
+                          {product?.amount} {product?.Product?.Unit.name_tm}
                         </td>
                         <td style={{ textAlign: "center", padding: "5px" }}>
-                          {product.ProductId}{" "}
+                          {product?.ProductId}{" "}
                         </td>
                         <td style={{ textAlign: "center", padding: "5px" }}>
                           {product?.Product?.sale_price
@@ -220,7 +223,7 @@ class ComponentToPrint extends React.Component {
                               : product?.Product?.sale_price
                             : product?.Product?.is_valyuta_price == true
                             ? (
-                                product?.Product?.price * this.props.valyuta
+                                product?.Product?.price * this.props?.valyuta
                               ).toFixed(2)
                             : product?.Product?.price}{" "}
                         </td>
@@ -232,12 +235,12 @@ class ComponentToPrint extends React.Component {
                                   this.props.valyuta *
                                   product.amount
                                 ).toFixed(2)
-                              : product?.Product?.sale_price * product.amount
+                              : product?.Product?.sale_price * product?.amount
                             : product?.Product?.is_valyuta_price == true
                             ? (
                                 product?.Product?.price *
-                                this.props.valyuta *
-                                product.amount
+                                this.props?.valyuta *
+                                product?.amount
                               ).toFixed(2)
                             : product?.Product?.price * product.amount}
                         </td>
@@ -253,7 +256,7 @@ class ComponentToPrint extends React.Component {
                   Jemi:
                 </td>
                 <td style={{ textAlign: "center", padding: "5px" }}>
-                  {this.props.sum && this.props.sum}
+                  {this.props?.sum && this.props?.sum}
                 </td>
               </tr>
               <tr key={"dastawkatr"}>
@@ -301,7 +304,7 @@ class ComponentToPrint extends React.Component {
                         return (
                           item.id ==
                             this.props?.maglumat?.delivery_time_status &&
-                          item.price + this.props.sum
+                          item?.price + this.props?.sum
                         );
                       }
                     )}
@@ -325,7 +328,7 @@ class ComponentToPrint extends React.Component {
                 {" "}
                 <img
                   style={{ height: "50px", objectfit: "contain" }}
-                  src={BASE_URL + "/" + this.props.maglumat.Market.surat}
+                  src={BASE_URL + "/" + this.props?.maglumat?.Market?.surat}
                   alt="logo"
                 />
                 <span
@@ -335,7 +338,7 @@ class ComponentToPrint extends React.Component {
                     color: "orange",
                   }}
                 >
-                  {this.props.maglumat.Market.name_tm}
+                  {this.props?.maglumat?.Market?.name_tm}
                 </span>
               </td>
             </tr>
@@ -343,16 +346,19 @@ class ComponentToPrint extends React.Component {
               <td style={{ height: "20px" }}></td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> Telefon: +{this.props.maglumat.Market.tel}</td>
+              <td> Telefon: +{this.props?.maglumat?.Market?.tel}</td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> IMO: +{this.props.maglumat.Market.tel}</td>
+              <td> IMO: +{this.props?.maglumat?.Market?.tel}</td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> Salgy: {this.props.maglumat.Market.addres_tm}</td>
+              <td> Salgy: {this.props?.maglumat?.Market?.addres_tm}</td>
             </tr>
             <tr className="modalLi" key={`sany`}>
-              <td> Düşündiriş: {this.props.maglumat.Market.description_tm}</td>
+              <td>
+                {" "}
+                Düşündiriş: {this.props?.maglumat?.Market?.description_tm}
+              </td>
             </tr>
           </table>
 
@@ -361,19 +367,19 @@ class ComponentToPrint extends React.Component {
             <tr className="modalLi" key={`sany`}>
               <td> Ady:</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.Address.rec_name}
+                {this.props?.maglumat?.Address?.rec_name}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
               <td> Telefon No:</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.Address.rec_number}{" "}
+                {this.props?.maglumat?.Address?.rec_number}{" "}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
               <td> Salgysy:</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.Address.rec_address}{" "}
+                {this.props?.maglumat?.Address?.rec_address}{" "}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
@@ -405,17 +411,17 @@ class ComponentToPrint extends React.Component {
             <tr className="modalLi" key={`sany`}>
               <td> Töleg şekili :</td>
               <td style={{ fontWeight: "600" }}>
-                {this.props.maglumat.is_cash == true
+                {this.props?.maglumat?.is_cash == true
                   ? "Nagt"
                   : "Toleg Terminal"}
               </td>
             </tr>
             <tr className="modalLi" key={`sany`}>
               <td> Sargyt No: </td>
-              <td style={{ fontWeight: "600" }}>{this.props.maglumat.id} </td>
+              <td style={{ fontWeight: "600" }}>{this.props?.maglumat?.id} </td>
             </tr>
           </table>
-          {this.props.maglumat && (
+          {this.props?.maglumat && (
             <table
               style={{
                 width: "100%",
@@ -458,15 +464,15 @@ class ComponentToPrint extends React.Component {
                 </td>
               </tr>
 
-              {this.props.maglumat &&
-                this.props.maglumat.OrderedProducts &&
-                this.props.maglumat.OrderedProducts.map((product, i) => {
+              {this.props?.maglumat &&
+                this.props?.maglumat?.OrderedProducts &&
+                this.props?.maglumat?.OrderedProducts?.map((product, i) => {
                   return (
                     <React.Fragment>
                       <tr className="modalLi" key={`tolega${i}`}>
                         <td>{product?.Product?.name_tm} </td>
                         <td style={{ textAlign: "center", padding: "5px" }}>
-                          {product.amount} {product?.Product?.Unit.name_tm}
+                          {product.amount} {product?.Product?.Unit?.name_tm}
                         </td>
                         <td style={{ textAlign: "center", padding: "5px" }}>
                           {product.ProductId}{" "}
@@ -476,12 +482,12 @@ class ComponentToPrint extends React.Component {
                             ? product?.Product?.is_valyuta_price == true
                               ? (
                                   product?.Product?.sale_price *
-                                  this.props.valyuta
+                                  this.props?.valyuta
                                 ).toFixed(2)
                               : product?.Product?.sale_price
                             : product?.Product?.is_valyuta_price == true
                             ? (
-                                product?.Product?.price * this.props.valyuta
+                                product?.Product?.price * this.props?.valyuta
                               ).toFixed(2)
                             : product?.Product?.price}{" "}
                         </td>
@@ -490,17 +496,17 @@ class ComponentToPrint extends React.Component {
                             ? product?.Product?.is_valyuta_price == true
                               ? (
                                   product?.Product?.sale_price *
-                                  this.props.valyuta *
-                                  product.amount
+                                  this.props?.valyuta *
+                                  product?.amount
                                 ).toFixed(2)
-                              : product?.Product?.sale_price * product.amount
+                              : product?.Product?.sale_price * product?.amount
                             : product?.Product?.is_valyuta_price == true
                             ? (
                                 product?.Product?.price *
-                                this.props.valyuta *
-                                product.amount
+                                this.props?.valyuta *
+                                product?.amount
                               ).toFixed(2)
-                            : product?.Product?.price * product.amount}
+                            : product?.Product?.price * product?.amount}
                         </td>
                       </tr>
                     </React.Fragment>
@@ -514,7 +520,7 @@ class ComponentToPrint extends React.Component {
                   Jemi:
                 </td>
                 <td style={{ textAlign: "center", padding: "5px" }}>
-                  {this.props.sum && this.props.sum}
+                  {this.props?.sum && this.props?.sum}
                 </td>
               </tr>
               <tr key={"dastawkatr"}>
@@ -526,13 +532,13 @@ class ComponentToPrint extends React.Component {
                 </td>
                 <td style={{ textAlign: "center", padding: "5px" }}>
                   {" "}
-                  {this.props.maglumat.Market &&
+                  {this.props?.maglumat?.Market &&
                     this.props?.maglumat?.Market?.MarketDeleiveries?.map(
                       (item) => {
                         return (
                           item.id ==
                             this.props?.maglumat?.delivery_time_status &&
-                          item.price
+                          item?.price
                         );
                       }
                     )}
@@ -562,7 +568,7 @@ class ComponentToPrint extends React.Component {
                         return (
                           item.id ==
                             this.props?.maglumat?.delivery_time_status &&
-                          item.price + this.props.sum
+                          item?.price + this.props?.sum
                         );
                       }
                     )}
