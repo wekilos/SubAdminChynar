@@ -1,6 +1,6 @@
 export const token = () => {
-    if (JSON.parse(localStorage.getItem("profile"))) {
-      var data = JSON.parse(localStorage.getItem("profile"));
+    if (JSON.parse(localStorage.getItem("SubProfile"))) {
+      var data = JSON.parse(localStorage.getItem("SubProfile"));
       return data.token;
     }
   };
